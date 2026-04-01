@@ -1,0 +1,15 @@
+Hypothesis,Outcome,Coef_is_gamified,SE,pvalue,Significant
+H1,avg_mispricing,19.581766917293226,,,0
+H1,abs_mispricing,21.341165413533826,,,0
+H1,abs_mp_ratio,0.7082657708832517,,,0
+H2,n_bubble_runs,0.47368421052631554,,,0
+H2,n_surge_crash,-2.6607286216991287e-16,,,0
+H3,gini,0.024757838388988,,,0
+H3,sd_payoff,230.56521507793423,,,0
+H4,abs_mispricing,-2.534794973544971,,,0
+H5,share_feedback,0.0,-0.0,,0
+H5,share_fundamental,-4.434547702831879e-17,,,0
+H6,abs_mispricing,21.341165413533826,,,0
+H6,n_bubble_runs,0.47368421052631554,,,0
+H6,gini,0.024757838388988,,,0
+H7,forecast_error,-0.2900869476640197,0.005640986633819487,0.0,1
