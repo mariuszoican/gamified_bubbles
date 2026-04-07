@@ -453,3 +453,15 @@ print(
     f"Saved trader_day ({trader_day.shape[0]:,} rows) "
     f"and market_day ({market_day.shape[0]:,} rows) to {OUT_DIR}/."
 )
+
+# save payoffs
+payoffs = (
+    post_exp[["player.email", "player.ucid", "participant.payoff"]]
+    .dropna()
+    .reset_index(drop=True)
+)
+exchange_rate = 1 / 500
+payoffs["payoff_cad"] = (payoffs["participant.payoff"] * exchange_rate).apply(
+    lambda x: round(x, 2)
+)
+payoffs.to_csv(f"{OUT_DIR}/participant_payments.csv", index=False)
