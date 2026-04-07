@@ -4,9 +4,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-
-DATA_DIR = Path("../Bubble_Project/data")
-OUT_DIR = Path("../Bubble_Project/generated_data")
+DATA_DIR = Path("../Bubble_Project/raw_data")
+OUT_DIR = Path("../Bubble_Project/processed_data")
 OUT_DIR.mkdir(exist_ok=True)
 
 
@@ -37,7 +36,7 @@ def standardize_series(s):
 
 
 # -----------------------------
-# Load raw data
+# Load raw raw_data
 # -----------------------------
 def load_data():
     intro = pd.read_csv(DATA_DIR / "intro_2026-03-12.csv")
@@ -66,20 +65,24 @@ def build_participant_map(app):
     out = (
         app[cols]
         .drop_duplicates()
-        .rename(columns={
-            "participant.code": "participant_code",
-            "player.trader_uuid": "trader_uuid",
-            "player.id_in_group": "id_in_group",
-            "group.trading_session_uuid": "trading_session_uuid",
-            "group.treatment": "treatment",
-            "group.market_design": "market_design",
-            "group.group_composition": "group_composition",
-            "subsession.round_number": "round_number_raw",
-        })
+        .rename(
+            columns={
+                "participant.code": "participant_code",
+                "player.trader_uuid": "trader_uuid",
+                "player.id_in_group": "id_in_group",
+                "group.trading_session_uuid": "trading_session_uuid",
+                "group.treatment": "treatment",
+                "group.market_design": "market_design",
+                "group.group_composition": "group_composition",
+                "subsession.round_number": "round_number_raw",
+            }
+        )
     )
 
     if "round_number_raw" in out.columns:
-        out["round_number_raw"] = pd.to_numeric(out["round_number_raw"], errors="coerce")
+        out["round_number_raw"] = pd.to_numeric(
+            out["round_number_raw"], errors="coerce"
+        )
         out["repetition"] = np.where(out["round_number_raw"] <= 15, 1, 2)
     else:
         out["repetition"] = np.nan
@@ -176,10 +179,14 @@ def build_trade_panel(mbo, participant_map):
     trades = mbo.copy()
 
     if "record_kind" in trades.columns:
-        trades = trades.loc[trades["record_kind"].astype(str).str.lower() == "trade"].copy()
+        trades = trades.loc[
+            trades["record_kind"].astype(str).str.lower() == "trade"
+        ].copy()
 
     trades["price"] = pd.to_numeric(trades["price"], errors="coerce")
-    trades["trading_day"] = pd.to_numeric(trades["trading_day"], errors="coerce").astype("Int64")
+    trades["trading_day"] = pd.to_numeric(
+        trades["trading_day"], errors="coerce"
+    ).astype("Int64")
     trades = trades.dropna(subset=["price", "trading_day"])
 
     trades["fundamental_value"] = 8 * (16 - trades["trading_day"])
@@ -243,7 +250,15 @@ def build_trade_panel(mbo, participant_map):
         trades["event_ts"] = pd.to_datetime(trades["event_ts"], errors="coerce")
 
     sort_cols = [
-        c for c in ["market_id", "repetition", "trading_day", "event_ts", "event_seq", "price"]
+        c
+        for c in [
+            "market_id",
+            "repetition",
+            "trading_day",
+            "event_ts",
+            "event_seq",
+            "price",
+        ]
         if c in trades.columns
     ]
     if sort_cols:
@@ -256,40 +271,41 @@ def build_trade_panel(mbo, participant_map):
 # Market-period panel
 # -----------------------------
 def build_market_period(trades):
-    mp = (
-        trades.groupby(["market_id", "repetition", "trading_day"], as_index=False)
-        .agg(
-            n_trades=("price", "size"),
-            avg_trade_price=("price", "mean"),
-            closing_price=("price", "last"),
-            opening_price=("price", "first"),
-            max_price=("price", "max"),
-            min_price=("price", "min"),
-            fundamental_value=("fundamental_value", "first"),
-            gamified=("gamified", "first"),
-            hybrid=("hybrid", "first"),
-            treatment=("treatment", "first"),
-            market_design=("market_design", "first"),
-            group_composition=("group_composition", "first"),
-        )
+    mp = trades.groupby(["market_id", "repetition", "trading_day"], as_index=False).agg(
+        n_trades=("price", "size"),
+        avg_trade_price=("price", "mean"),
+        closing_price=("price", "last"),
+        opening_price=("price", "first"),
+        max_price=("price", "max"),
+        min_price=("price", "min"),
+        fundamental_value=("fundamental_value", "first"),
+        gamified=("gamified", "first"),
+        hybrid=("hybrid", "first"),
+        treatment=("treatment", "first"),
+        market_design=("market_design", "first"),
+        group_composition=("group_composition", "first"),
     )
 
-    mp = mp.sort_values(["market_id", "repetition", "trading_day"]).reset_index(drop=True)
+    mp = mp.sort_values(["market_id", "repetition", "trading_day"]).reset_index(
+        drop=True
+    )
 
     mp["average_mispricing"] = mp["avg_trade_price"] - mp["fundamental_value"]
     mp["absolute_mispricing"] = (mp["avg_trade_price"] - mp["fundamental_value"]).abs()
     mp["abs_mispricing_ratio"] = mp["absolute_mispricing"] / mp["fundamental_value"]
 
     mp["lag_price"] = mp.groupby(["market_id", "repetition"])["closing_price"].shift(1)
-    mp["lead_price"] = mp.groupby(["market_id", "repetition"])["closing_price"].shift(-1)
+    mp["lead_price"] = mp.groupby(["market_id", "repetition"])["closing_price"].shift(
+        -1
+    )
     mp["delta_p"] = mp["closing_price"] - mp["lag_price"]
     mp["lead_delta_p"] = mp["lead_price"] - mp["closing_price"]
 
     mp["return"] = (mp["closing_price"] - mp["lag_price"]) / mp["lag_price"]
 
     mp["normalized_mispricing"] = (
-        (mp["avg_trade_price"] - mp["fundamental_value"]) / mp["fundamental_value"]
-    )
+        mp["avg_trade_price"] - mp["fundamental_value"]
+    ) / mp["fundamental_value"]
 
     rep_return_mean = mp.groupby("repetition")["return"].transform("mean")
     rep_return_sd = mp.groupby("repetition")["return"].transform("std")
@@ -304,7 +320,10 @@ def build_market_period(trades):
 
     mp["bubble_start"] = (
         (mp["bubble_period"] == 1)
-        & (mp.groupby(["market_id", "repetition"])["bubble_period"].shift(1).fillna(0) == 0)
+        & (
+            mp.groupby(["market_id", "repetition"])["bubble_period"].shift(1).fillna(0)
+            == 0
+        )
     ).astype(int)
 
     return mp
@@ -314,24 +333,21 @@ def build_market_period(trades):
 # Market summary
 # -----------------------------
 def build_market_summary(market_period):
-    ms = (
-        market_period.groupby(["market_id", "repetition"], as_index=False)
-        .agg(
-            gamified=("gamified", "first"),
-            hybrid=("hybrid", "first"),
-            treatment=("treatment", "first"),
-            market_design=("market_design", "first"),
-            group_composition=("group_composition", "first"),
-            n_periods=("trading_day", "nunique"),
-            total_trades=("n_trades", "sum"),
-            mean_avg_trade_price=("avg_trade_price", "mean"),
-            mean_average_mispricing=("average_mispricing", "mean"),
-            mean_absolute_mispricing=("absolute_mispricing", "mean"),
-            mean_abs_mispricing_ratio=("abs_mispricing_ratio", "mean"),
-            n_surges=("surge", "sum"),
-            n_crashes=("crash", "sum"),
-            n_bubble_runs=("bubble_start", "sum"),
-        )
+    ms = market_period.groupby(["market_id", "repetition"], as_index=False).agg(
+        gamified=("gamified", "first"),
+        hybrid=("hybrid", "first"),
+        treatment=("treatment", "first"),
+        market_design=("market_design", "first"),
+        group_composition=("group_composition", "first"),
+        n_periods=("trading_day", "nunique"),
+        total_trades=("n_trades", "sum"),
+        mean_avg_trade_price=("avg_trade_price", "mean"),
+        mean_average_mispricing=("average_mispricing", "mean"),
+        mean_absolute_mispricing=("absolute_mispricing", "mean"),
+        mean_abs_mispricing_ratio=("abs_mispricing_ratio", "mean"),
+        n_surges=("surge", "sum"),
+        n_crashes=("crash", "sum"),
+        n_bubble_runs=("bubble_start", "sum"),
     )
 
     ms["surges_crashes_total"] = ms["n_surges"] + ms["n_crashes"]
@@ -346,33 +362,39 @@ def build_market_summary(market_period):
 def build_trader_period(app, participant_map, background):
     df = app.copy()
 
-    keep = [c for c in [
-        "participant.code",
-        "player.trader_uuid",
-        "group.trading_session_uuid",
-        "subsession.round_number",
-        "player.num_shares",
-        "player.current_cash",
-        "player.forecast_price_next_day",
-        "player.forecast_confidence_next_day",
-        "player.algorithm_belief",
-        "player.payoff",
-    ] if c in df.columns]
+    keep = [
+        c
+        for c in [
+            "participant.code",
+            "player.trader_uuid",
+            "group.trading_session_uuid",
+            "subsession.round_number",
+            "player.num_shares",
+            "player.current_cash",
+            "player.forecast_price_next_day",
+            "player.forecast_confidence_next_day",
+            "player.algorithm_belief",
+            "player.payoff",
+        ]
+        if c in df.columns
+    ]
 
     tp = df[keep].copy()
 
-    tp = tp.rename(columns={
-        "participant.code": "participant_code",
-        "player.trader_uuid": "trader_uuid",
-        "group.trading_session_uuid": "trading_session_uuid",
-        "subsession.round_number": "round_number_raw",
-        "player.num_shares": "num_shares",
-        "player.current_cash": "current_cash",
-        "player.forecast_price_next_day": "forecast_price_next_day",
-        "player.forecast_confidence_next_day": "forecast_confidence_next_day",
-        "player.algorithm_belief": "algorithm_belief",
-        "player.payoff": "payoff",
-    })
+    tp = tp.rename(
+        columns={
+            "participant.code": "participant_code",
+            "player.trader_uuid": "trader_uuid",
+            "group.trading_session_uuid": "trading_session_uuid",
+            "subsession.round_number": "round_number_raw",
+            "player.num_shares": "num_shares",
+            "player.current_cash": "current_cash",
+            "player.forecast_price_next_day": "forecast_price_next_day",
+            "player.forecast_confidence_next_day": "forecast_confidence_next_day",
+            "player.algorithm_belief": "algorithm_belief",
+            "player.payoff": "payoff",
+        }
+    )
 
     if "round_number_raw" in tp.columns:
         tp["round_number_raw"] = pd.to_numeric(tp["round_number_raw"], errors="coerce")
@@ -382,7 +404,13 @@ def build_trader_period(app, participant_map, background):
         tp["repetition"] = np.nan
 
     merge_keys = [
-        c for c in ["participant_code", "trader_uuid", "trading_session_uuid", "repetition"]
+        c
+        for c in [
+            "participant_code",
+            "trader_uuid",
+            "trading_session_uuid",
+            "repetition",
+        ]
         if c in tp.columns
     ]
 
@@ -420,7 +448,11 @@ def build_trader_period(app, participant_map, background):
 
     tp = tp.merge(background, on="participant_code", how="left")
 
-    sort_cols = [c for c in ["market_id", "repetition", "participant_code", "trading_day"] if c in tp.columns]
+    sort_cols = [
+        c
+        for c in ["market_id", "repetition", "participant_code", "trading_day"]
+        if c in tp.columns
+    ]
     tp = tp.sort_values(sort_cols).reset_index(drop=True)
 
     if "num_shares" in tp.columns:
@@ -439,7 +471,14 @@ def build_forecast_panel(trader_period, market_period):
     fp = trader_period.copy()
 
     price_info = market_period[
-        ["market_id", "repetition", "trading_day", "closing_price", "lag_price", "delta_p"]
+        [
+            "market_id",
+            "repetition",
+            "trading_day",
+            "closing_price",
+            "lag_price",
+            "delta_p",
+        ]
     ].copy()
 
     fp = fp.merge(
@@ -452,7 +491,13 @@ def build_forecast_panel(trader_period, market_period):
     if "forecast_price_next_day" in fp.columns:
         fp["forecast_gap"] = fp["forecast_price_next_day"] - fp["closing_price"]
 
-    for c in ["age", "fin_quiz_score", "overconfidence", "trading_experience", "risk_aversion"]:
+    for c in [
+        "age",
+        "fin_quiz_score",
+        "overconfidence",
+        "trading_experience",
+        "risk_aversion",
+    ]:
         if c in fp.columns:
             fp[f"z_{c}"] = standardize_series(fp[c])
 
@@ -464,7 +509,9 @@ def build_forecast_panel(trader_period, market_period):
 # -----------------------------
 def build_trader_final(trader_period, market_period):
     last_fv = (
-        market_period.groupby(["market_id", "repetition"], as_index=False)["fundamental_value"]
+        market_period.groupby(["market_id", "repetition"], as_index=False)[
+            "fundamental_value"
+        ]
         .min()
         .rename(columns={"fundamental_value": "terminal_fundamental_value"})
     )
@@ -472,7 +519,9 @@ def build_trader_final(trader_period, market_period):
     tf = trader_period.sort_values(
         ["market_id", "repetition", "participant_code", "trading_day"]
     ).copy()
-    tf = tf.groupby(["market_id", "repetition", "participant_code"], as_index=False).tail(1)
+    tf = tf.groupby(
+        ["market_id", "repetition", "participant_code"], as_index=False
+    ).tail(1)
 
     tf = tf.merge(last_fv, on=["market_id", "repetition"], how="left")
 
@@ -486,21 +535,25 @@ def build_trader_final(trader_period, market_period):
     else:
         tf["final_wealth"] = np.nan
 
-    keep = [c for c in [
-        "market_id",
-        "repetition",
-        "participant_code",
-        "final_wealth",
-        "current_cash",
-        "num_shares",
-        "gamified",
-        "hybrid",
-        "treatment",
-        "market_design",
-        "group_composition",
-        "fin_quiz_score",
-        "overconfidence",
-    ] if c in tf.columns]
+    keep = [
+        c
+        for c in [
+            "market_id",
+            "repetition",
+            "participant_code",
+            "final_wealth",
+            "current_cash",
+            "num_shares",
+            "gamified",
+            "hybrid",
+            "treatment",
+            "market_design",
+            "group_composition",
+            "fin_quiz_score",
+            "overconfidence",
+        ]
+        if c in tf.columns
+    ]
 
     return tf[keep].copy()
 
@@ -516,7 +569,9 @@ def add_wealth_inequality(market_summary, trader_final):
         .reset_index()
     )
 
-    out = market_summary.merge(wealth_by_market, on=["market_id", "repetition"], how="left")
+    out = market_summary.merge(
+        wealth_by_market, on=["market_id", "repetition"], how="left"
+    )
     return out
 
 
@@ -526,33 +581,37 @@ def add_wealth_inequality(market_summary, trader_final):
 def build_trader_types(trader_period, market_period):
     tp = trader_period.copy()
 
-    price_ref = market_period[[
-        "market_id",
-        "repetition",
-        "trading_day",
-        "avg_trade_price",
-        "fundamental_value",
-        "delta_p",
-        "lead_delta_p",
-    ]].copy()
+    price_ref = market_period[
+        [
+            "market_id",
+            "repetition",
+            "trading_day",
+            "avg_trade_price",
+            "fundamental_value",
+            "delta_p",
+            "lead_delta_p",
+        ]
+    ].copy()
 
     price_ref = price_ref.sort_values(["market_id", "repetition", "trading_day"])
-    price_ref["feedback_ref_change"] = price_ref.groupby(
-        ["market_id", "repetition"]
-    )["delta_p"].shift(1)
+    price_ref["feedback_ref_change"] = price_ref.groupby(["market_id", "repetition"])[
+        "delta_p"
+    ].shift(1)
     price_ref["price_minus_fundamental"] = (
         price_ref["avg_trade_price"] - price_ref["fundamental_value"]
     )
 
     tp = tp.merge(
-        price_ref[[
-            "market_id",
-            "repetition",
-            "trading_day",
-            "feedback_ref_change",
-            "lead_delta_p",
-            "price_minus_fundamental",
-        ]],
+        price_ref[
+            [
+                "market_id",
+                "repetition",
+                "trading_day",
+                "feedback_ref_change",
+                "lead_delta_p",
+                "price_minus_fundamental",
+            ]
+        ],
         on=["market_id", "repetition", "trading_day"],
         how="left",
         validate="many_to_one",
@@ -575,24 +634,25 @@ def build_trader_types(trader_period, market_period):
     if "holding_change" in tp.columns:
         tp["feedback_hit"] = same_sign(tp["holding_change"], tp["feedback_ref_change"])
         tp["speculator_hit"] = same_sign(tp["holding_change"], tp["lead_delta_p"])
-        tp["fundamental_hit"] = opposite_sign(tp["holding_change"], tp["price_minus_fundamental"])
+        tp["fundamental_hit"] = opposite_sign(
+            tp["holding_change"], tp["price_minus_fundamental"]
+        )
     else:
         tp["feedback_hit"] = np.nan
         tp["speculator_hit"] = np.nan
         tp["fundamental_hit"] = np.nan
 
-    scores = (
-        tp.groupby(["market_id", "repetition", "participant_code"], as_index=False)
-        .agg(
-            gamified=("gamified", "first"),
-            hybrid=("hybrid", "first"),
-            treatment=("treatment", "first"),
-            market_design=("market_design", "first"),
-            group_composition=("group_composition", "first"),
-            feedback_score=("feedback_hit", "sum"),
-            speculator_score=("speculator_hit", "sum"),
-            fundamental_score=("fundamental_hit", "sum"),
-        )
+    scores = tp.groupby(
+        ["market_id", "repetition", "participant_code"], as_index=False
+    ).agg(
+        gamified=("gamified", "first"),
+        hybrid=("hybrid", "first"),
+        treatment=("treatment", "first"),
+        market_design=("market_design", "first"),
+        group_composition=("group_composition", "first"),
+        feedback_score=("feedback_hit", "sum"),
+        speculator_score=("speculator_hit", "sum"),
+        fundamental_score=("fundamental_hit", "sum"),
     )
 
     def classify_row(row):
@@ -624,19 +684,18 @@ def build_trader_types(trader_period, market_period):
     weights = scores.apply(classify_row, axis=1, result_type="expand")
     trader_types = pd.concat([scores, weights], axis=1)
 
-    market_type_shares = (
-        trader_types.groupby(["market_id", "repetition"], as_index=False)
-        .agg(
-            gamified=("gamified", "first"),
-            hybrid=("hybrid", "first"),
-            treatment=("treatment", "first"),
-            market_design=("market_design", "first"),
-            group_composition=("group_composition", "first"),
-            share_feedback=("feedback_w", "mean"),
-            share_speculator=("speculator_w", "mean"),
-            share_fundamental=("fundamental_w", "mean"),
-            share_other=("other_w", "mean"),
-        )
+    market_type_shares = trader_types.groupby(
+        ["market_id", "repetition"], as_index=False
+    ).agg(
+        gamified=("gamified", "first"),
+        hybrid=("hybrid", "first"),
+        treatment=("treatment", "first"),
+        market_design=("market_design", "first"),
+        group_composition=("group_composition", "first"),
+        share_feedback=("feedback_w", "mean"),
+        share_speculator=("speculator_w", "mean"),
+        share_fundamental=("fundamental_w", "mean"),
+        share_other=("other_w", "mean"),
     )
 
     return tp, trader_types, market_type_shares
@@ -654,7 +713,10 @@ def main():
 
     print("trade_panel shape:", trade_panel.shape)
     if "market_id" in trade_panel.columns:
-        print("non-missing market_id in trade_panel:", trade_panel["market_id"].notna().sum())
+        print(
+            "non-missing market_id in trade_panel:",
+            trade_panel["market_id"].notna().sum(),
+        )
     else:
         print("market_id missing in trade_panel")
 

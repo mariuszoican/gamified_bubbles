@@ -3,23 +3,30 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 
-DATA_DIR = Path("../Bubble_Project/generated_data")
+DATA_DIR = Path("../Bubble_Project/processed_data")
 FIG_DIR = Path("../Bubble_Project/figures")
 FIG_DIR.mkdir(exist_ok=True)
 
-plt.rcParams.update({
-    "font.size": 12,
-    "axes.titlesize": 16,
-    "axes.labelsize": 13,
-    "legend.fontsize": 10,
-    "xtick.labelsize": 11,
-    "ytick.labelsize": 11,
-})
+plt.rcParams.update(
+    {
+        "font.size": 12,
+        "axes.titlesize": 16,
+        "axes.labelsize": 13,
+        "legend.fontsize": 10,
+        "xtick.labelsize": 11,
+        "ytick.labelsize": 11,
+    }
+)
 
 
 def load_data():
     out = {}
-    for fn in ["market_period.csv", "market_summary.csv", "market_type_shares.csv", "forecast_panel.csv"]:
+    for fn in [
+        "market_period.csv",
+        "market_summary.csv",
+        "market_type_shares.csv",
+        "forecast_panel.csv",
+    ]:
         path = DATA_DIR / fn
         if path.exists():
             out[fn.replace(".csv", "")] = pd.read_csv(path)
@@ -52,6 +59,7 @@ def prepare(df):
         df["cell"] = df["treatment"].astype(str)
     else:
         if {"gamified", "hybrid"}.issubset(df.columns):
+
             def make_cell(row):
                 if row["gamified"] == 1 and row["hybrid"] == 0:
                     return "gh"
@@ -62,6 +70,7 @@ def prepare(df):
                 elif row["gamified"] == 0 and row["hybrid"] == 1:
                     return "nm"
                 return None
+
             df["cell"] = df.apply(make_cell, axis=1)
         else:
             df["cell"] = None
@@ -89,12 +98,29 @@ def plot_price_paths(mp):
         )
 
         if g.empty:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 
-        ax.plot(g["trading_day"], g["avg_trade_price"], marker="o", label="Average trade price")
-        ax.plot(g["trading_day"], g["fundamental_value"], marker="s", label="Fundamental value")
+        ax.plot(
+            g["trading_day"],
+            g["avg_trade_price"],
+            marker="o",
+            label="Average trade price",
+        )
+        ax.plot(
+            g["trading_day"],
+            g["fundamental_value"],
+            marker="s",
+            label="Fundamental value",
+        )
         ax.set_title(treatment_label(c))
         ax.set_xlabel("Period")
         ax.set_ylabel("Price")
@@ -124,12 +150,29 @@ def plot_mispricing_paths(mp):
         )
 
         if g.empty:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 
-        ax.plot(g["trading_day"], g["absolute_mispricing"], marker="o", label="Absolute mispricing")
-        ax.plot(g["trading_day"], g["abs_mispricing_ratio"], marker="s", label="Absolute mispricing ratio")
+        ax.plot(
+            g["trading_day"],
+            g["absolute_mispricing"],
+            marker="o",
+            label="Absolute mispricing",
+        )
+        ax.plot(
+            g["trading_day"],
+            g["abs_mispricing_ratio"],
+            marker="s",
+            label="Absolute mispricing ratio",
+        )
         ax.set_title(treatment_label(c))
         ax.set_xlabel("Period")
         ax.set_ylabel("Mispricing")
@@ -161,7 +204,14 @@ def plot_surges_and_bubbles(mp):
         )
 
         if g.empty:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 
@@ -196,13 +246,27 @@ def plot_wealth_inequality(ms):
         )
 
         if g.empty or "wealth_gini" not in g.columns:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 
         xlabels = [f"Market {int(r)}" for r in g["repetition"] if pd.notna(r)]
         if len(xlabels) == 0:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 
@@ -227,13 +291,27 @@ def plot_wealth_inequality(ms):
         )
 
         if g.empty or "wealth_sd" not in g.columns:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 
         xlabels = [f"Market {int(r)}" for r in g["repetition"] if pd.notna(r)]
         if len(xlabels) == 0:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 
@@ -249,7 +327,12 @@ def plot_trader_type_shares(mts):
     mts = prepare(mts)
 
     cells = ["gh", "gm", "nh", "nm"]
-    share_cols = ["share_feedback", "share_speculator", "share_fundamental", "share_other"]
+    share_cols = [
+        "share_feedback",
+        "share_speculator",
+        "share_fundamental",
+        "share_other",
+    ]
     labels = ["Feedback", "Speculator", "Fundamental", "Other"]
 
     fig, axes = plt.subplots(2, 2, figsize=(12, 9), sharex=True, sharey=True)
@@ -269,13 +352,27 @@ def plot_trader_type_shares(mts):
         )
 
         if g.empty:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 
         xlabels = [f"Market {int(r)}" for r in g["repetition"] if pd.notna(r)]
         if len(xlabels) == 0:
-            ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No raw_data",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_title(treatment_label(c))
             continue
 

@@ -18,7 +18,7 @@ import statsmodels.formula.api as smf
 
 from table_utils import regression_table_to_latex, summary_stats_to_latex
 
-DATA_DIR = Path("generated_data")
+DATA_DIR = Path("processed_data")
 TABLE_DIR = Path("tables")
 TABLE_DIR.mkdir(exist_ok=True)
 
@@ -62,30 +62,27 @@ def fit_count_model(formula, data, cluster_col="market_id"):
         return None
 
     if cluster_col in d.columns and d[cluster_col].nunique() >= 2:
-        return smf.poisson(
-            formula,
-            data=d
-        ).fit(
-            disp=False,
-            cov_type="cluster",
-            cov_kwds={"groups": d[cluster_col]}
+        return smf.poisson(formula, data=d).fit(
+            disp=False, cov_type="cluster", cov_kwds={"groups": d[cluster_col]}
         )
 
-    return smf.poisson(
-        formula,
-        data=d
-    ).fit(
-        disp=False,
-        cov_type="HC1"
-    )
+    return smf.poisson(formula, data=d).fit(disp=False, cov_type="HC1")
 
 
 def check_treatment_variation(df):
-    cols = [c for c in ["market_id", "gamified", "hybrid", "repetition"] if c in df.columns]
+    cols = [
+        c for c in ["market_id", "gamified", "hybrid", "repetition"] if c in df.columns
+    ]
     out = df[cols].drop_duplicates().copy()
 
-    has_gamified_var = out["gamified"].nunique(dropna=True) >= 2 if "gamified" in out.columns else False
-    has_hybrid_var = out["hybrid"].nunique(dropna=True) >= 2 if "hybrid" in out.columns else False
+    has_gamified_var = (
+        out["gamified"].nunique(dropna=True) >= 2
+        if "gamified" in out.columns
+        else False
+    )
+    has_hybrid_var = (
+        out["hybrid"].nunique(dropna=True) >= 2 if "hybrid" in out.columns else False
+    )
     return has_gamified_var and has_hybrid_var
 
 
@@ -93,7 +90,8 @@ def make_summary_stats(panels):
     if "market_summary" in panels:
         ms = panels["market_summary"].copy()
         cols = [
-            c for c in [
+            c
+            for c in [
                 "mean_average_mispricing",
                 "mean_absolute_mispricing",
                 "mean_abs_mispricing_ratio",
@@ -102,7 +100,8 @@ def make_summary_stats(panels):
                 "n_bubble_runs",
                 "wealth_sd",
                 "wealth_gini",
-            ] if c in ms.columns
+            ]
+            if c in ms.columns
         ]
 
         if cols:
@@ -117,7 +116,7 @@ def make_summary_stats(panels):
                     ms,
                     TABLE_DIR / "summary_stats.tex",
                     columns=cols,
-                    title="Summary Statistics"
+                    title="Summary Statistics",
                 )
 
 
@@ -174,7 +173,15 @@ def run_h4_experience(panels):
 
     return fit_clustered_ols(
         "mean_abs_mispricing_ratio ~ gamified * repetition2 + hybrid",
-        ms[["mean_abs_mispricing_ratio", "gamified", "repetition2", "hybrid", "market_id"]],
+        ms[
+            [
+                "mean_abs_mispricing_ratio",
+                "gamified",
+                "repetition2",
+                "hybrid",
+                "market_id",
+            ]
+        ],
     )
 
 
@@ -201,7 +208,15 @@ def run_h6_algo_interaction(panels):
 
     m1 = fit_clustered_ols(
         "mean_abs_mispricing_ratio ~ gamified * hybrid + C(repetition)",
-        ms[["mean_abs_mispricing_ratio", "gamified", "hybrid", "repetition", "market_id"]],
+        ms[
+            [
+                "mean_abs_mispricing_ratio",
+                "gamified",
+                "hybrid",
+                "repetition",
+                "market_id",
+            ]
+        ],
     )
     m2 = fit_count_model(
         "surges_crashes_total ~ gamified * hybrid + C(repetition)",
