@@ -24,8 +24,8 @@ library(latex2exp)
 # ── LOAD DATA ─────────────────────────────────────────────────────────────────
 setwd(dirname(getActiveDocumentContext()$path))
 
-mkt_day    <- read.csv("../../data_analysis_deb/processed_data/market_day_panel.csv")
-trader_day <- read.csv("../../data_analysis_deb/processed_data/trader_day_panel.csv")
+mkt_day    <- read.csv("../processed_data/market_day_panel.csv")
+trader_day <- read.csv("../processed_data/trader_day_panel.csv")
 
 # ── SAVE RAW COPIES BEFORE STANDARDISING ──────────────────────────────────────
 trader_day <- trader_day %>%

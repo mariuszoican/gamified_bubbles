@@ -19,7 +19,7 @@ import pandas as pd
 # ============================================================
 # Parameters
 # ============================================================
-DATE = "2026-04-07"
+DATE = "2026-04-08"
 SESSIONS = ["uik7aoor"]
 
 RAW_DIR = "../raw_data"
@@ -176,7 +176,14 @@ trader_day["trading_day"] = np.where(
     trader_day["trading_day"] - ROUNDS_PER_REPETITION,
     trader_day["trading_day"],
 )
-
+trader_day["algorithm_belief"] = np.where(
+    trader_day["hybrid"] == 1,
+    (trader_day["algorithm_belief"] == "yes").astype(int),
+    np.nan,
+)
+trader_day["algorithm_belief"] = trader_day.groupby(
+    ["market_uuid", "participant_code"]
+)["algorithm_belief"].transform("max")
 
 # ============================================================
 # 3. Build trade-level and market-period panels
@@ -412,12 +419,27 @@ market_id = trader_day[MARKET_LEVEL_COLS].drop_duplicates()
 market_day = (
     trader_day.groupby(["market_uuid", "trading_day"])
     .agg(
+        # market composition and demographics
+        n_traders=("participant_code", "nunique"),
+        avg_age=("age", "mean"),
+        share_female=("gender_female", "mean"),
+        share_finance_course=("finance_course", "mean"),
+        share_trading_experience=("trading_experience", "mean"),
+        share_high_education=("high_education", "mean"),
+        avg_fin_quiz=("fin_quiz_score", "mean"),
+        sd_fin_quiz=("fin_quiz_score", "std"),
+        avg_self_assessment=("self_assessment", "mean"),
+        avg_overconfidence=("overconfidence", "mean"),
+        sd_overconfidence=("overconfidence", "std"),
+        avg_cq_attempts=("cq_attempt_count", "mean"),
+        share_algo_belief=("algorithm_belief", "mean"),
+        # wealth
         avg_wealth=("wealth_day", "mean"),
         sd_wealth=("wealth_day", "std"),
         gini=("gini", "first"),
+        # forecasts
         avg_forecast=("forecast", "mean"),
         sd_forecast=("forecast", "std"),
-        avg_overconfidence=("overconfidence", "mean"),
         # trader-type shares (market-level, constant within market)
         share_feedback=("feedback_flag", "mean"),
         share_speculator=("speculator_flag", "mean"),
