@@ -1,0 +1,13 @@
+market_id,repetition,participant_code,gamified,hybrid,treatment,market_design,group_composition,feedback_score,speculator_score,fundamental_score,feedback_w,speculator_w,fundamental_w,other_w
+4397451b-fa5f-4b8f-b86e-278d272e1d68,1,3qk5kred,1,0,gh,gamified,human_only,0,2,0,0.0,0.0,0.0,1.0
+4397451b-fa5f-4b8f-b86e-278d272e1d68,1,7uj99w7k,1,0,gh,gamified,human_only,3,4,4,0.0,0.0,0.0,1.0
+4397451b-fa5f-4b8f-b86e-278d272e1d68,1,8pfnya23,1,0,gh,gamified,human_only,5,3,3,0.0,0.0,0.0,1.0
+4397451b-fa5f-4b8f-b86e-278d272e1d68,1,ggq5fqn1,1,0,gh,gamified,human_only,1,5,3,0.0,0.0,0.0,1.0
+4397451b-fa5f-4b8f-b86e-278d272e1d68,1,pno5o92p,1,0,gh,gamified,human_only,1,1,2,0.0,0.0,0.0,1.0
+4397451b-fa5f-4b8f-b86e-278d272e1d68,1,rhxwy9vc,1,0,gh,gamified,human_only,5,4,6,0.0,0.0,0.0,1.0
+4b4a8da8-869c-4728-b134-73a625591381,2,3qk5kred,1,0,gh,gamified,human_only,2,1,7,0.0,0.0,0.0,1.0
+4b4a8da8-869c-4728-b134-73a625591381,2,7uj99w7k,1,0,gh,gamified,human_only,2,1,1,0.0,0.0,0.0,1.0
+4b4a8da8-869c-4728-b134-73a625591381,2,8pfnya23,1,0,gh,gamified,human_only,4,3,4,0.0,0.0,0.0,1.0
+4b4a8da8-869c-4728-b134-73a625591381,2,ggq5fqn1,1,0,gh,gamified,human_only,6,8,7,0.0,1.0,0.0,0.0
+4b4a8da8-869c-4728-b134-73a625591381,2,pno5o92p,1,0,gh,gamified,human_only,4,1,4,0.0,0.0,0.0,1.0
+4b4a8da8-869c-4728-b134-73a625591381,2,rhxwy9vc,1,0,gh,gamified,human_only,2,2,4,0.0,0.0,0.0,1.0

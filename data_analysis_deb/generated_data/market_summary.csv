@@ -1,0 +1,3 @@
+market_id,repetition,gamified,hybrid,treatment,market_design,group_composition,n_periods,total_trades,mean_avg_trade_price,mean_average_mispricing,mean_absolute_mispricing,mean_abs_mispricing_ratio,n_surges,n_crashes,n_bubble_runs,surges_crashes_total,repetition2,wealth_sd,wealth_mean,wealth_gini
+4397451b-fa5f-4b8f-b86e-278d272e1d68,1,1,0,gh,gamified,human_only,14,32,101.33928571428571,41.339285714285715,45.05357142857143,1.49522773853131,0,0,1,0,0,0.0,0.0,0.0
+4b4a8da8-869c-4728-b134-73a625591381,2,1,0,gh,gamified,human_only,15,64,94.08398148148149,30.08398148148148,39.98398148148148,1.471353659843243,1,0,1,1,1,0.0,0.0,0.0
