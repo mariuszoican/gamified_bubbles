@@ -19,11 +19,13 @@ import pandas as pd
 # ============================================================
 # Parameters
 # ============================================================
-DATE = "2026-04-08"
-SESSIONS = ["uik7aoor"]
+DATE = "2026-05-05"
+SESSIONS = ["skdclskt"]
 
-RAW_DIR = "../raw_data"
-OUT_DIR = "../processed_data"
+# skdclskt - Ran on May 5, 2026 with 24 people. No training round.
+
+RAW_DIR = "../raw_data/20260505/"
+OUT_DIR = "../processed_data/20260505/"
 
 ROUNDS_PER_REPETITION = 15  # trading days per repetition
 DIVIDEND_PER_PERIOD = 8  # constant per-period dividend
