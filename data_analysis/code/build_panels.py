@@ -29,6 +29,7 @@ RAW_DIR = "../raw_data/20260512/"
 OUT_DIR = "../processed_data/20260512/"
 
 ROUNDS_PER_REPETITION = 15  # trading days per repetition
+TRAINING_ROUNDS = 3  # training rounds
 DIVIDEND_PER_PERIOD = 8  # constant per-period dividend
 BUBBLE_SURGE_SIGMA = 2  # σ threshold for surge/crash/bubble flags
 TRADER_TYPE_THRESHOLD = 5  # min flag count to classify trader type
@@ -43,12 +44,17 @@ def load_raw(date: str, sessions: list[str]) -> tuple:
     intro = pd.read_csv(f"{RAW_DIR}/intro_{date}.csv")
     intro = intro[intro["session.code"].isin(sessions)]
 
+    participants_full_groups = intro[intro["group.realized_group_size"] == 6][
+        "participant.code"
+    ].tolist()
+
     post_exp = pd.read_csv(f"{RAW_DIR}/post_exp_{date}.csv")
     post_exp = post_exp[post_exp["session.code"].isin(sessions)]
 
     app = pd.read_csv(f"{RAW_DIR}/trader_bridge_app_{date}.csv")
     app = app[app["session.code"].isin(sessions)]
     app = app[app["participant._current_page_name"] == "FinalForProlific"]
+    app = app[app["participant.code"].isin(participants_full_groups)]
 
     mbo = pd.read_csv(f"{RAW_DIR}/trader_bridge_app_custom_export_mbo_{date}.csv")
 
@@ -170,23 +176,14 @@ trader_day = trader_day.merge(post_exp[DEMOG_COLS], on="participant_code")
 # --- 2c. Encode treatment dummies and repetition -------------------
 
 trader_day["gamified"] = (trader_day["gamified"] == "gamified").astype(int)
-trader_day["hybrid"] = (trader_day["hybrid"] != "human_only").astype(int)
 trader_day["repetition"] = np.where(
-    trader_day["trading_day"] <= ROUNDS_PER_REPETITION, 1, 2
+    trader_day["trading_day"] <= ROUNDS_PER_REPETITION + TRAINING_ROUNDS, 1, 2
 )
 trader_day["trading_day"] = np.where(
-    trader_day["trading_day"] > ROUNDS_PER_REPETITION,
-    trader_day["trading_day"] - ROUNDS_PER_REPETITION,
-    trader_day["trading_day"],
+    trader_day["trading_day"] > ROUNDS_PER_REPETITION + TRAINING_ROUNDS,
+    trader_day["trading_day"] - ROUNDS_PER_REPETITION - TRAINING_ROUNDS,
+    trader_day["trading_day"] - TRAINING_ROUNDS,
 )
-trader_day["algorithm_belief"] = np.where(
-    trader_day["hybrid"] == 1,
-    (trader_day["algorithm_belief"] == "yes").astype(int),
-    np.nan,
-)
-trader_day["algorithm_belief"] = trader_day.groupby(
-    ["market_uuid", "participant_code"]
-)["algorithm_belief"].transform("max")
 
 # ============================================================
 # 3. Build trade-level and market-period panels
@@ -200,9 +197,18 @@ trades = trades.rename(
         "bid_trader_uuid": "buyer_uuid",
         "ask_trader_uuid": "seller_uuid",
         "trading_session_uuid": "market_uuid",
-        "market_number": "repetition",
+        "market_number": "session_market_index",  # NOT repetition
     }
 )
+
+# inject the correct temporal repetition (market_uuid → repetition is 1-to-1 in trader_day)
+market_to_rep = (
+    trader_day[["market_uuid", "repetition"]]
+    .drop_duplicates()
+    .set_index("market_uuid")["repetition"]
+)
+trades["repetition"] = trades["market_uuid"].map(market_to_rep)
+
 trades["fundamental_value"] = fundamental_value(trades["trading_day"])
 trades["event_ts"] = pd.to_datetime(trades["event_ts"])
 trades["diff_time"] = (
@@ -245,9 +251,9 @@ mp = (
     .reset_index()
 )
 
-# fill in zero-trade periods from trader_day skeleton
 mp = mp.merge(
     trader_day[["market_uuid", "repetition", "trading_day"]].drop_duplicates(),
+    on=["market_uuid", "repetition", "trading_day"],
     how="outer",
 )
 mp["n_trades_market"] = mp["n_trades_market"].fillna(0)
@@ -470,6 +476,9 @@ market_day = market_day.sort_values(
 # ============================================================
 # 8. Save panels
 # ============================================================
+
+trader_day = trader_day[trader_day.trading_day >= 1]
+market_day = market_day[market_day.trading_day >= 1]
 
 trader_day.to_csv(f"{OUT_DIR}/trader_day_panel.csv", index=False)
 market_day.to_csv(f"{OUT_DIR}/market_day_panel.csv", index=False)
