@@ -19,13 +19,14 @@ import pandas as pd
 # ============================================================
 # Parameters
 # ============================================================
-DATE = "2026-05-05"
-SESSIONS = ["skdclskt"]
+DATE = "2026-05-12"
+SESSIONS = ["ffe5xhmq"]
 
-# skdclskt - Ran on May 5, 2026 with 24 people. No training round.
+# skdclskt - Ran on May 5, 2026 with 24 people. No training round. PILOT ONLY
+# ffe5xhmq - Ran on May 12, 2026 with 14 people. (1 ghp, 1 nh group of 6 + 1 group of 2 that played with bots).
 
-RAW_DIR = "../raw_data/20260505/"
-OUT_DIR = "../processed_data/20260505/"
+RAW_DIR = "../raw_data/20260512/"
+OUT_DIR = "../processed_data/20260512/"
 
 ROUNDS_PER_REPETITION = 15  # trading days per repetition
 DIVIDEND_PER_PERIOD = 8  # constant per-period dividend
@@ -440,7 +441,7 @@ market_day = (
         sd_wealth=("wealth_day", "std"),
         gini=("gini", "first"),
         # forecasts
-        avg_forecast=("forecast", "mean"),
+        avg_forecast=("forecast", "median"),
         sd_forecast=("forecast", "std"),
         # trader-type shares (market-level, constant within market)
         share_feedback=("feedback_flag", "mean"),

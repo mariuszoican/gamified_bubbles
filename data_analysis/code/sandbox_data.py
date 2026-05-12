@@ -1,8 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.graph_objects as go
 
-market = pd.read_csv("../processed_data/20260505/market_day_panel.csv")
+market = pd.read_csv("../processed_data/20260512/market_day_panel.csv")
+trader = pd.read_csv("../processed_data/20260512/trader_day_panel.csv")
 
 # session_list = [""]
 
@@ -22,3 +24,8 @@ plt.show()
 
 sns.barplot(data=market, x="gamified", y="n_trades_market")
 plt.show()
+
+mbo = pd.read_csv(
+    "../raw_data/20260505/trader_bridge_app_custom_export_mbo_2026-05-05.csv"
+)
+trades = mbo[mbo.event_type == "trade"]
