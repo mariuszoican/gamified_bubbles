@@ -10,7 +10,7 @@ trader = pd.read_csv("../processed_data/20260512/trader_day_panel.csv")
 sns.barplot(data=market, x="trading_day", y="avg_mispricing", hue="gamified")
 plt.show()
 
-sns.barplot(data=market, x="trading_day", y="share_feedback", hue="gamified")
+sns.barplot(data=market, x="trading_day", y="share_speculator", hue="gamified")
 plt.show()
 
 sns.barplot(

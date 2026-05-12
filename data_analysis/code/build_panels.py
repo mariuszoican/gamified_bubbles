@@ -54,10 +54,7 @@ def load_raw(date: str, sessions: list[str]) -> tuple:
 
     app = pd.read_csv(f"{RAW_DIR}/trader_bridge_app_{date}.csv")
     app = app[app["session.code"].isin(sessions)]
-    app = app[
-        (app["participant._current_page_name"] == "FinalForProlific")
-        | (app["participant._current_page_name"] == "Payoff")
-    ]
+    app = app[(app["participant._current_page_name"] == "FinalForProlific")]
     app = app[app["participant.code"].isin(participants_full_groups)]
 
     mbo = pd.read_csv(f"{RAW_DIR}/trader_bridge_app_custom_export_mbo_{date}.csv")
