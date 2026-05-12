@@ -1,7 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import plotly.graph_objects as go
 
 market = pd.read_csv("../processed_data/20260512/market_day_panel.csv")
 trader = pd.read_csv("../processed_data/20260512/trader_day_panel.csv")
@@ -15,7 +14,7 @@ sns.barplot(data=market, x="trading_day", y="share_feedback", hue="gamified")
 plt.show()
 
 sns.barplot(
-    data=market[market.repetition == 2],
+    data=market,
     x="trading_day",
     y="avg_trade_price",
     hue="gamified",

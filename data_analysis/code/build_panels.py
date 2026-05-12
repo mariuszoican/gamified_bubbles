@@ -33,6 +33,7 @@ TRAINING_ROUNDS = 3  # training rounds
 DIVIDEND_PER_PERIOD = 8  # constant per-period dividend
 BUBBLE_SURGE_SIGMA = 2  # σ threshold for surge/crash/bubble flags
 TRADER_TYPE_THRESHOLD = 5  # min flag count to classify trader type
+TRADER_GROUP_SIZE = 6  # group size
 
 # ============================================================
 # 1. Load raw oTree exports
@@ -44,16 +45,19 @@ def load_raw(date: str, sessions: list[str]) -> tuple:
     intro = pd.read_csv(f"{RAW_DIR}/intro_{date}.csv")
     intro = intro[intro["session.code"].isin(sessions)]
 
-    participants_full_groups = intro[intro["group.realized_group_size"] == 6][
-        "participant.code"
-    ].tolist()
+    participants_full_groups = intro[
+        intro["group.realized_group_size"] == TRADER_GROUP_SIZE
+    ]["participant.code"].tolist()
 
     post_exp = pd.read_csv(f"{RAW_DIR}/post_exp_{date}.csv")
     post_exp = post_exp[post_exp["session.code"].isin(sessions)]
 
     app = pd.read_csv(f"{RAW_DIR}/trader_bridge_app_{date}.csv")
     app = app[app["session.code"].isin(sessions)]
-    app = app[app["participant._current_page_name"] == "FinalForProlific"]
+    app = app[
+        (app["participant._current_page_name"] == "FinalForProlific")
+        | (app["participant._current_page_name"] == "Payoff")
+    ]
     app = app[app["participant.code"].isin(participants_full_groups)]
 
     mbo = pd.read_csv(f"{RAW_DIR}/trader_bridge_app_custom_export_mbo_{date}.csv")
@@ -85,11 +89,8 @@ APP_COLUMN_MAP = {
     "player.forecast_price_next_day": "forecast",
     "player.forecast_confidence_next_day": "forecast_confidence",
     "subsession.round_number": "trading_day",
-    "group.noise_trader_present": "algo_present",
     "group.market_design": "gamified",
-    "group.group_composition": "hybrid",
-    "player.algo_belief_present": "algorithm_belief",
-    "player.algo_belief_confidence": "algorithm_belief_confidence",
+    "group.treatment": "treatment",
     "player.num_shares": "num_shares",
     "player.current_cash": "current_cash",
     "group.trading_session_uuid": "market_uuid",
@@ -101,8 +102,7 @@ TRADER_DAY_COLS = [
     "market_uuid",
     "trader_uuid",
     "gamified",
-    "hybrid",
-    "algo_present",
+    "treatment",
     "trading_day",
     "payoff",
     "initial_cash",
@@ -110,7 +110,6 @@ TRADER_DAY_COLS = [
     "forecast_confidence",
     "current_cash",
     "num_shares",
-    "algorithm_belief",
 ]
 
 trader_day = app.rename(columns=APP_COLUMN_MAP)[TRADER_DAY_COLS].copy()
@@ -176,6 +175,12 @@ trader_day = trader_day.merge(post_exp[DEMOG_COLS], on="participant_code")
 # --- 2c. Encode treatment dummies and repetition -------------------
 
 trader_day["gamified"] = (trader_day["gamified"] == "gamified").astype(int)
+
+trader_day["hedonic"] = np.where(trader_day["treatment"].isin(["ghp", "gh"]), 1, 0)
+trader_day["price_notifications"] = np.where(
+    trader_day["treatment"].isin(["ghp", "gp"]), 1, 0
+)
+
 trader_day["repetition"] = np.where(
     trader_day["trading_day"] <= ROUNDS_PER_REPETITION + TRAINING_ROUNDS, 1, 2
 )
@@ -420,7 +425,14 @@ trader_day = trader_day.merge(
 # ============================================================
 
 # columns constant within a market (treatment assignment)
-MARKET_LEVEL_COLS = ["market_uuid", "repetition", "gamified", "hybrid", "algo_present"]
+MARKET_LEVEL_COLS = [
+    "market_uuid",
+    "repetition",
+    "treatment",
+    "gamified",
+    "hedonic",
+    "price_notifications",
+]
 
 market_id = trader_day[MARKET_LEVEL_COLS].drop_duplicates()
 
@@ -441,7 +453,6 @@ market_day = (
         avg_overconfidence=("overconfidence", "mean"),
         sd_overconfidence=("overconfidence", "std"),
         avg_cq_attempts=("cq_attempt_count", "mean"),
-        share_algo_belief=("algorithm_belief", "mean"),
         # wealth
         avg_wealth=("wealth_day", "mean"),
         sd_wealth=("wealth_day", "std"),
