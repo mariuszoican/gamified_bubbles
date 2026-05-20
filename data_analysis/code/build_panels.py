@@ -19,14 +19,15 @@ import pandas as pd
 # ============================================================
 # Parameters
 # ============================================================
-DATE = "2026-05-12"
-SESSIONS = ["ffe5xhmq"]
+DATE = "2026-05-20"
+SESSIONS = ["mn8370qr"]
 
 # skdclskt - Ran on May 5, 2026 with 24 people. No training round. PILOT ONLY
 # ffe5xhmq - Ran on May 12, 2026 with 14 people. (1 ghp, 1 nh group of 6 + 1 group of 2 that played with bots).
+# mn8370qr - Ran on May 20, 2026 with 16 people (1 gh, 1 gp group of 6 + 1 group of 4 ghp).
 
-RAW_DIR = "../raw_data/20260512/"
-OUT_DIR = "../processed_data/20260512/"
+RAW_DIR = "../raw_data/20260520_AM/"
+OUT_DIR = "../processed_data/20260520_AM/"
 
 ROUNDS_PER_REPETITION = 15  # trading days per repetition
 TRAINING_ROUNDS = 3  # training rounds

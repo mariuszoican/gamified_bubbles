@@ -1,0 +1,59 @@
+﻿participant.id_in_session,participant.code,participant.label,participant._is_bot,participant._index_in_pages,participant._max_page_index,participant._current_app_name,participant._current_page_name,participant.time_started_utc,participant.visited,participant.mturk_worker_id,participant.mturk_assignment_id,participant.payoff,player.id_in_group,player.role,player.payoff,player.consent,player.condition,player.user_agent_browser,player.user_agent_browser_version,player.user_agent_os,player.user_agent_os_version,player.user_agent_device,player.user_agent_is_bot,player.user_agent_is_mobile,player.user_agent_is_tablet,player.user_agent_is_pc,player.attention_check,player.attention_check_passed,player.cq_wrong_first_try,player.cq_attempt_count,player.q1,player.q2,player.q3,player.q4,player.q5,player.self_assesment,group.id_in_subsession,group.treatment,group.market_design,group.group_composition,group.realized_group_size,subsession.round_number,session.code,session.label,session.mturk_HITId,session.mturk_HITGroupId,session.comment,session.is_demo
+1,viseix7p,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.162574,1,,,4068.0,1,,0.0,1,ghp,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,0,1,ghp,gamified,human_only,6,1,ffe5xhmq,,,,,0
+2,qhz5zte3,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.174764,1,,,5491.0,2,,0.0,1,ghp,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,1,2,b,d,a,c,d,0,1,ghp,gamified,human_only,6,1,ffe5xhmq,,,,,0
+3,kmcc2p31,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.179802,1,,,6177.0,3,,0.0,1,ghp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,7,1,ghp,gamified,human_only,6,1,ffe5xhmq,,,,,0
+4,snooaw5j,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.185093,1,,,5310.0,4,,0.0,1,ghp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,6,1,ghp,gamified,human_only,6,1,ffe5xhmq,,,,,0
+5,twrkr7hz,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.193724,1,,,5777.0,5,,0.0,1,ghp,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,3,1,ghp,gamified,human_only,6,1,ffe5xhmq,,,,,0
+6,hk3teh8u,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.431171,1,,,5073.0,6,,0.0,1,ghp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,3,b,d,a,c,d,8,1,ghp,gamified,human_only,6,1,ffe5xhmq,,,,,0
+7,6kvq85km,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.454950,1,,,5884.0,1,,0.0,1,ng,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,6,2,ng,non_gamified,human_only,6,1,ffe5xhmq,,,,,0
+8,7dpcven3,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.479580,1,,,5168.0,2,,0.0,1,ng,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,1,2,b,d,a,c,d,0,2,ng,non_gamified,human_only,6,1,ffe5xhmq,,,,,0
+9,2mz5up3e,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.496584,1,,,5955.0,3,,0.0,1,ng,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,3,2,ng,non_gamified,human_only,6,1,ffe5xhmq,,,,,0
+10,keffe6of,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.505946,1,,,4719.0,4,,0.0,1,ng,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,3,b,d,a,c,d,3,2,ng,non_gamified,human_only,6,1,ffe5xhmq,,,,,0
+11,quvmw080,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.538071,1,,,5573.0,5,,0.0,1,ng,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,1,6,b,d,a,c,d,10,2,ng,non_gamified,human_only,6,1,ffe5xhmq,,,,,0
+12,zmzx9bpp,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.548095,1,,,5011.0,6,,0.0,1,ng,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,7,2,ng,non_gamified,human_only,6,1,ffe5xhmq,,,,,0
+13,er9d8a5v,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.558728,1,,,6590.0,1,,0.0,1,ghp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,2,b,d,a,c,d,3,3,ghp,gamified,human_only,2,1,ffe5xhmq,,,,,0
+14,r2eorolq,,0,308,307,post_exp,FinalForProlific,2026-05-12 16:19:08.574796,1,,,4974.0,2,,0.0,1,ghp,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,4,3,ghp,gamified,human_only,2,1,ffe5xhmq,,,,,0
+1,yn5sz28v,,0,0,307,,,,0,,,0.0,1,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,ikaycmf8,,,,,1
+2,t0vh9h8x,,0,0,307,,,,0,,,0.0,2,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,ikaycmf8,,,,,1
+3,6ckm0zrm,,0,0,307,,,,0,,,0.0,3,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,ikaycmf8,,,,,1
+4,r11m2ep9,,0,0,307,,,,0,,,0.0,4,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,ikaycmf8,,,,,1
+5,e9wpbatq,,0,0,307,,,,0,,,0.0,5,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,ikaycmf8,,,,,1
+6,nenkbgc8,,0,0,307,,,,0,,,0.0,6,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,ikaycmf8,,,,,1
+7,y9ted3ir,,0,0,307,,,,0,,,0.0,1,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,ikaycmf8,,,,,1
+8,vhfzkabo,,0,0,307,,,,0,,,0.0,2,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,ikaycmf8,,,,,1
+9,6momimo9,,0,0,307,,,,0,,,0.0,3,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,ikaycmf8,,,,,1
+10,08r0w9lr,,0,0,307,,,,0,,,0.0,4,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,ikaycmf8,,,,,1
+11,jbj6kmuu,,0,0,307,,,,0,,,0.0,5,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,ikaycmf8,,,,,1
+12,bgcts3uh,,0,0,307,,,,0,,,0.0,6,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,ikaycmf8,,,,,1
+1,2cg8ws5z,,0,0,307,,,,0,,,0.0,1,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,drvwn3qn,,,,,0
+2,lmowcnj4,,0,0,307,,,,0,,,0.0,2,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,drvwn3qn,,,,,0
+3,ut8batsp,,0,0,307,,,,0,,,0.0,3,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,drvwn3qn,,,,,0
+4,g19tdrc5,,0,0,307,,,,0,,,0.0,4,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,drvwn3qn,,,,,0
+5,gks2srrt,,0,0,307,,,,0,,,0.0,5,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,drvwn3qn,,,,,0
+6,4ga2jjk5,,0,0,307,,,,0,,,0.0,6,,0.0,,gh,,,,,,,,,,,,0,1,,,,,,,1,gh,hedonic_only,human_only,6,1,drvwn3qn,,,,,0
+7,hyzettta,,0,0,307,,,,0,,,0.0,1,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,drvwn3qn,,,,,0
+8,pyk3jkbw,,0,0,307,,,,0,,,0.0,2,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,drvwn3qn,,,,,0
+9,v1sz6v5a,,0,0,307,,,,0,,,0.0,3,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,drvwn3qn,,,,,0
+10,c9hjz24n,,0,0,307,,,,0,,,0.0,4,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,drvwn3qn,,,,,0
+11,9bjz8nvb,,0,0,307,,,,0,,,0.0,5,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,drvwn3qn,,,,,0
+12,etralflj,,0,0,307,,,,0,,,0.0,6,,0.0,,gp,,,,,,,,,,,,0,1,,,,,,,2,gp,info_only,human_only,6,1,drvwn3qn,,,,,0
+13,nssv2yvi,,0,0,307,,,,0,,,0.0,1,,0.0,,ghp,,,,,,,,,,,,0,1,,,,,,,3,ghp,gamified,human_only,4,1,drvwn3qn,,,,,0
+14,glcjrv9i,,0,0,307,,,,0,,,0.0,2,,0.0,,ghp,,,,,,,,,,,,0,1,,,,,,,3,ghp,gamified,human_only,4,1,drvwn3qn,,,,,0
+15,4odonh5g,,0,0,307,,,,0,,,0.0,3,,0.0,,ghp,,,,,,,,,,,,0,1,,,,,,,3,ghp,gamified,human_only,4,1,drvwn3qn,,,,,0
+16,nfztjwlz,,0,0,307,,,,0,,,0.0,4,,0.0,,ghp,,,,,,,,,,,,0,1,,,,,,,3,ghp,gamified,human_only,4,1,drvwn3qn,,,,,0
+1,e4rzuiqc,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.187444,1,,,5538.0,1,,0.0,1,gh,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,8,1,gh,hedonic_only,human_only,6,1,mn8370qr,,,,,0
+2,j6o1gu35,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.199388,1,,,1136.0,2,,0.0,1,gh,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,3,b,d,a,c,d,3,1,gh,hedonic_only,human_only,6,1,mn8370qr,,,,,0
+3,z9n52ebr,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.205068,1,,,5326.0,3,,0.0,1,gh,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,2,b,d,a,c,d,7,1,gh,hedonic_only,human_only,6,1,mn8370qr,,,,,0
+4,lh92b709,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.210764,1,,,5744.0,4,,0.0,1,gh,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,1,4,b,d,a,c,d,5,1,gh,hedonic_only,human_only,6,1,mn8370qr,,,,,0
+5,729v3r7i,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.216438,1,,,5824.0,5,,0.0,1,gh,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,9,1,gh,hedonic_only,human_only,6,1,mn8370qr,,,,,0
+6,aac2mc3k,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.222017,1,,,5288.0,6,,0.0,1,gh,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,2,b,d,a,c,d,1,1,gh,hedonic_only,human_only,6,1,mn8370qr,,,,,0
+7,bs9r1rdm,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.227334,1,,,4422.0,1,,0.0,1,gp,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,1,2,b,d,a,c,d,7,2,gp,info_only,human_only,6,1,mn8370qr,,,,,0
+8,9uh6p1vm,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.233246,1,,,5926.0,2,,0.0,1,gp,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,6,2,gp,info_only,human_only,6,1,mn8370qr,,,,,0
+9,kb2z64e8,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.238889,1,,,6101.0,3,,0.0,1,gp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,15,b,d,a,c,d,8,2,gp,info_only,human_only,6,1,mn8370qr,,,,,0
+10,ai0il249,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.244342,1,,,5172.0,4,,0.0,1,gp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,3,b,d,a,c,d,2,2,gp,info_only,human_only,6,1,mn8370qr,,,,,0
+11,pqnknbrr,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.249954,1,,,4810.0,5,,0.0,1,gp,Edge,148.0.0,Windows,10,Other,0,0,0,1,,1,1,3,b,d,a,c,d,7,2,gp,info_only,human_only,6,1,mn8370qr,,,,,0
+12,whc9aveo,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.255262,1,,,6139.0,6,,0.0,1,gp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,7,2,gp,info_only,human_only,6,1,mn8370qr,,,,,0
+13,51q1wtqi,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.260557,1,,,6081.0,1,,0.0,1,ghp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,4,b,d,a,c,d,6,3,ghp,gamified,human_only,4,1,mn8370qr,,,,,0
+14,q9v4q54j,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.266013,1,,,4846.0,2,,0.0,1,ghp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,0,1,b,d,a,c,d,7,3,ghp,gamified,human_only,4,1,mn8370qr,,,,,0
+15,5g1om6y0,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.271633,1,,,6308.0,3,,0.0,1,ghp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,3,b,d,a,c,d,7,3,ghp,gamified,human_only,4,1,mn8370qr,,,,,0
+16,ry1l466x,,0,308,307,post_exp,FinalForProlific,2026-05-20 19:25:41.277077,1,,,5341.0,4,,0.0,1,ghp,Chrome,148.0.0,Windows,10,Other,0,0,0,1,,1,1,2,b,d,a,c,d,7,3,ghp,gamified,human_only,4,1,mn8370qr,,,,,0
