@@ -25,6 +25,6 @@ sns.barplot(data=market, x="gamified", y="n_trades_market")
 plt.show()
 
 mbo = pd.read_csv(
-    "../raw_data/20260505/trader_bridge_app_custom_export_mbo_2026-05-05.csv"
+    "../old_pilot/20260505_PILOT/trader_bridge_app_custom_export_mbo_2026-05-05.csv"
 )
 trades = mbo[mbo.event_type == "trade"]
