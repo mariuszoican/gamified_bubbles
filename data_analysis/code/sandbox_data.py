@@ -2,12 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-market = pd.read_csv("../processed_data/20260512/market_day_panel.csv")
-trader = pd.read_csv("../processed_data/20260512/trader_day_panel.csv")
+market = pd.read_csv("../main_panels/market_day_panel_full.csv")
+trader = pd.read_csv("../main_panels/trader_day_panel_full.csv")
 
 # session_list = [""]
 
-sns.barplot(data=market, x="trading_day", y="avg_mispricing", hue="gamified")
+sns.barplot(data=market, x="trading_day", y="avg_mispricing", hue="treatment")
 plt.show()
 
 sns.barplot(data=market, x="trading_day", y="share_speculator", hue="gamified")
@@ -21,10 +21,5 @@ sns.barplot(
 )
 plt.show()
 
-sns.barplot(data=market, x="gamified", y="n_trades_market")
+sns.barplot(data=market, x="treatment", y="n_trades_market")
 plt.show()
-
-mbo = pd.read_csv(
-    "../old_pilot/20260505_PILOT/trader_bridge_app_custom_export_mbo_2026-05-05.csv"
-)
-trades = mbo[mbo.event_type == "trade"]
