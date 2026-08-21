@@ -1,0 +1,10 @@
+# Design parameters shared by panel construction.
+# Keep these aligned with the oTree / trader-bridge settings and the paper.
+
+rounds_per_repetition: 15   # trading days per market repetition
+training_rounds: 3          # practice rounds dropped from analysis panels
+dividend_per_period: 8      # constant per-period dividend (experimental $)
+bubble_surge_sigma: 2       # σ threshold for surge / crash / bubble flags
+trader_type_threshold: 5    # min flag count to classify trader type
+trader_group_size: 6        # complete markets only
+exchange_rate: 0.002        # experimental $ → CAD (1/500)

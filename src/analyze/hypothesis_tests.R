@@ -5,9 +5,11 @@
 # Date last modified: 04-08-2026
 # Last modified by: deb
 # ============================================================
-# Sources:
-#   market_day_panel.csv  → market × trading-day (mkt_day)
-#   trader_day_panel.csv  → trader × market × trading-day (trader_day)
+# Sources (analysis-ready full panels):
+#   data/processed/market_day_panel_full.csv
+#   data/processed/trader_day_panel_full.csv
+# Outputs:
+#   output/tables/*.tex
 # ============================================================
 library(conflicted)
 library(tidyverse)
@@ -15,17 +17,44 @@ library(lfe)
 library(stargazer)
 library(fixest)
 library(modelsummary)
-library(rstudioapi)
 library(ggplot2)
 library(ggfixest)
 library(cowplot)
 library(latex2exp)
 
-# ── LOAD DATA ─────────────────────────────────────────────────────────────────
-setwd(dirname(getActiveDocumentContext()$path))
+# ── REPO ROOT ─────────────────────────────────────────────────────────────────
+# Works under Rscript, source(), and RStudio "Source" / interactive.
+.resolve_root <- function() {
+  file_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+  if (length(file_arg) > 0) {
+    return(normalizePath(file.path(dirname(sub("^--file=", "", file_arg)), "../..")))
+  }
+  if (requireNamespace("rstudioapi", quietly = TRUE) &&
+      rstudioapi::isAvailable() &&
+      !is.null(rstudioapi::getActiveDocumentContext()$path) &&
+      nzchar(rstudioapi::getActiveDocumentContext()$path)) {
+    return(normalizePath(file.path(
+      dirname(rstudioapi::getActiveDocumentContext()$path), "../.."
+    )))
+  }
+  # Fallback: assume cwd is src/analyze or repo root
+  if (file.exists("data/processed/market_day_panel_full.csv")) {
+    return(normalizePath("."))
+  }
+  if (file.exists("../../data/processed/market_day_panel_full.csv")) {
+    return(normalizePath("../.."))
+  }
+  stop("Cannot locate repo root; run from gamified_bubbles_analysis/ or via Rscript.")
+}
 
-mkt_day    <- read.csv("../processed_data/market_day_panel.csv")
-trader_day <- read.csv("../processed_data/trader_day_panel.csv")
+ROOT <- .resolve_root()
+PROCESSED <- file.path(ROOT, "data", "processed")
+TABLES <- file.path(ROOT, "output", "tables")
+dir.create(TABLES, recursive = TRUE, showWarnings = FALSE)
+
+# ── LOAD DATA ─────────────────────────────────────────────────────────────────
+mkt_day    <- read.csv(file.path(PROCESSED, "market_day_panel_full.csv"))
+trader_day <- read.csv(file.path(PROCESSED, "trader_day_panel_full.csv"))
 
 # ── SAVE RAW COPIES BEFORE STANDARDISING ──────────────────────────────────────
 trader_day <- trader_day %>%
@@ -205,7 +234,7 @@ h1_tex <- etable(
   headers = list("With controls" = 3, "Without controls" = 3),
   fitstat = c("n", "r2")
 )
-writeLines(h1_tex, "../tables/h1_mispricing.tex")
+writeLines(h1_tex, file.path(TABLES, "h1_mispricing.tex"))
 
 
 # ============================================================
@@ -245,7 +274,7 @@ h2_tex <- etable(
   headers = list("With controls" = 2, "Without controls" = 2),
   fitstat = c("n", "r2")
 )
-writeLines(h2_tex, "../tables/h2_volatility.tex")
+writeLines(h2_tex, file.path(TABLES, "h2_volatility.tex"))
 
 
 # ============================================================
@@ -285,7 +314,7 @@ h3_tex <- etable(
   headers = list("With controls" = 2, "Without controls" = 2),
   fitstat = c("n", "r2")
 )
-writeLines(h3_tex, "../tables/h3_inequality.tex")
+writeLines(h3_tex, file.path(TABLES, "h3_inequality.tex"))
 
 
 # ============================================================
@@ -328,7 +357,7 @@ h4_tex <- etable(
   headers = list("With controls" = 2, "Without controls" = 2),
   fitstat = c("n", "r2")
 )
-writeLines(h4_tex, "../tables/h4_experience.tex")
+writeLines(h4_tex, file.path(TABLES, "h4_experience.tex"))
 
 
 # ============================================================
@@ -368,7 +397,7 @@ h5_tex <- etable(
   headers = list("With controls" = 2, "Without controls" = 2),
   fitstat = c("n", "r2")
 )
-writeLines(h5_tex, "../tables/h5_trader_types.tex")
+writeLines(h5_tex, file.path(TABLES, "h5_trader_types.tex"))
 
 
 # ============================================================
@@ -418,7 +447,7 @@ h6_tex <- etable(
   headers = list("With controls" = 3, "Without controls" = 3),
   fitstat = c("n", "r2")
 )
-writeLines(h6_tex, "../tables/h6_algo_beliefs.tex")
+writeLines(h6_tex, file.path(TABLES, "h6_algo_beliefs.tex"))
 
 
 # ============================================================
@@ -475,7 +504,7 @@ h7_tex <- etable(
   headers = list("Trader + period FE" = 2, "Pooled OLS" = 2),
   fitstat = c("n", "r2")
 )
-writeLines(h7_tex, "../tables/h7_forecasts.tex")
+writeLines(h7_tex, file.path(TABLES, "h7_forecasts.tex"))
 
 
 # ============================================================
@@ -513,7 +542,7 @@ stargazer(
     "Share feedback traders", "Share fundamental traders",
     "Gamified", "Hybrid", "Repetition 2"
   ),
-  out = "../tables/summary_stats_market.tex"
+  out = file.path(TABLES, "summary_stats_market.tex")
 )
 
 stargazer(
@@ -527,5 +556,5 @@ stargazer(
     "Financial literacy", "Self-assessed literacy",
     "Overconfidence", "Age", "Trading experience"
   ),
-  out = "../tables/summary_stats_trader.tex"
+  out = file.path(TABLES, "summary_stats_trader.tex")
 )

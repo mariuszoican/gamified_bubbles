@@ -1,0 +1,40 @@
+# Lab-session registry for Gamified Bubbles.
+#
+# Each entry maps a folder under data/raw/{id}/ to the oTree export date
+# stamped in CSV filenames and the session.code values to keep.
+#
+# Rules:
+#   - id:            lab calendar day (YYYYMMDD) + optional _AM/_PM
+#   - export_date:   date string in CSV filenames (YYYY-MM-DD); may differ
+#                    from the folder day when the export ran overnight
+#   - oTree_codes:   session.code values to include from those CSVs
+#   - include:       if true, enters data/processed/*_full.csv
+#   - notes:         free text for co-authors
+#
+# Quote id values so YAML does not parse bare YYYYMMDD as integers.
+
+sessions:
+  - id: "20260512"
+    export_date: "2026-05-12"
+    oTree_codes: [ffe5xhmq]
+    include: true
+    notes: "1 ghp + 1 ng"
+
+  - id: "20260520_AM"
+    export_date: "2026-05-20"
+    oTree_codes: [mn8370qr]
+    include: true
+    notes: "1 gh + 1 gp"
+
+  - id: "20260520_PM"
+    export_date: "2026-05-21"
+    oTree_codes: [qxgij9sh]
+    include: true
+    notes: "2 ghp + 1 ng."
+
+  - id: "20260505_PILOT"
+    export_date: "2026-05-05"
+    oTree_codes: [skdclskt]
+    include: false
+    notes: "Pilot — no training round. Raw lives under data/archive/20260505_PILOT."
+    raw_root: archive

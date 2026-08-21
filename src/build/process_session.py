@@ -10,33 +10,62 @@ then constructs:
                    inequality, and cumulative surge/crash/bubble counts
   3. mp          – (intermediate) market-period price and mispricing stats
 
-Output: trader_day_{DATE}.csv and market_day_{DATE}.csv in ``OUT_DIR``.
+Output: trader_day_panel.csv, market_day_panel.csv, participant_payments.csv
+under data/interim/{session_id}/.
 """
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import argparse
-import os
 
-# ============================================================
-# Parameters
-# ============================================================
-DATE = "2026-05-21"
-FOLDER_NAME = "20260520_PM"
-SESSIONS = ["qxgij9sh"]
+from paths import get_session, interim_dir_for, load_parameters, raw_dir_for
 
 
-def process_session(DATE, FOLDER_NAME, SESSIONS):
-    RAW_DIR = f"../raw_data/{FOLDER_NAME}/"
-    OUT_DIR = f"../processed_data/{FOLDER_NAME}"
-    os.makedirs(OUT_DIR, exist_ok=True)
+def process_session(
+    session_id: str | None = None,
+    *,
+    DATE: str | None = None,
+    FOLDER_NAME: str | None = None,
+    SESSIONS: list[str] | None = None,
+):
+    """Build interim panels for one lab session.
 
-    ROUNDS_PER_REPETITION = 15  # trading days per repetition
-    TRAINING_ROUNDS = 3  # training rounds
-    DIVIDEND_PER_PERIOD = 8  # constant per-period dividend
-    BUBBLE_SURGE_SIGMA = 2  # σ threshold for surge/crash/bubble flags
-    TRADER_TYPE_THRESHOLD = 5  # min flag count to classify trader type
-    TRADER_GROUP_SIZE = 6  # group size
+    Prefer ``session_id`` (looked up in ``config/sessions.yaml``).
+    The DATE / FOLDER_NAME / SESSIONS kwargs are kept for backward
+    compatibility with older call sites.
+    """
+    if session_id is not None:
+        session = get_session(session_id)
+        DATE = session["export_date"]
+        FOLDER_NAME = session["id"]
+        SESSIONS = list(session["oTree_codes"])
+        raw_path = raw_dir_for(session)
+    else:
+        if not (DATE and FOLDER_NAME and SESSIONS):
+            raise ValueError(
+                "Provide session_id, or all of DATE, FOLDER_NAME, and SESSIONS"
+            )
+        raw_path = Path(FOLDER_NAME)
+        if not raw_path.is_absolute():
+            from paths import RAW_DIR
+
+            raw_path = RAW_DIR / FOLDER_NAME
+
+    OUT_DIR = interim_dir_for(FOLDER_NAME)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    params = load_parameters()
+    ROUNDS_PER_REPETITION = params["rounds_per_repetition"]
+    TRAINING_ROUNDS = params["training_rounds"]
+    DIVIDEND_PER_PERIOD = params["dividend_per_period"]
+    BUBBLE_SURGE_SIGMA = params["bubble_surge_sigma"]
+    TRADER_TYPE_THRESHOLD = params["trader_type_threshold"]
+    TRADER_GROUP_SIZE = params["trader_group_size"]
+    EXCHANGE_RATE = params["exchange_rate"]
 
     # ============================================================
     # 1. Load raw oTree exports
@@ -44,24 +73,26 @@ def process_session(DATE, FOLDER_NAME, SESSIONS):
 
     def load_raw(date: str, sessions: list[str]) -> tuple:
         """Read CSVs and keep only rows from target sessions."""
-        intro = pd.read_csv(f"{RAW_DIR}/intro_{date}.csv")
+        intro = pd.read_csv(raw_path / f"intro_{date}.csv")
         intro = intro[intro["session.code"].isin(sessions)]
 
         participants_full_groups = intro[
             intro["group.realized_group_size"] == TRADER_GROUP_SIZE
         ]["participant.code"].tolist()
 
-        post_exp = pd.read_csv(f"{RAW_DIR}/post_exp_{date}.csv")
+        post_exp = pd.read_csv(raw_path / f"post_exp_{date}.csv")
         post_exp = post_exp[post_exp["session.code"].isin(sessions)]
 
-        app = pd.read_csv(f"{RAW_DIR}/trader_bridge_app_{date}.csv")
+        app = pd.read_csv(raw_path / f"trader_bridge_app_{date}.csv")
         app = app[app["session.code"].isin(sessions)]
         app = app[
             (app["participant._current_page_name"].isin(["FinalForProlific", "Payoff"]))
         ]
         app = app[app["participant.code"].isin(participants_full_groups)]
 
-        mbo = pd.read_csv(f"{RAW_DIR}/trader_bridge_app_custom_export_mbo_{date}.csv")
+        mbo = pd.read_csv(
+            raw_path / f"trader_bridge_app_custom_export_mbo_{date}.csv"
+        )
 
         return intro, post_exp, app, mbo
 
@@ -483,8 +514,8 @@ def process_session(DATE, FOLDER_NAME, SESSIONS):
     trader_day = trader_day[trader_day.trading_day >= 1]
     market_day = market_day[market_day.trading_day >= 1]
 
-    trader_day.to_csv(f"{OUT_DIR}/trader_day_panel.csv", index=False)
-    market_day.to_csv(f"{OUT_DIR}/market_day_panel.csv", index=False)
+    trader_day.to_csv(OUT_DIR / "trader_day_panel.csv", index=False)
+    market_day.to_csv(OUT_DIR / "market_day_panel.csv", index=False)
 
     print(
         f"Saved trader_day ({trader_day.shape[0]:,} rows) "
@@ -497,21 +528,28 @@ def process_session(DATE, FOLDER_NAME, SESSIONS):
         .dropna()
         .reset_index(drop=True)
     )
-    exchange_rate = 1 / 500
-    payoffs["payoff_cad"] = (payoffs["participant.payoff"] * exchange_rate).apply(
+    payoffs["payoff_cad"] = (payoffs["participant.payoff"] * EXCHANGE_RATE).apply(
         lambda x: round(x, 2)
     )
-    payoffs.to_csv(f"{OUT_DIR}/participant_payments.csv", index=False)
+    payoffs.to_csv(OUT_DIR / "participant_payments.csv", index=False)
 
 
 if __name__ == "__main__":
-    cc
     parser = argparse.ArgumentParser(
-        description="Build trader-day and market-day panels."
+        description="Build trader-day and market-day panels for one session."
     )
-    parser.add_argument("--date", required=True)
-    parser.add_argument("--folder", required=True)
-    parser.add_argument("--sessions", required=True, nargs="+")
+    parser.add_argument(
+        "--session",
+        help="Session id from config/sessions.yaml (preferred)",
+    )
+    parser.add_argument("--date", help="Export date stamp YYYY-MM-DD (legacy)")
+    parser.add_argument("--folder", help="Raw folder name (legacy)")
+    parser.add_argument("--sessions", nargs="+", help="oTree session codes (legacy)")
     args = parser.parse_args()
 
-    build_panels(args.date, args.folder, args.sessions)
+    if args.session:
+        process_session(args.session)
+    else:
+        process_session(
+            DATE=args.date, FOLDER_NAME=args.folder, SESSIONS=args.sessions
+        )
