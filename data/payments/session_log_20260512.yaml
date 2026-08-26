@@ -1,0 +1,25 @@
+session_id: '20260512'
+export_date: '2026-05-12'
+oTree_codes:
+- ffe5xhmq
+notes: 1 ghp + 1 ng
+processed_at: '2026-08-26T00:21:52.702389+00:00'
+counts:
+  slots_in_export: 14
+  started: 14
+  completed: 14
+  incomplete: 0
+  never_started: 0
+  paid: 14
+payoffs_points:
+  n: 14
+  min: 4068.0
+  max: 6590.0
+  mean: 5412.142857142857
+payments:
+  participation_fee_cad: 15.0
+  exchange_rate: 0.003
+  experimental_payoff_cad_sum: 227.3
+  total_payment_cad_sum: 437.3
+incomplete: []
+flags: []

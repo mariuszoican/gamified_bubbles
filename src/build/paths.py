@@ -13,6 +13,7 @@ RAW_DIR = DATA_DIR / "raw"
 INTERIM_DIR = DATA_DIR / "interim"
 PROCESSED_DIR = DATA_DIR / "processed"
 ARCHIVE_DIR = DATA_DIR / "archive"
+PAYMENTS_DIR = DATA_DIR / "payments"
 OUTPUT_DIR = REPO_ROOT / "output"
 
 
@@ -45,3 +46,12 @@ def raw_dir_for(session: dict) -> Path:
 
 def interim_dir_for(session_id: str) -> Path:
     return INTERIM_DIR / str(session_id)
+
+
+def payments_xlsx_path(session_id: str) -> Path:
+    """Lab-facing file: data/payments/payments_{session_id}.xlsx."""
+    return PAYMENTS_DIR / f"payments_{session_id}.xlsx"
+
+
+def session_log_path(session_id: str) -> Path:
+    return PAYMENTS_DIR / f"session_log_{session_id}.yaml"

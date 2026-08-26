@@ -1,0 +1,28 @@
+session_id: 20260520_PM
+export_date: '2026-05-21'
+oTree_codes:
+- qxgij9sh
+notes: 2 ghp + 1 ng.
+processed_at: '2026-08-26T00:21:53.317225+00:00'
+counts:
+  slots_in_export: 19
+  started: 19
+  completed: 19
+  incomplete: 0
+  never_started: 0
+  paid: 19
+payoffs_points:
+  n: 19
+  min: 521.0
+  max: 9064.0
+  mean: 5425.578947368421
+payments:
+  participation_fee_cad: 15.0
+  exchange_rate: 0.003
+  experimental_payoff_cad_sum: 309.26
+  total_payment_cad_sum: 594.26
+incomplete: []
+flags:
+- 1 completers missing email
+- 2 completers missing student_id
+- duplicate student_ids in payment file

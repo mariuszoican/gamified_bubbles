@@ -8,10 +8,11 @@ endif
 
 export PYTHONPATH := src/build
 
-.PHONY: panels session analyze explore clean-interim help
+.PHONY: panels session payments analyze explore clean-interim help
 
 help:
 	@echo "Targets:"
+	@echo "  make payments ID=20260512 Write data/payments/payments_YYYYMMDD.xlsx"
 	@echo "  make panels              Rebuild interim + full panels for include:true sessions"
 	@echo "  make session ID=20260512 Process one session from config/sessions.yaml"
 	@echo "  make analyze             Run hypothesis_tests.R (writes output/tables/)"
@@ -24,6 +25,10 @@ panels:
 session:
 	@test -n "$(ID)" || (echo "Usage: make session ID=20260512"; exit 1)
 	$(PYTHON) src/build/process_session.py --session $(ID)
+
+payments:
+	@test -n "$(ID)" || (echo "Usage: make payments ID=20260512"; exit 1)
+	$(PYTHON) src/build/process_payments.py --session $(ID)
 
 analyze:
 	Rscript src/analyze/hypothesis_tests.R

@@ -12,6 +12,7 @@ config/
   parameters.yaml    # design constants (rounds, dividend, σ thresholds, …)
 data/
   raw/{session_id}/  # immutable oTree dumps — never edit
+  payments/          # payments_{session id}.xlsx (lab folder date)
   interim/           # per-session panels (rebuildable)
   processed/         # concatenated analysis sample (*_full.csv)
   archive/           # pilots / excluded sessions
@@ -79,6 +80,26 @@ R packages used by `src/analyze/hypothesis_tests.R`: `tidyverse`, `lfe`, `starga
 
 6. **Do not hand-edit files under `data/raw/`.** Fix logic in `src/build/` instead.
 
+## Payments
+
+```bash
+make payments ID=20260512
+```
+
+Writes `data/payments/payments_{session id}.xlsx` using the lab folder date,
+plus a sidecar `session_log_{session id}.yaml`. Completers are people on
+`FinalForProlific` or `Payoff`.
+
+| Column | Source |
+|---|---|
+| `email` | `player.email` |
+| `student_id` | `player.ucid` (falls back to `player.student_id`) |
+| `participation_fee` | `config/parameters.yaml` ($15 show-up) |
+| `experimental_payoff` | `participant.payoff` (E$) × `exchange_rate` (0.003) |
+| `total_payment` | show-up + experimental payoff |
+
+After changing the exchange rate, re-run the same command.
+
 ## Analysis flow
 
 ```
@@ -104,6 +125,7 @@ output/tables/*.tex
 
 | Command | What it does |
 |---|---|
+| `make payments ID=20260512` | Write `data/payments/payments_{id}.xlsx` + session log |
 | `make panels` | Process every `include: true` session, then write `data/processed/*_full.csv` |
 | `make session ID=20260512` | Process one session into `data/interim/` only |
 | `make analyze` | Run `hypothesis_tests.R` → `output/tables/` |

@@ -1,0 +1,25 @@
+session_id: 20260520_AM
+export_date: '2026-05-20'
+oTree_codes:
+- mn8370qr
+notes: 1 gh + 1 gp
+processed_at: '2026-08-26T00:21:53.023410+00:00'
+counts:
+  slots_in_export: 16
+  started: 16
+  completed: 16
+  incomplete: 0
+  never_started: 0
+  paid: 16
+payoffs_points:
+  n: 16
+  min: 1136.0
+  max: 6308.0
+  mean: 5250.125
+payments:
+  participation_fee_cad: 15.0
+  exchange_rate: 0.003
+  experimental_payoff_cad_sum: 252.0
+  total_payment_cad_sum: 492.0
+incomplete: []
+flags: []
