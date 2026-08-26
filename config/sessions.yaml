@@ -32,6 +32,12 @@ sessions:
     include: true
     notes: "2 ghp + 1 ng."
 
+  - id: "20260826"
+    export_date: "2026-08-26"
+    oTree_codes: [8o0qyfku]
+    include: true
+    notes: "2 ghp + 2 ng + 1 gh. Incomplete gp (n=4) dropped. Aborted q2uzwrke excluded."
+
   - id: "20260505_PILOT"
     export_date: "2026-05-05"
     oTree_codes: [skdclskt]

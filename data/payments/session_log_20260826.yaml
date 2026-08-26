@@ -1,0 +1,25 @@
+session_id: '20260826'
+export_date: '2026-08-26'
+oTree_codes:
+- 8o0qyfku
+notes: 2 ghp + 2 ng + 1 gh. Incomplete gp (n=4) dropped. Aborted q2uzwrke excluded.
+processed_at: '2026-08-26T18:04:32.922726+00:00'
+counts:
+  slots_in_export: 34
+  started: 34
+  completed: 34
+  incomplete: 0
+  never_started: 0
+  paid: 34
+payoffs_points:
+  n: 34
+  min: 1989.0
+  max: 6609.0
+  mean: 5235.058823529412
+payments:
+  participation_fee_cad: 15.0
+  exchange_rate: 0.003
+  experimental_payoff_cad_sum: 534.0
+  total_payment_cad_sum: 1044.0
+incomplete: []
+flags: []

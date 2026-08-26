@@ -6,5 +6,5 @@
     <option name="pathToExecutable" value="/opt/anaconda3/bin/black" />
     <option name="sdkName" value="Python 3.14 (gamified_bubbles)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.14 (gamified_bubbles)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.14 (gamified_bubbles_analysis)" project-jdk-type="Python SDK" />
 </project>
