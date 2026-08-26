@@ -9,8 +9,15 @@ import seaborn as sns
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = REPO_ROOT / "data" / "processed"
 
+# Today's lab session (20260826). Set to None to use the full sample.
+SESSION = "8o0qyfku"
+
 market = pd.read_csv(PROCESSED / "market_day_panel_full.csv")
 trader = pd.read_csv(PROCESSED / "trader_day_panel_full.csv")
+
+if SESSION is not None:
+    trader = trader[trader["session_code"] == SESSION].copy()
+    market = market[market["market_uuid"].isin(trader["market_uuid"])].copy()
 
 sns.barplot(data=market, x="trading_day", y="avg_mispricing", hue="treatment")
 plt.show()
