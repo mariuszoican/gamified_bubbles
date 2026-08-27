@@ -1,0 +1,1963 @@
+{
+ "sample": {
+  "sessions": [
+   {
+    "id": "20260512",
+    "included": true,
+    "notes": "1 ghp + 1 ng"
+   },
+   {
+    "id": "20260520_AM",
+    "included": true,
+    "notes": "1 gh + 1 gp"
+   },
+   {
+    "id": "20260520_PM",
+    "included": true,
+    "notes": "2 ghp + 1 ng."
+   },
+   {
+    "id": "20260826",
+    "included": true,
+    "notes": "2 ghp + 2 ng + 1 gh. Incomplete gp (n=4) dropped. Aborted q2uzwrke excluded."
+   },
+   {
+    "id": "20260505_PILOT",
+    "included": false,
+    "notes": "Pilot \u2014 no training round. Raw lives under data/archive/20260505_PILOT."
+   }
+  ],
+  "groups_by_treatment": {
+   "ghp": 5,
+   "ng": 3,
+   "gh": 2,
+   "gp": 1
+  },
+  "n_groups": 11,
+  "n_market_reps": 22,
+  "n_traders": 66,
+  "n_paid": 80,
+  "market_day_rows": 330,
+  "excluded_outlier": [
+   {
+    "group": "20260520_PM/ng1",
+    "treatment": "ng",
+    "trades_r1": 495,
+    "trades_r2": 578,
+    "amr_r1": 2.59,
+    "amr_r2": 2.61,
+    "peak_avg_price": 132.0
+   }
+  ],
+  "shares_outstanding_check": [
+   90.0,
+   91.0,
+   93.0,
+   94.0,
+   96.0,
+   97.0,
+   103.0,
+   92.0,
+   95.0,
+   99.0,
+   98.0,
+   105.0,
+   106.0,
+   101.0,
+   104.0,
+   102.0,
+   130.0,
+   108.0,
+   109.0,
+   116.0,
+   114.0,
+   112.0,
+   100.0,
+   107.0,
+   113.0,
+   119.0
+  ]
+ },
+ "balance": [
+  {
+   "var": "Financial literacy (share correct)",
+   "ng": 0.83,
+   "gh": 0.82,
+   "gp": 0.72,
+   "ghp": 0.82,
+   "kw_p": 0.226
+  },
+  {
+   "var": "Self-assessed literacy (0-10)",
+   "ng": 5.22,
+   "gh": 5.58,
+   "gp": 6.17,
+   "ghp": 5.17,
+   "kw_p": 0.615
+  },
+  {
+   "var": "Overconfidence",
+   "ng": -0.31,
+   "gh": -0.26,
+   "gp": -0.11,
+   "ghp": -0.3,
+   "kw_p": 0.247
+  },
+  {
+   "var": "Age",
+   "ng": 26.5,
+   "gh": 22.17,
+   "gp": 23.33,
+   "ghp": 23.13,
+   "kw_p": 0.051
+  },
+  {
+   "var": "Female",
+   "ng": 0.28,
+   "gh": 0.17,
+   "gp": 0.5,
+   "ghp": 0.23,
+   "kw_p": 0.483
+  },
+  {
+   "var": "Trading experience",
+   "ng": 0.44,
+   "gh": 0.42,
+   "gp": 0.83,
+   "ghp": 0.53,
+   "kw_p": 0.355
+  },
+  {
+   "var": "Finance course",
+   "ng": 0.67,
+   "gh": 0.58,
+   "gp": 0.5,
+   "ghp": 0.53,
+   "kw_p": 0.811
+  },
+  {
+   "var": "Comprehension-quiz attempts",
+   "ng": 1.67,
+   "gh": 2.08,
+   "gp": 4.17,
+   "ghp": 1.87,
+   "kw_p": 0.228
+  }
+ ],
+ "manipulation": {
+  "event_types": [
+   {
+    "element_type": "badge_gif",
+    "event_name": "shown",
+    "n": 289
+   },
+   {
+    "element_type": "badge_modal",
+    "event_name": "shown",
+    "n": 289
+   },
+   {
+    "element_type": "badge_unlock",
+    "event_name": "shown",
+    "n": 295
+   },
+   {
+    "element_type": "trend_alert",
+    "event_name": "shown",
+    "n": 1957
+   }
+  ],
+  "by_treatment": [
+   {
+    "treatment": "gh",
+    "badge_gif": 75,
+    "badge_modal": 75,
+    "badge_unlock": 75,
+    "trend_alert": 0
+   },
+   {
+    "treatment": "ghp",
+    "badge_gif": 214,
+    "badge_modal": 214,
+    "badge_unlock": 220,
+    "trend_alert": 1489
+   },
+   {
+    "treatment": "gp",
+    "badge_gif": 0,
+    "badge_modal": 0,
+    "badge_unlock": 0,
+    "trend_alert": 468
+   }
+  ],
+  "alert_messages": {
+   "Price went down 3 times in the last 5 ticks!": 1065,
+   "Price went up 3 times in the last 5 ticks!": 868,
+   "Price went up 3 times in the last 3 ticks!": 12,
+   "Price went up 3 times in the last 4 ticks!": 6,
+   "Price went down 3 times in the last 4 ticks!": 6
+  },
+  "trades_vs_badges": {
+   "ng": {
+    "mean_trades_per_trader": 24.7,
+    "median_trades_per_trader": 27.0,
+    "bronze_10": 0.97,
+    "silver_15": 0.83,
+    "gold_35": 0.14,
+    "plat_50": 0.0,
+    "diam_60": 0.0
+   },
+   "gh": {
+    "mean_trades_per_trader": 46.3,
+    "median_trades_per_trader": 39.0,
+    "bronze_10": 1.0,
+    "silver_15": 0.88,
+    "gold_35": 0.58,
+    "plat_50": 0.42,
+    "diam_60": 0.25
+   },
+   "gp": {
+    "mean_trades_per_trader": 69.3,
+    "median_trades_per_trader": 58.0,
+    "bronze_10": 1.0,
+    "silver_15": 1.0,
+    "gold_35": 0.83,
+    "plat_50": 0.67,
+    "diam_60": 0.5
+   },
+   "ghp": {
+    "mean_trades_per_trader": 48.0,
+    "median_trades_per_trader": 38.0,
+    "bronze_10": 0.97,
+    "silver_15": 0.87,
+    "gold_35": 0.57,
+    "plat_50": 0.37,
+    "diam_60": 0.28
+   }
+  }
+ },
+ "h1": {
+  "cells": {
+   "avg_mispricing": {
+    "ng": -2.6,
+    "gh": 17.0,
+    "gp": -11.4,
+    "ghp": 7.0
+   },
+   "abs_mispricing": {
+    "ng": 14.3,
+    "gh": 19.9,
+    "gp": 15.9,
+    "ghp": 18.6
+   },
+   "amr": {
+    "ng": 0.263,
+    "gh": 0.621,
+    "gp": 0.331,
+    "ghp": 0.555
+   },
+   "bubble_periods_pooled": {
+    "ng": 0.0,
+    "gh": 1.25,
+    "gp": 0.0,
+    "ghp": 0.8
+   }
+  },
+  "gamified_vs_ng": {
+   "avg_mispricing": {
+    "mean1": 7.215,
+    "mean0": -2.639,
+    "n1": 8,
+    "n0": 3,
+    "p": 0.376
+   },
+   "abs_mispricing": {
+    "mean1": 18.596,
+    "mean0": 14.314,
+    "n1": 8,
+    "n0": 3,
+    "p": 0.63
+   },
+   "amr": {
+    "mean1": 0.544,
+    "mean0": 0.263,
+    "n1": 8,
+    "n0": 3,
+    "p": 0.776
+   },
+   "bubble_periods_pooled": {
+    "mean1": 0.812,
+    "mean0": 0.0,
+    "n1": 8,
+    "n0": 3,
+    "p": 0.297
+   }
+  }
+ },
+ "h1a": {
+  "amr_by_rep": {
+   "ng": {
+    "r1": 0.216,
+    "r2": 0.31
+   },
+   "gh": {
+    "r1": 0.852,
+    "r2": 0.391
+   },
+   "gp": {
+    "r1": 0.419,
+    "r2": 0.243
+   },
+   "ghp": {
+    "r1": 0.583,
+    "r2": 0.527
+   }
+  },
+  "delta_within": {
+   "gamified": {
+    "mean_delta": -0.172,
+    "p_wilcoxon": 0.195,
+    "n": 8
+   },
+   "ng": {
+    "mean_delta": 0.094,
+    "p_wilcoxon": null,
+    "n": 3
+   }
+  },
+  "dd_gamified_vs_ng": {
+   "mean1": -0.172,
+   "mean0": 0.094,
+   "n1": 8,
+   "n0": 3,
+   "p": 0.048
+  }
+ },
+ "h2": {
+  "cells_trades": {
+   "ng": 74.0,
+   "gh": 139.0,
+   "gp": 208.0,
+   "ghp": 144.0
+  },
+  "cells_turnover": {
+   "ng": 0.82,
+   "gh": 1.54,
+   "gp": 2.31,
+   "ghp": 1.6
+  },
+  "gamified_vs_ng": {
+   "mean1": 150.75,
+   "mean0": 74.0,
+   "n1": 8,
+   "n0": 3,
+   "p": 0.012
+  },
+  "hedonic_vs_not": {
+   "mean1": 142.571,
+   "mean0": 107.5,
+   "n1": 7,
+   "n0": 4,
+   "p": 0.164
+  },
+  "pn_vs_not": {
+   "mean1": 154.667,
+   "mean0": 100.0,
+   "n1": 6,
+   "n0": 5,
+   "p": 0.126
+  }
+ },
+ "h3": {
+  "cells_gini_recon": {
+   "ng": 0.062,
+   "gh": 0.073,
+   "gp": 0.049,
+   "ghp": 0.062
+  },
+  "cells_sd_recon": {
+   "ng": 622.0,
+   "gh": 815.0,
+   "gp": 601.0,
+   "ghp": 661.0
+  },
+  "cells_gini_panel_contaminated": {
+   "ng": 0.042,
+   "gh": 0.067,
+   "gp": 0.047,
+   "ghp": 0.051
+  },
+  "gamified_vs_ng_gini_recon": {
+   "mean1": 0.063,
+   "mean0": 0.062,
+   "n1": 8,
+   "n0": 3,
+   "p": 0.776
+  },
+  "gamified_vs_ng_sd_recon": {
+   "mean1": 692.313,
+   "mean0": 622.059,
+   "n1": 8,
+   "n0": 3,
+   "p": 0.776
+  },
+  "literacy_relpayoff_corr": {
+   "gamified": {
+    "spearman_rho": 0.287,
+    "p": 0.005,
+    "n": 96
+   },
+   "ng": {
+    "spearman_rho": 0.139,
+    "p": 0.42,
+    "n": 36
+   }
+  }
+ },
+ "h4": {
+  "cells": {
+   "share_feedback": {
+    "ng": 0.171,
+    "gh": 0.146,
+    "gp": 0.153,
+    "ghp": 0.178
+   },
+   "share_speculator": {
+    "ng": 0.171,
+    "gh": 0.271,
+    "gp": 0.486,
+    "ghp": 0.294
+   },
+   "share_fundamental": {
+    "ng": 0.38,
+    "gh": 0.417,
+    "gp": 0.361,
+    "ghp": 0.444
+   },
+   "share_other": {
+    "ng": 0.278,
+    "gh": 0.167,
+    "gp": 0.0,
+    "ghp": 0.083
+   }
+  },
+  "feedback_by_pn": {
+   "mean1": 0.174,
+   "mean0": 0.161,
+   "n1": 6,
+   "n0": 5,
+   "p": 0.927
+  },
+  "other_by_hedonic": {
+   "mean1": 0.107,
+   "mean0": 0.208,
+   "n1": 7,
+   "n0": 4,
+   "p": 0.145
+  },
+  "fundamental_by_gamified": {
+   "mean1": 0.427,
+   "mean0": 0.38,
+   "n1": 8,
+   "n0": 3,
+   "p": 0.411
+  }
+ },
+ "h5": {
+  "cells_sessionflags": {
+   "ng": 0.5,
+   "gh": 0.25,
+   "gp": 0.5,
+   "ghp": 0.5
+  },
+  "cells_pooledflags": {
+   "ng": 0.33,
+   "gh": 0.25,
+   "gp": 0.5,
+   "ghp": 0.1
+  },
+  "pn_vs_not_session": {
+   "mean1": 0.5,
+   "mean0": 0.4,
+   "n1": 6,
+   "n0": 5,
+   "p": 0.922
+  },
+  "pn_vs_not_pooled": {
+   "mean1": 0.167,
+   "mean0": 0.3,
+   "n1": 6,
+   "n0": 5,
+   "p": 0.748
+  },
+  "flag_totals": {
+   "session_def": 10,
+   "pooled_def": 5,
+   "bubble_session_def": 13,
+   "bubble_pooled_def": 13
+  }
+ },
+ "h6": {
+  "n_forecasts": 528,
+  "forecast_days": [
+   3,
+   6,
+   9,
+   12
+  ],
+  "err_fv_cells": {
+   "ng": 2.895,
+   "gh": 5.385,
+   "gp": 1.38,
+   "ghp": 3.403
+  },
+  "err_realized_cells": {
+   "ng": 3.117,
+   "gh": 2.425,
+   "gp": 8.642,
+   "ghp": 3.455
+  },
+  "err_fv_hedonic_test": {
+   "mean1": 3.97,
+   "mean0": 2.516,
+   "n1": 7,
+   "n0": 4,
+   "p": 0.927
+  },
+  "err_fv_gamified_test": {
+   "mean1": 3.646,
+   "mean0": 2.895,
+   "n1": 8,
+   "n0": 3,
+   "p": 0.776
+  },
+  "extrapolation": {
+   "pn1": {
+    "beta": 4.226,
+    "se": 3.08,
+    "p": 0.17,
+    "n": 288
+   },
+   "pn0": {
+    "beta": -0.081,
+    "se": 2.304,
+    "p": 0.972,
+    "n": 240
+   },
+   "interaction": {
+    "beta": 4.307,
+    "se": 3.659,
+    "p": 0.239
+   },
+   "interaction_hedonic": {
+    "beta": 3.511,
+    "se": 4.286,
+    "p": 0.413
+   }
+  }
+ },
+ "pricepaths": [
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 1,
+   "price": 120.5,
+   "fv": 120,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 2,
+   "price": 116.0,
+   "fv": 112,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 3,
+   "price": 117.3,
+   "fv": 104,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 4,
+   "price": 114.2,
+   "fv": 96,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 5,
+   "price": 107.9,
+   "fv": 88,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 6,
+   "price": 105.6,
+   "fv": 80,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 7,
+   "price": 98.7,
+   "fv": 72,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 8,
+   "price": 94.0,
+   "fv": 64,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 9,
+   "price": 88.6,
+   "fv": 56,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 10,
+   "price": 83.6,
+   "fv": 48,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 11,
+   "price": 78.4,
+   "fv": 40,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 12,
+   "price": 73.4,
+   "fv": 32,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 13,
+   "price": 64.8,
+   "fv": 24,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 14,
+   "price": 54.9,
+   "fv": 16,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 1,
+   "day": 15,
+   "price": 30.9,
+   "fv": 8,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 1,
+   "price": 128.0,
+   "fv": 120,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 2,
+   "price": 118.9,
+   "fv": 112,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 3,
+   "price": 114.7,
+   "fv": 104,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 4,
+   "price": 108.6,
+   "fv": 96,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 5,
+   "price": 102.7,
+   "fv": 88,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 6,
+   "price": 90.9,
+   "fv": 80,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 7,
+   "price": 84.9,
+   "fv": 72,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 8,
+   "price": 71.8,
+   "fv": 64,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 9,
+   "price": 61.8,
+   "fv": 56,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 10,
+   "price": 39.4,
+   "fv": 48,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 11,
+   "price": 27.1,
+   "fv": 40,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 12,
+   "price": 38.4,
+   "fv": 32,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 13,
+   "price": 26.0,
+   "fv": 24,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 14,
+   "price": 54.9,
+   "fv": 16,
+   "n": 2
+  },
+  {
+   "treatment": "gh",
+   "rep": 2,
+   "day": 15,
+   "price": 14.0,
+   "fv": 8,
+   "n": 2
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 1,
+   "price": 105.7,
+   "fv": 120,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 2,
+   "price": 115.2,
+   "fv": 112,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 3,
+   "price": 109.5,
+   "fv": 104,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 4,
+   "price": 93.6,
+   "fv": 96,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 5,
+   "price": 88.4,
+   "fv": 88,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 6,
+   "price": 78.8,
+   "fv": 80,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 7,
+   "price": 71.1,
+   "fv": 72,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 8,
+   "price": 63.0,
+   "fv": 64,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 9,
+   "price": 56.1,
+   "fv": 56,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 10,
+   "price": 53.6,
+   "fv": 48,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 11,
+   "price": 51.3,
+   "fv": 40,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 12,
+   "price": 48.1,
+   "fv": 32,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 13,
+   "price": 42.2,
+   "fv": 24,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 14,
+   "price": 33.8,
+   "fv": 16,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 1,
+   "day": 15,
+   "price": 29.2,
+   "fv": 8,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 1,
+   "price": 112.4,
+   "fv": 120,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 2,
+   "price": 115.3,
+   "fv": 112,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 3,
+   "price": 104.7,
+   "fv": 104,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 4,
+   "price": 97.3,
+   "fv": 96,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 5,
+   "price": 90.4,
+   "fv": 88,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 6,
+   "price": 86.9,
+   "fv": 80,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 7,
+   "price": 80.2,
+   "fv": 72,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 8,
+   "price": 75.5,
+   "fv": 64,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 9,
+   "price": 65.7,
+   "fv": 56,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 10,
+   "price": 58.4,
+   "fv": 48,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 11,
+   "price": 51.4,
+   "fv": 40,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 12,
+   "price": 45.4,
+   "fv": 32,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 13,
+   "price": 39.5,
+   "fv": 24,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 14,
+   "price": 35.9,
+   "fv": 16,
+   "n": 5
+  },
+  {
+   "treatment": "ghp",
+   "rep": 2,
+   "day": 15,
+   "price": 31.7,
+   "fv": 8,
+   "n": 5
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 1,
+   "price": 64.7,
+   "fv": 120,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 2,
+   "price": 76.1,
+   "fv": 112,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 3,
+   "price": 68.2,
+   "fv": 104,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 4,
+   "price": 68.5,
+   "fv": 96,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 5,
+   "price": 63.0,
+   "fv": 88,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 6,
+   "price": 69.8,
+   "fv": 80,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 7,
+   "price": 63.4,
+   "fv": 72,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 8,
+   "price": 58.8,
+   "fv": 64,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 9,
+   "price": 55.5,
+   "fv": 56,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 10,
+   "price": 55.9,
+   "fv": 48,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 11,
+   "price": 48.3,
+   "fv": 40,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 12,
+   "price": 39.2,
+   "fv": 32,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 13,
+   "price": 30.5,
+   "fv": 24,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 14,
+   "price": 28.0,
+   "fv": 16,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 1,
+   "day": 15,
+   "price": 27.0,
+   "fv": 8,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 1,
+   "price": 106.0,
+   "fv": 120,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 2,
+   "price": 93.9,
+   "fv": 112,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 3,
+   "price": 87.4,
+   "fv": 104,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 4,
+   "price": 81.3,
+   "fv": 96,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 5,
+   "price": 74.2,
+   "fv": 88,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 6,
+   "price": 61.3,
+   "fv": 80,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 7,
+   "price": 55.8,
+   "fv": 72,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 8,
+   "price": 47.9,
+   "fv": 64,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 9,
+   "price": 39.5,
+   "fv": 56,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 10,
+   "price": 35.3,
+   "fv": 48,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 11,
+   "price": 30.1,
+   "fv": 40,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 12,
+   "price": 21.0,
+   "fv": 32,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 13,
+   "price": 13.2,
+   "fv": 24,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 14,
+   "price": 8.1,
+   "fv": 16,
+   "n": 1
+  },
+  {
+   "treatment": "gp",
+   "rep": 2,
+   "day": 15,
+   "price": 7.4,
+   "fv": 8,
+   "n": 1
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 1,
+   "price": 81.1,
+   "fv": 120,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 2,
+   "price": 83.5,
+   "fv": 112,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 3,
+   "price": 98.9,
+   "fv": 104,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 4,
+   "price": 105.8,
+   "fv": 96,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 5,
+   "price": 99.8,
+   "fv": 88,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 6,
+   "price": 96.2,
+   "fv": 80,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 7,
+   "price": 79.2,
+   "fv": 72,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 8,
+   "price": 74.7,
+   "fv": 64,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 9,
+   "price": 64.7,
+   "fv": 56,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 10,
+   "price": 55.3,
+   "fv": 48,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 11,
+   "price": 46.9,
+   "fv": 40,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 12,
+   "price": 39.8,
+   "fv": 32,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 13,
+   "price": 25.0,
+   "fv": 24,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 14,
+   "price": 13.2,
+   "fv": 16,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 1,
+   "day": 15,
+   "price": 8.3,
+   "fv": 8,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 1,
+   "price": 87.8,
+   "fv": 120,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 2,
+   "price": 100.2,
+   "fv": 112,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 3,
+   "price": 106.6,
+   "fv": 104,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 4,
+   "price": 104.6,
+   "fv": 96,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 5,
+   "price": 102.5,
+   "fv": 88,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 6,
+   "price": 86.0,
+   "fv": 80,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 7,
+   "price": 68.0,
+   "fv": 72,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 8,
+   "price": 35.0,
+   "fv": 64,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 9,
+   "price": 41.3,
+   "fv": 56,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 10,
+   "price": 34.2,
+   "fv": 48,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 11,
+   "price": 28.7,
+   "fv": 40,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 12,
+   "price": 24.6,
+   "fv": 32,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 13,
+   "price": 19.2,
+   "fv": 24,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 14,
+   "price": 16.3,
+   "fv": 16,
+   "n": 3
+  },
+  {
+   "treatment": "ng",
+   "rep": 2,
+   "day": 15,
+   "price": 17.1,
+   "fv": 8,
+   "n": 3
+  }
+ ],
+ "volumepaths": [
+  {
+   "treatment": "gh",
+   "day": 1,
+   "trades": 5.2
+  },
+  {
+   "treatment": "gh",
+   "day": 2,
+   "trades": 7.8
+  },
+  {
+   "treatment": "gh",
+   "day": 3,
+   "trades": 8.8
+  },
+  {
+   "treatment": "gh",
+   "day": 4,
+   "trades": 8.8
+  },
+  {
+   "treatment": "gh",
+   "day": 5,
+   "trades": 7.5
+  },
+  {
+   "treatment": "gh",
+   "day": 6,
+   "trades": 8.5
+  },
+  {
+   "treatment": "gh",
+   "day": 7,
+   "trades": 6.0
+  },
+  {
+   "treatment": "gh",
+   "day": 8,
+   "trades": 5.0
+  },
+  {
+   "treatment": "gh",
+   "day": 9,
+   "trades": 8.2
+  },
+  {
+   "treatment": "gh",
+   "day": 10,
+   "trades": 9.8
+  },
+  {
+   "treatment": "gh",
+   "day": 11,
+   "trades": 9.5
+  },
+  {
+   "treatment": "gh",
+   "day": 12,
+   "trades": 14.0
+  },
+  {
+   "treatment": "gh",
+   "day": 13,
+   "trades": 8.2
+  },
+  {
+   "treatment": "gh",
+   "day": 14,
+   "trades": 15.0
+  },
+  {
+   "treatment": "gh",
+   "day": 15,
+   "trades": 16.8
+  },
+  {
+   "treatment": "ghp",
+   "day": 1,
+   "trades": 6.2
+  },
+  {
+   "treatment": "ghp",
+   "day": 2,
+   "trades": 7.6
+  },
+  {
+   "treatment": "ghp",
+   "day": 3,
+   "trades": 8.9
+  },
+  {
+   "treatment": "ghp",
+   "day": 4,
+   "trades": 9.3
+  },
+  {
+   "treatment": "ghp",
+   "day": 5,
+   "trades": 10.1
+  },
+  {
+   "treatment": "ghp",
+   "day": 6,
+   "trades": 8.7
+  },
+  {
+   "treatment": "ghp",
+   "day": 7,
+   "trades": 8.3
+  },
+  {
+   "treatment": "ghp",
+   "day": 8,
+   "trades": 10.6
+  },
+  {
+   "treatment": "ghp",
+   "day": 9,
+   "trades": 12.2
+  },
+  {
+   "treatment": "ghp",
+   "day": 10,
+   "trades": 10.3
+  },
+  {
+   "treatment": "ghp",
+   "day": 11,
+   "trades": 8.4
+  },
+  {
+   "treatment": "ghp",
+   "day": 12,
+   "trades": 9.9
+  },
+  {
+   "treatment": "ghp",
+   "day": 13,
+   "trades": 10.9
+  },
+  {
+   "treatment": "ghp",
+   "day": 14,
+   "trades": 9.2
+  },
+  {
+   "treatment": "ghp",
+   "day": 15,
+   "trades": 13.4
+  },
+  {
+   "treatment": "gp",
+   "day": 1,
+   "trades": 8.0
+  },
+  {
+   "treatment": "gp",
+   "day": 2,
+   "trades": 10.5
+  },
+  {
+   "treatment": "gp",
+   "day": 3,
+   "trades": 14.5
+  },
+  {
+   "treatment": "gp",
+   "day": 4,
+   "trades": 21.5
+  },
+  {
+   "treatment": "gp",
+   "day": 5,
+   "trades": 13.0
+  },
+  {
+   "treatment": "gp",
+   "day": 6,
+   "trades": 13.0
+  },
+  {
+   "treatment": "gp",
+   "day": 7,
+   "trades": 22.0
+  },
+  {
+   "treatment": "gp",
+   "day": 8,
+   "trades": 13.0
+  },
+  {
+   "treatment": "gp",
+   "day": 9,
+   "trades": 16.0
+  },
+  {
+   "treatment": "gp",
+   "day": 10,
+   "trades": 14.5
+  },
+  {
+   "treatment": "gp",
+   "day": 11,
+   "trades": 12.5
+  },
+  {
+   "treatment": "gp",
+   "day": 12,
+   "trades": 9.5
+  },
+  {
+   "treatment": "gp",
+   "day": 13,
+   "trades": 18.5
+  },
+  {
+   "treatment": "gp",
+   "day": 14,
+   "trades": 12.0
+  },
+  {
+   "treatment": "gp",
+   "day": 15,
+   "trades": 9.5
+  },
+  {
+   "treatment": "ng",
+   "day": 1,
+   "trades": 5.3
+  },
+  {
+   "treatment": "ng",
+   "day": 2,
+   "trades": 6.7
+  },
+  {
+   "treatment": "ng",
+   "day": 3,
+   "trades": 4.3
+  },
+  {
+   "treatment": "ng",
+   "day": 4,
+   "trades": 5.2
+  },
+  {
+   "treatment": "ng",
+   "day": 5,
+   "trades": 2.7
+  },
+  {
+   "treatment": "ng",
+   "day": 6,
+   "trades": 3.8
+  },
+  {
+   "treatment": "ng",
+   "day": 7,
+   "trades": 4.0
+  },
+  {
+   "treatment": "ng",
+   "day": 8,
+   "trades": 4.2
+  },
+  {
+   "treatment": "ng",
+   "day": 9,
+   "trades": 5.7
+  },
+  {
+   "treatment": "ng",
+   "day": 10,
+   "trades": 4.5
+  },
+  {
+   "treatment": "ng",
+   "day": 11,
+   "trades": 5.7
+  },
+  {
+   "treatment": "ng",
+   "day": 12,
+   "trades": 4.2
+  },
+  {
+   "treatment": "ng",
+   "day": 13,
+   "trades": 4.0
+  },
+  {
+   "treatment": "ng",
+   "day": 14,
+   "trades": 6.5
+  },
+  {
+   "treatment": "ng",
+   "day": 15,
+   "trades": 7.3
+  }
+ ],
+ "markets_table": [
+  {
+   "group": "20260512/ghp1",
+   "session": "20260512",
+   "treatment": "ghp",
+   "trades_r1": 79,
+   "trades_r2": 106,
+   "amr_r1": 0.218,
+   "amr_r2": 0.172,
+   "gini": 0.03,
+   "bubbles_pooled": 0,
+   "surge_crash_pooled": 0
+  },
+  {
+   "group": "20260512/ng1",
+   "session": "20260512",
+   "treatment": "ng",
+   "trades_r1": 83,
+   "trades_r2": 74,
+   "amr_r1": 0.142,
+   "amr_r2": 0.196,
+   "gini": 0.021,
+   "bubbles_pooled": 0,
+   "surge_crash_pooled": 0
+  },
+  {
+   "group": "20260520_AM/gh1",
+   "session": "20260520_AM",
+   "treatment": "gh",
+   "trades_r1": 111,
+   "trades_r2": 149,
+   "amr_r1": 1.649,
+   "amr_r2": 0.709,
+   "gini": 0.116,
+   "bubbles_pooled": 5,
+   "surge_crash_pooled": 1
+  },
+  {
+   "group": "20260520_AM/gp1",
+   "session": "20260520_AM",
+   "treatment": "gp",
+   "trades_r1": 209,
+   "trades_r2": 207,
+   "amr_r1": 0.419,
+   "amr_r2": 0.243,
+   "gini": 0.047,
+   "bubbles_pooled": 0,
+   "surge_crash_pooled": 1
+  },
+  {
+   "group": "20260520_PM/ghp1",
+   "session": "20260520_PM",
+   "treatment": "ghp",
+   "trades_r1": 145,
+   "trades_r2": 130,
+   "amr_r1": 0.233,
+   "amr_r2": 0.252,
+   "gini": 0.059,
+   "bubbles_pooled": 0,
+   "surge_crash_pooled": 0
+  },
+  {
+   "group": "20260520_PM/ghp2",
+   "session": "20260520_PM",
+   "treatment": "ghp",
+   "trades_r1": 228,
+   "trades_r2": 258,
+   "amr_r1": 1.118,
+   "amr_r2": 1.05,
+   "gini": 0.056,
+   "bubbles_pooled": 4,
+   "surge_crash_pooled": 1
+  },
+  {
+   "group": "20260826/gh1",
+   "session": "20260826",
+   "treatment": "gh",
+   "trades_r1": 164,
+   "trades_r2": 132,
+   "amr_r1": 0.054,
+   "amr_r2": 0.074,
+   "gini": 0.018,
+   "bubbles_pooled": 0,
+   "surge_crash_pooled": 0
+  },
+  {
+   "group": "20260826/ghp1",
+   "session": "20260826",
+   "treatment": "ghp",
+   "trades_r1": 109,
+   "trades_r2": 122,
+   "amr_r1": 0.989,
+   "amr_r2": 1.094,
+   "gini": 0.076,
+   "bubbles_pooled": 4,
+   "surge_crash_pooled": 0
+  },
+  {
+   "group": "20260826/ghp2",
+   "session": "20260826",
+   "treatment": "ghp",
+   "trades_r1": 154,
+   "trades_r2": 109,
+   "amr_r1": 0.359,
+   "amr_r2": 0.068,
+   "gini": 0.036,
+   "bubbles_pooled": 0,
+   "surge_crash_pooled": 0
+  },
+  {
+   "group": "20260826/ng1",
+   "session": "20260826",
+   "treatment": "ng",
+   "trades_r1": 63,
+   "trades_r2": 64,
+   "amr_r1": 0.239,
+   "amr_r2": 0.444,
+   "gini": 0.064,
+   "bubbles_pooled": 0,
+   "surge_crash_pooled": 2
+  },
+  {
+   "group": "20260826/ng2",
+   "session": "20260826",
+   "treatment": "ng",
+   "trades_r1": 70,
+   "trades_r2": 90,
+   "amr_r1": 0.267,
+   "amr_r2": 0.291,
+   "gini": 0.04,
+   "bubbles_pooled": 0,
+   "surge_crash_pooled": 0
+  }
+ ],
+ "integrity": {
+  "share_sum_min": 90.0,
+  "share_sum_max": 130.0,
+  "share_sum_mean": 95.5,
+  "pct_market_days_off": 0.927
+ }
+}
