@@ -1,0 +1,826 @@
+{
+ "excluded": [
+  "20260520_PM/ng1"
+ ],
+ "n_groups_by_treatment": {
+  "ghp": 5,
+  "ng": 3,
+  "gh": 2,
+  "gp": 1
+ },
+ "group_level": [
+  {
+   "group": "20260512/ghp1",
+   "treatment": "ghp",
+   "amr": 0.195,
+   "rad": 0.132,
+   "rd": -0.067
+  },
+  {
+   "group": "20260512/ng1",
+   "treatment": "ng",
+   "amr": 0.169,
+   "rad": 0.069,
+   "rd": 0.024
+  },
+  {
+   "group": "20260520_AM/gh1",
+   "treatment": "gh",
+   "amr": 1.179,
+   "rad": 0.546,
+   "rd": 0.495
+  },
+  {
+   "group": "20260520_AM/gp1",
+   "treatment": "gp",
+   "amr": 0.331,
+   "rad": 0.241,
+   "rd": -0.177
+  },
+  {
+   "group": "20260520_PM/ghp1",
+   "treatment": "ghp",
+   "amr": 0.243,
+   "rad": 0.238,
+   "rd": 0.144
+  },
+  {
+   "group": "20260520_PM/ghp2",
+   "treatment": "ghp",
+   "amr": 1.084,
+   "rad": 0.489,
+   "rd": -0.001
+  },
+  {
+   "group": "20260826/gh1",
+   "treatment": "gh",
+   "amr": 0.064,
+   "rad": 0.043,
+   "rd": 0.037
+  },
+  {
+   "group": "20260826/ghp1",
+   "treatment": "ghp",
+   "amr": 1.041,
+   "rad": 0.372,
+   "rd": 0.368
+  },
+  {
+   "group": "20260826/ghp2",
+   "treatment": "ghp",
+   "amr": 0.214,
+   "rad": 0.204,
+   "rd": 0.104
+  },
+  {
+   "group": "20260826/ng1",
+   "treatment": "ng",
+   "amr": 0.341,
+   "rad": 0.346,
+   "rd": -0.247
+  },
+  {
+   "group": "20260826/ng2",
+   "treatment": "ng",
+   "amr": 0.279,
+   "rad": 0.232,
+   "rd": 0.1
+  }
+ ],
+ "cells_amr": {
+  "ng": {
+   "mean": 0.263,
+   "median": 0.279,
+   "n_groups": 3
+  },
+  "gh": {
+   "mean": 0.621,
+   "median": 0.621,
+   "n_groups": 2
+  },
+  "gp": {
+   "mean": 0.331,
+   "median": 0.331,
+   "n_groups": 1
+  },
+  "ghp": {
+   "mean": 0.555,
+   "median": 0.243,
+   "n_groups": 5
+  }
+ },
+ "tests_amr": {
+  "gamified_vs_ng": {
+   "mean_gamified": 0.544,
+   "mean_ng": 0.263,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw_two_sided": 0.7758
+  },
+  "ghp_vs_ng": {
+   "p_mw_two_sided": 0.7857
+  },
+  "hedonic_vs_not": {
+   "mean_1": 0.574,
+   "mean_0": 0.28,
+   "p_mw_two_sided": 0.9273
+  },
+  "pn_vs_not": {
+   "mean_1": 0.518,
+   "mean_0": 0.406,
+   "p_mw_two_sided": 0.7922
+  }
+ },
+ "cells_rad": {
+  "ng": {
+   "mean": 0.216,
+   "median": 0.232,
+   "n_groups": 3
+  },
+  "gh": {
+   "mean": 0.295,
+   "median": 0.295,
+   "n_groups": 2
+  },
+  "gp": {
+   "mean": 0.241,
+   "median": 0.241,
+   "n_groups": 1
+  },
+  "ghp": {
+   "mean": 0.287,
+   "median": 0.238,
+   "n_groups": 5
+  }
+ },
+ "tests_rad": {
+  "gamified_vs_ng": {
+   "mean_gamified": 0.283,
+   "mean_ng": 0.216,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw_two_sided": 0.6303
+  },
+  "ghp_vs_ng": {
+   "p_mw_two_sided": 0.5714
+  },
+  "hedonic_vs_not": {
+   "mean_1": 0.289,
+   "mean_0": 0.222,
+   "p_mw_two_sided": 0.7879
+  },
+  "pn_vs_not": {
+   "mean_1": 0.279,
+   "mean_0": 0.247,
+   "p_mw_two_sided": 0.6623
+  }
+ },
+ "cells_rd": {
+  "ng": {
+   "mean": -0.041,
+   "median": 0.024,
+   "n_groups": 3
+  },
+  "gh": {
+   "mean": 0.266,
+   "median": 0.266,
+   "n_groups": 2
+  },
+  "gp": {
+   "mean": -0.177,
+   "median": -0.177,
+   "n_groups": 1
+  },
+  "ghp": {
+   "mean": 0.109,
+   "median": 0.104,
+   "n_groups": 5
+  }
+ },
+ "tests_rd": {
+  "gamified_vs_ng": {
+   "mean_gamified": 0.113,
+   "mean_ng": -0.041,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw_two_sided": 0.3758
+  },
+  "ghp_vs_ng": {
+   "p_mw_two_sided": 0.3929
+  },
+  "hedonic_vs_not": {
+   "mean_1": 0.154,
+   "mean_0": -0.075,
+   "p_mw_two_sided": 0.1091
+  },
+  "pn_vs_not": {
+   "mean_1": 0.062,
+   "mean_0": 0.082,
+   "p_mw_two_sided": 1.0
+  }
+ },
+ "by_repetition_amr": {
+  "ng": {
+   "r1": 0.216,
+   "r2": 0.31
+  },
+  "gh": {
+   "r1": 0.852,
+   "r2": 0.391
+  },
+  "gp": {
+   "r1": 0.419,
+   "r2": 0.243
+  },
+  "ghp": {
+   "r1": 0.583,
+   "r2": 0.527
+  }
+ },
+ "by_repetition_rad": {
+  "ng": {
+   "r1": 0.211,
+   "r2": 0.22
+  },
+  "gh": {
+   "r1": 0.412,
+   "r2": 0.177
+  },
+  "gp": {
+   "r1": 0.276,
+   "r2": 0.206
+  },
+  "ghp": {
+   "r1": 0.325,
+   "r2": 0.249
+  }
+ },
+ "paths": [
+  {
+   "treatment": "gh",
+   "day": 1,
+   "amr": 0.0701,
+   "rad": 0.0793
+  },
+  {
+   "treatment": "gh",
+   "day": 2,
+   "amr": 0.0605,
+   "rad": 0.0857
+  },
+  {
+   "treatment": "gh",
+   "day": 3,
+   "amr": 0.1154,
+   "rad": 0.1876
+  },
+  {
+   "treatment": "gh",
+   "day": 4,
+   "amr": 0.1602,
+   "rad": 0.2403
+  },
+  {
+   "treatment": "gh",
+   "day": 5,
+   "amr": 0.1966,
+   "rad": 0.2704
+  },
+  {
+   "treatment": "gh",
+   "day": 6,
+   "amr": 0.2281,
+   "rad": 0.2851
+  },
+  {
+   "treatment": "gh",
+   "day": 7,
+   "amr": 0.275,
+   "rad": 0.3094
+  },
+  {
+   "treatment": "gh",
+   "day": 8,
+   "amr": 0.3497,
+   "rad": 0.2951
+  },
+  {
+   "treatment": "gh",
+   "day": 9,
+   "amr": 0.3614,
+   "rad": 0.2996
+  },
+  {
+   "treatment": "gh",
+   "day": 10,
+   "amr": 0.4962,
+   "rad": 0.3654
+  },
+  {
+   "treatment": "gh",
+   "day": 11,
+   "amr": 0.6619,
+   "rad": 0.4137
+  },
+  {
+   "treatment": "gh",
+   "day": 12,
+   "amr": 0.8442,
+   "rad": 0.3734
+  },
+  {
+   "treatment": "gh",
+   "day": 13,
+   "amr": 0.9896,
+   "rad": 0.3474
+  },
+  {
+   "treatment": "gh",
+   "day": 14,
+   "amr": 2.6279,
+   "rad": 0.6378
+  },
+  {
+   "treatment": "gh",
+   "day": 15,
+   "amr": 1.8832,
+   "rad": 0.2311
+  },
+  {
+   "treatment": "ghp",
+   "day": 1,
+   "amr": 0.2613,
+   "rad": 0.489
+  },
+  {
+   "treatment": "ghp",
+   "day": 2,
+   "amr": 0.2517,
+   "rad": 0.4341
+  },
+  {
+   "treatment": "ghp",
+   "day": 3,
+   "amr": 0.2106,
+   "rad": 0.3366
+  },
+  {
+   "treatment": "ghp",
+   "day": 4,
+   "amr": 0.1995,
+   "rad": 0.2898
+  },
+  {
+   "treatment": "ghp",
+   "day": 5,
+   "amr": 0.1874,
+   "rad": 0.2511
+  },
+  {
+   "treatment": "ghp",
+   "day": 6,
+   "amr": 0.1648,
+   "rad": 0.1993
+  },
+  {
+   "treatment": "ghp",
+   "day": 7,
+   "amr": 0.1239,
+   "rad": 0.1356
+  },
+  {
+   "treatment": "ghp",
+   "day": 8,
+   "amr": 0.1637,
+   "rad": 0.1631
+  },
+  {
+   "treatment": "ghp",
+   "day": 9,
+   "amr": 0.2097,
+   "rad": 0.1806
+  },
+  {
+   "treatment": "ghp",
+   "day": 10,
+   "amr": 0.3012,
+   "rad": 0.2227
+  },
+  {
+   "treatment": "ghp",
+   "day": 11,
+   "amr": 0.4358,
+   "rad": 0.2693
+  },
+  {
+   "treatment": "ghp",
+   "day": 12,
+   "amr": 0.6043,
+   "rad": 0.2965
+  },
+  {
+   "treatment": "ghp",
+   "day": 13,
+   "amr": 0.8594,
+   "rad": 0.3217
+  },
+  {
+   "treatment": "ghp",
+   "day": 14,
+   "amr": 1.3704,
+   "rad": 0.3416
+  },
+  {
+   "treatment": "ghp",
+   "day": 15,
+   "amr": 2.9856,
+   "rad": 0.3728
+  },
+  {
+   "treatment": "gp",
+   "day": 1,
+   "amr": 0.2945,
+   "rad": 0.5413
+  },
+  {
+   "treatment": "gp",
+   "day": 2,
+   "amr": 0.2411,
+   "rad": 0.4219
+  },
+  {
+   "treatment": "gp",
+   "day": 3,
+   "amr": 0.2521,
+   "rad": 0.4096
+  },
+  {
+   "treatment": "gp",
+   "day": 4,
+   "amr": 0.2198,
+   "rad": 0.3298
+  },
+  {
+   "treatment": "gp",
+   "day": 5,
+   "amr": 0.2246,
+   "rad": 0.3033
+  },
+  {
+   "treatment": "gp",
+   "day": 6,
+   "amr": 0.181,
+   "rad": 0.2262
+  },
+  {
+   "treatment": "gp",
+   "day": 7,
+   "amr": 0.2011,
+   "rad": 0.1941
+  },
+  {
+   "treatment": "gp",
+   "day": 8,
+   "amr": 0.1709,
+   "rad": 0.1664
+  },
+  {
+   "treatment": "gp",
+   "day": 9,
+   "amr": 0.2095,
+   "rad": 0.1323
+  },
+  {
+   "treatment": "gp",
+   "day": 10,
+   "amr": 0.2149,
+   "rad": 0.1612
+  },
+  {
+   "treatment": "gp",
+   "day": 11,
+   "amr": 0.2323,
+   "rad": 0.1421
+  },
+  {
+   "treatment": "gp",
+   "day": 12,
+   "amr": 0.2842,
+   "rad": 0.1421
+  },
+  {
+   "treatment": "gp",
+   "day": 13,
+   "amr": 0.3816,
+   "rad": 0.1353
+  },
+  {
+   "treatment": "gp",
+   "day": 14,
+   "amr": 0.6267,
+   "rad": 0.1556
+  },
+  {
+   "treatment": "gp",
+   "day": 15,
+   "amr": 1.2254,
+   "rad": 0.1532
+  },
+  {
+   "treatment": "ng",
+   "day": 1,
+   "amr": 0.3182,
+   "rad": 0.5966
+  },
+  {
+   "treatment": "ng",
+   "day": 2,
+   "amr": 0.2767,
+   "rad": 0.4792
+  },
+  {
+   "treatment": "ng",
+   "day": 3,
+   "amr": 0.1691,
+   "rad": 0.2748
+  },
+  {
+   "treatment": "ng",
+   "day": 4,
+   "amr": 0.1514,
+   "rad": 0.2167
+  },
+  {
+   "treatment": "ng",
+   "day": 5,
+   "amr": 0.1466,
+   "rad": 0.2016
+  },
+  {
+   "treatment": "ng",
+   "day": 6,
+   "amr": 0.1613,
+   "rad": 0.1898
+  },
+  {
+   "treatment": "ng",
+   "day": 7,
+   "amr": 0.1171,
+   "rad": 0.1243
+  },
+  {
+   "treatment": "ng",
+   "day": 8,
+   "amr": 0.3253,
+   "rad": 0.3105
+  },
+  {
+   "treatment": "ng",
+   "day": 9,
+   "amr": 0.2433,
+   "rad": 0.191
+  },
+  {
+   "treatment": "ng",
+   "day": 10,
+   "amr": 0.2856,
+   "rad": 0.2142
+  },
+  {
+   "treatment": "ng",
+   "day": 11,
+   "amr": 0.2666,
+   "rad": 0.1655
+  },
+  {
+   "treatment": "ng",
+   "day": 12,
+   "amr": 0.2697,
+   "rad": 0.1221
+  },
+  {
+   "treatment": "ng",
+   "day": 13,
+   "amr": 0.2199,
+   "rad": 0.0603
+  },
+  {
+   "treatment": "ng",
+   "day": 14,
+   "amr": 0.2897,
+   "rad": 0.0665
+  },
+  {
+   "treatment": "ng",
+   "day": 15,
+   "amr": 0.6749,
+   "rad": 0.0793
+  }
+ ],
+ "market_reps": [
+  {
+   "group": "20260520_AM/gh1",
+   "treatment": "gh",
+   "rep": 1,
+   "amr": 1.649,
+   "rad": 0.788,
+   "rd": 0.785,
+   "days_traded": 15
+  },
+  {
+   "group": "20260520_AM/gh1",
+   "treatment": "gh",
+   "rep": 2,
+   "amr": 0.709,
+   "rad": 0.304,
+   "rd": 0.206,
+   "days_traded": 15
+  },
+  {
+   "group": "20260826/gh1",
+   "treatment": "gh",
+   "rep": 1,
+   "amr": 0.054,
+   "rad": 0.036,
+   "rd": 0.025,
+   "days_traded": 15
+  },
+  {
+   "group": "20260826/gh1",
+   "treatment": "gh",
+   "rep": 2,
+   "amr": 0.074,
+   "rad": 0.05,
+   "rd": 0.049,
+   "days_traded": 15
+  },
+  {
+   "group": "20260512/ghp1",
+   "treatment": "ghp",
+   "rep": 1,
+   "amr": 0.218,
+   "rad": 0.191,
+   "rd": -0.158,
+   "days_traded": 15
+  },
+  {
+   "group": "20260512/ghp1",
+   "treatment": "ghp",
+   "rep": 2,
+   "amr": 0.172,
+   "rad": 0.074,
+   "rd": 0.023,
+   "days_traded": 15
+  },
+  {
+   "group": "20260520_PM/ghp1",
+   "treatment": "ghp",
+   "rep": 1,
+   "amr": 0.233,
+   "rad": 0.226,
+   "rd": 0.164,
+   "days_traded": 15
+  },
+  {
+   "group": "20260520_PM/ghp1",
+   "treatment": "ghp",
+   "rep": 2,
+   "amr": 0.252,
+   "rad": 0.249,
+   "rd": 0.125,
+   "days_traded": 15
+  },
+  {
+   "group": "20260520_PM/ghp2",
+   "treatment": "ghp",
+   "rep": 1,
+   "amr": 1.118,
+   "rad": 0.549,
+   "rd": -0.057,
+   "days_traded": 15
+  },
+  {
+   "group": "20260520_PM/ghp2",
+   "treatment": "ghp",
+   "rep": 2,
+   "amr": 1.05,
+   "rad": 0.428,
+   "rd": 0.054,
+   "days_traded": 15
+  },
+  {
+   "group": "20260826/ghp1",
+   "treatment": "ghp",
+   "rep": 1,
+   "amr": 0.989,
+   "rad": 0.329,
+   "rd": 0.32,
+   "days_traded": 15
+  },
+  {
+   "group": "20260826/ghp1",
+   "treatment": "ghp",
+   "rep": 2,
+   "amr": 1.094,
+   "rad": 0.416,
+   "rd": 0.416,
+   "days_traded": 15
+  },
+  {
+   "group": "20260826/ghp2",
+   "treatment": "ghp",
+   "rep": 1,
+   "amr": 0.359,
+   "rad": 0.331,
+   "rd": 0.145,
+   "days_traded": 15
+  },
+  {
+   "group": "20260826/ghp2",
+   "treatment": "ghp",
+   "rep": 2,
+   "amr": 0.068,
+   "rad": 0.077,
+   "rd": 0.062,
+   "days_traded": 15
+  },
+  {
+   "group": "20260520_AM/gp1",
+   "treatment": "gp",
+   "rep": 1,
+   "amr": 0.419,
+   "rad": 0.276,
+   "rd": -0.149,
+   "days_traded": 15
+  },
+  {
+   "group": "20260520_AM/gp1",
+   "treatment": "gp",
+   "rep": 2,
+   "amr": 0.243,
+   "rad": 0.206,
+   "rd": -0.206,
+   "days_traded": 15
+  },
+  {
+   "group": "20260512/ng1",
+   "treatment": "ng",
+   "rep": 1,
+   "amr": 0.142,
+   "rad": 0.086,
+   "rd": 0.004,
+   "days_traded": 14
+  },
+  {
+   "group": "20260512/ng1",
+   "treatment": "ng",
+   "rep": 2,
+   "amr": 0.196,
+   "rad": 0.052,
+   "rd": 0.044,
+   "days_traded": 14
+  },
+  {
+   "group": "20260826/ng1",
+   "treatment": "ng",
+   "rep": 1,
+   "amr": 0.239,
+   "rad": 0.309,
+   "rd": -0.154,
+   "days_traded": 15
+  },
+  {
+   "group": "20260826/ng1",
+   "treatment": "ng",
+   "rep": 2,
+   "amr": 0.444,
+   "rad": 0.382,
+   "rd": -0.341,
+   "days_traded": 14
+  },
+  {
+   "group": "20260826/ng2",
+   "treatment": "ng",
+   "rep": 1,
+   "amr": 0.267,
+   "rad": 0.238,
+   "rd": 0.219,
+   "days_traded": 15
+  },
+  {
+   "group": "20260826/ng2",
+   "treatment": "ng",
+   "rep": 2,
+   "amr": 0.291,
+   "rad": 0.226,
+   "rd": -0.019,
+   "days_traded": 15
+  }
+ ]
+}

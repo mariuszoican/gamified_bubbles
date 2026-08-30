@@ -1,0 +1,142 @@
+{
+ "rel_quoted_spread": {
+  "ghp_mean": 0.1417,
+  "ng_mean": 0.2568,
+  "p_rep_two": 0.0559,
+  "p_grp_two": 0.1429,
+  "n_rep": [
+   10,
+   6
+  ],
+  "n_grp": [
+   5,
+   3
+  ],
+  "all_treatments": {
+   "ng": 0.2568,
+   "gh": 0.3296,
+   "gp": 0.2558,
+   "ghp": 0.1417
+  }
+ },
+ "quoted_spread": {
+  "ghp_mean": 8.8271,
+  "ng_mean": 9.8607,
+  "p_rep_two": 0.2635,
+  "p_grp_two": 0.5714,
+  "n_rep": [
+   10,
+   6
+  ],
+  "n_grp": [
+   5,
+   3
+  ],
+  "all_treatments": {
+   "ng": 9.8607,
+   "gh": 134.3812,
+   "gp": 12.6848,
+   "ghp": 8.8271
+  }
+ },
+ "depth_best": {
+  "ghp_mean": 2.7869,
+  "ng_mean": 2.6234,
+  "p_rep_two": 0.6354,
+  "p_grp_two": 0.7857,
+  "n_rep": [
+   10,
+   6
+  ],
+  "n_grp": [
+   5,
+   3
+  ],
+  "all_treatments": {
+   "ng": 2.6234,
+   "gh": 4.8958,
+   "gp": 2.6642,
+   "ghp": 2.7869
+  }
+ },
+ "pct_two_sided": {
+  "ghp_mean": 0.8601,
+  "ng_mean": 0.8447,
+  "p_rep_two": 1.0,
+  "p_grp_two": 1.0,
+  "n_rep": [
+   10,
+   6
+  ],
+  "n_grp": [
+   5,
+   3
+  ],
+  "all_treatments": {
+   "ng": 0.8447,
+   "gh": 0.8565,
+   "gp": 0.9185,
+   "ghp": 0.8601
+  }
+ },
+ "rel_eff_spread": {
+  "ghp_mean": 0.3846,
+  "ng_mean": 0.7867,
+  "p_rep_two": 0.042,
+  "p_grp_two": 0.0714,
+  "n_rep": [
+   10,
+   6
+  ],
+  "n_grp": [
+   5,
+   3
+  ],
+  "all_treatments": {
+   "ng": 0.7867,
+   "gh": 1.1638,
+   "gp": 0.8074,
+   "ghp": 0.3846
+  }
+ },
+ "rv_mid": {
+  "ghp_mean": 0.2684,
+  "ng_mean": 0.5413,
+  "p_rep_two": 0.0312,
+  "p_grp_two": 0.1429,
+  "n_rep": [
+   10,
+   6
+  ],
+  "n_grp": [
+   5,
+   3
+  ],
+  "all_treatments": {
+   "ng": 0.5413,
+   "gh": 0.7593,
+   "gp": 0.624,
+   "ghp": 0.2684
+  }
+ },
+ "trader_day_directionality": {
+  "ghp_mean": 0.8314,
+  "ng_mean": 0.9269,
+  "p_rep_two": 0.0225,
+  "p_grp_two": 0.25,
+  "n_rep": [
+   10,
+   6
+  ],
+  "n_grp": [
+   5,
+   3
+  ],
+  "all_treatments": {
+   "ng": 0.9269,
+   "gh": 0.7471,
+   "gp": 0.6155,
+   "ghp": 0.8314
+  }
+ }
+}

@@ -101,10 +101,21 @@ mkt["group_label"] = mkt["group_key"].map(glabel)
 trd["group_label"] = trd["group_key"].map(glabel)
 mkt["session_id"] = mkt["group_key"].map(groups.set_index("group_key")["session_id"])
 
-# ---------------------------------------------------------- outlier exclusion
+# ---------------------------------------------------------- sample filters
+# KEEP_SESSIONS: restrict the analysis sample to these session ids
+# (None = all included sessions).
+KEEP_SESSIONS: set[str] | None = {"20260826"}
+
+if KEEP_SESSIONS is not None:
+    keep_keys = groups.loc[groups.session_id.isin(KEEP_SESSIONS), "group_key"]
+    mkt = mkt[mkt.group_key.isin(keep_keys)].copy()
+    trd = trd[trd.group_key.isin(keep_keys)].copy()
+    groups = groups[groups.group_key.isin(keep_keys)].copy()
+
 # 20260520_PM/ng1: ~3x the trades of any other market (495 + 578),
 # AMR ~2.6 in both repetitions, Gini 0.218. Excluded on request;
 # summary stats of the dropped group retained for transparency.
+# (No-op when KEEP_SESSIONS already drops that session.)
 EXCLUDE_GROUPS = {"20260520_PM/ng1"}
 
 _excl = mkt[mkt.group_label.isin(EXCLUDE_GROUPS)]
@@ -144,8 +155,18 @@ results["sample"] = {
     "n_groups": int(groups.shape[0]),
     "n_market_reps": int(mkt["market_uuid"].nunique()),
     "n_traders": int(trd["participant_code"].nunique()),
-    "n_paid": int(pay.shape[0]),
+    "n_paid": (
+        int(pay.shape[0])
+        if KEEP_SESSIONS is None
+        else int(
+            sum(
+                pd.read_csv(ROOT / "data" / "interim" / s / "participant_payments.csv").shape[0]
+                for s in KEEP_SESSIONS
+            )
+        )
+    ),
     "market_day_rows": int(mkt.shape[0]),
+    "kept_sessions": sorted(KEEP_SESSIONS) if KEEP_SESSIONS else "all",
     "excluded_outlier": excluded_stats,
 }
 
