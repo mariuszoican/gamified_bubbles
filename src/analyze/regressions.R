@@ -9,7 +9,7 @@
 #   Table 2  fig2  Liquidity: spreads, price impact, depth, volatility
 #   Table 3  fig3  Volume, order flow, order composition, churn
 #   Table 4  fig5  Liquidity provision mechanism
-#   Table 5  fig6  Trader types (market-rep composition)
+#   Table 5  fig6  Volume share by trader type (market x day)
 #   Table 5b fig6  Profits by trader type
 #   Table 6  fig7  Forecast accuracy and bias
 #   Table 7  fig8  Bubble incidence (market-rep counts)
@@ -239,6 +239,16 @@ setFixest_dict(c(
   share_speculator          = "Share speculators",
   share_fundamental         = "Share fundamentalists",
   share_other               = "Share unclassified",
+  share_vol_market_maker    = "Market makers",
+  share_vol_fundamental     = "Fundamentalists",
+  share_vol_feedback        = "Feedback",
+  share_vol_speculator      = "Speculators",
+  share_vol_other           = "Unclassified",
+  vol_market_maker          = "Market makers",
+  vol_fundamental           = "Fundamentalists",
+  vol_feedback              = "Feedback",
+  vol_speculator            = "Speculators",
+  vol_other                 = "Unclassified",
   # controls / FE
   fin_quiz_score            = "Financial literacy",
   self_assessment           = "Self-assessed literacy",
@@ -362,22 +372,30 @@ write_table(
 )
 
 # ============================================================
-# Table 5 (fig 6): Trader-type composition — market-rep level
+# Table 5 (fig 6): Volume by trader type — market x day
+# All five mutually exclusive types. Each type: volume share, then
+# gross trades (buys+sells). Single FE set (day + repetition).
 # ============================================================
-t5_1 <- ols("share_market_maker", "gamified", mkt)
-t5_2 <- ols("share_market_maker", "gamified", mkt, fe = "repetition")
-t5_3 <- ols("share_fundamental",  "gamified", mkt, fe = "repetition")
-t5_4 <- ols("share_feedback",     "gamified", mkt, fe = "repetition")
-t5_5 <- ols("share_speculator",   "gamified", mkt, fe = "repetition")
-t5_6 <- ols("share_other",        "gamified", mkt, fe = "repetition")
+.t5_fe <- c("trading_day", "repetition")
+t5_1 <- ols("share_vol_market_maker", "gamified", mkt_day, fe = .t5_fe)
+t5_2 <- ols("vol_market_maker",       "gamified", mkt_day, fe = .t5_fe)
+t5_3 <- ols("share_vol_fundamental",  "gamified", mkt_day, fe = .t5_fe)
+t5_4 <- ols("vol_fundamental",        "gamified", mkt_day, fe = .t5_fe)
+t5_5 <- ols("share_vol_feedback",     "gamified", mkt_day, fe = .t5_fe)
+t5_6 <- ols("vol_feedback",           "gamified", mkt_day, fe = .t5_fe)
+t5_7 <- ols("share_vol_speculator",   "gamified", mkt_day, fe = .t5_fe)
+t5_8 <- ols("vol_speculator",         "gamified", mkt_day, fe = .t5_fe)
+t5_9 <- ols("share_vol_other",        "gamified", mkt_day, fe = .t5_fe)
+t5_10 <- ols("vol_other",             "gamified", mkt_day, fe = .t5_fe)
 
 write_table(
-  list(t5_1, t5_2, t5_3, t5_4, t5_5, t5_6),
-  title = "Gamification and Trader-Type Composition",
-  headers = list("Market makers" = 2, "Directional types" = 4),
+  list(t5_1, t5_2, t5_3, t5_4, t5_5, t5_6, t5_7, t5_8, t5_9, t5_10),
+  title = "Gamification and Trading Volume by Type",
+  headers = rep(c("Share", "Trades"), 5),
   file = "t5_trader_types.tex",
   extralines = list(
-    "_Repetition dummy" = c("", "Yes", "Yes", "Yes", "Yes", "Yes")
+    "_Repetition dummy"    = rep("Yes", 10),
+    "_Trading-day dummies" = rep("Yes", 10)
   )
 )
 

@@ -908,6 +908,35 @@ def process_session(
 
     trader_day["trader_type"] = trader_day.apply(label_type, axis=1)
 
+    # Gross trades (buys + sells) by mutually exclusive type, each market-day.
+    # Each trade is counted once on each side, so shares sum to 1.
+    trader_day["gross"] = trader_day["n_buys"] + trader_day["n_sells"]
+    vol_by_type = trader_day.pivot_table(
+        index=["market_uuid", "trading_day"],
+        columns="trader_type",
+        values="gross",
+        aggfunc="sum",
+        fill_value=0,
+    )
+    _vol_map = {
+        "market_maker": "vol_market_maker",
+        "fundamental": "vol_fundamental",
+        "feedback": "vol_feedback",
+        "speculator": "vol_speculator",
+        "other": "vol_other",
+    }
+    vol_by_type = vol_by_type.rename(columns=_vol_map)
+    for col in _vol_map.values():
+        if col not in vol_by_type.columns:
+            vol_by_type[col] = 0
+    vol_cols = list(_vol_map.values())
+    tot_vol = vol_by_type[vol_cols].sum(axis=1)
+    for col in vol_cols:
+        vol_by_type[col.replace("vol_", "share_vol_")] = np.where(
+            tot_vol > 0, vol_by_type[col] / tot_vol, np.nan
+        )
+    vol_by_type = vol_by_type.reset_index()
+
     # ============================================================
     # 7. Market-day panel (one row per market × trading_day)
     # ============================================================
@@ -960,6 +989,13 @@ def process_session(
 
     # merge treatment identifiers
     market_day = market_day.merge(market_id, on="market_uuid")
+
+    # day-level volume (and volume share) by mutually exclusive trader type
+    market_day = market_day.merge(
+        vol_by_type, how="left", on=["market_uuid", "trading_day"]
+    )
+    for col in vol_cols:
+        market_day[col] = market_day[col].fillna(0)
 
     # merge price / trade aggregates from mp
     market_day = market_day.merge(

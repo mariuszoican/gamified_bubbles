@@ -1,23 +1,24 @@
 \begingroup
 \centering
-\begin{tabular}{lcccccc}
+\begin{tabular}{lcccccccccc}
    \tabularnewline \midrule \midrule
-   Dependent Variables: & \multicolumn{2}{c}{Share market makers} & Share fundamentalists & Share feedback & Share speculators & Share unclassified\\
-    & \multicolumn{2}{c}{Market makers} & \multicolumn{4}{c}{Directional types} \\ 
-   Model:           & (1)         & (2)         & (3)           & (4)          & (5)           & (6)\\  
+   Dependent Variables: & \multicolumn{2}{c}{Market makers} & \multicolumn{2}{c}{Fundamentalists} & \multicolumn{2}{c}{Feedback} & \multicolumn{2}{c}{Speculators} & \multicolumn{2}{c}{Unclassified}\\
+                       & Share        & Trades  & Share         & Trades        & Share         & Trades       & Share         & Trades        & Share         & Trades \\   
+   Model:              & (1)          & (2)     & (3)           & (4)           & (5)           & (6)          & (7)           & (8)           & (9)           & (10)\\  
    \midrule
    \emph{Variables}\\
-   Gamified         & 0.278$^{*}$ & 0.278$^{*}$ & 0.065         & 0.006        & 0.123         & -0.194$^{**}$\\   
-                    & (0.119)     & (0.123)     & (0.049)       & (0.072)      & (0.067)       & (0.060)\\   
-   Constant         & 0.056       & 0.056       & 0.380$^{***}$ & 0.171$^{**}$ & 0.171$^{***}$ & 0.278$^{***}$\\   
-                    & (0.050)     & (0.052)     & (0.017)       & (0.053)      & (0.034)       & (0.026)\\   
+   Gamified            & 0.379$^{**}$ & 9.347   & -0.065        & 1.187         & -0.061        & 0.238        & -0.065        & -0.409        & -0.188$^{**}$ & -1.029\\   
+                       & (0.139)      & (4.978) & (0.102)       & (1.482)       & (0.069)       & (1.031)      & (0.049)       & (0.532)       & (0.070)       & (0.985)\\   
+   Constant            & 0.065        & 0.700   & 0.340$^{***}$ & 3.433$^{***}$ & 0.207$^{***}$ & 2.289$^{**}$ & 0.137$^{***}$ & 1.389$^{***}$ & 0.250$^{***}$ & 2.056$^{***}$\\   
+                       & (0.060)      & (0.633) & (0.068)       & (0.558)       & (0.056)       & (0.757)      & (0.024)       & (0.198)       & (0.037)       & (0.222)\\   
    \midrule
    \emph{Fit statistics}\\
-   Observations     & 16          & 16          & 16            & 16           & 16            & 16\\  
-   R$^2$            & 0.31        & 0.31        & 0.08          & 0.00         & 0.15          & 0.31\\  
-   Repetition dummy &             & Yes         & Yes           & Yes          & Yes           & Yes\\  
+   Observations        & 237          & 240     & 237           & 240           & 237           & 240          & 237           & 240           & 237           & 240\\  
+   R$^2$               & 0.33         & 0.18    & 0.09          & 0.10          & 0.09          & 0.05         & 0.17          & 0.07          & 0.23          & 0.06\\  
+   Repetition dummy    & Yes          & Yes     & Yes           & Yes           & Yes           & Yes          & Yes           & Yes           & Yes           & Yes\\  
+   Trading-day dummies & Yes          & Yes     & Yes           & Yes           & Yes           & Yes          & Yes           & Yes           & Yes           & Yes\\  
    \midrule \midrule
-   \multicolumn{7}{l}{\emph{Clustered (Group) standard-errors in parentheses}}\\
-   \multicolumn{7}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+   \multicolumn{11}{l}{\emph{Clustered (Group) standard-errors in parentheses}}\\
+   \multicolumn{11}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
 \end{tabular}
 \par\endgroup
