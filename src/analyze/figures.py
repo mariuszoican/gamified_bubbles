@@ -14,6 +14,7 @@ Figures
   3. volume_orderflow     – volume, order-flow imbalance, limit orders, churn
   4. literacy_gini_payoff – Gini day path; payoff by financial literacy
   9. price_paths          – mean trade price by day in GHP vs NG, plus v_t
+ 10. carry_daypath        – realized price drop vs expected dividend (carry)
 
 Confidence intervals are 95% normal-approximation bands across market
 repetitions (figures 1–3) or across traders (figure 4, right panel).
@@ -174,6 +175,39 @@ def fig_price_paths(mkt: pd.DataFrame) -> None:
     ax.legend(loc="upper right")
     fig.tight_layout()
     save(fig, "fig9_price_paths")
+
+
+# ----------------------------------------------------------------------
+# Figure 10: overnight carry — price drop vs expected dividend
+# ----------------------------------------------------------------------
+
+def fig_carry(mkt: pd.DataFrame) -> None:
+    """Mean realized overnight price drop −ΔP_{t→t+1} vs E[D] = 8.
+
+    Holding a share overnight pays 8 + ΔP. The dashed line is both the
+    expected dividend and |Δv_t|. When the treatment path sits below 8,
+    riding is myopically profitable; when it rises above, carrying loses
+    money. Day 15 has no next price and is omitted.
+    """
+    df = mkt.sort_values(["market_uuid", "trading_day"]).copy()
+    df["price_drop"] = -(
+        df.groupby("market_uuid")["avg_trade_price"].shift(-1)
+        - df["avg_trade_price"]
+    )
+    df = df[df["trading_day"] < 15]
+
+    fig, ax = plt.subplots(figsize=(8.8, 4.95))
+    draw_daypath(ax, day_path(df, "price_drop"))
+    ax.axhline(
+        8.0, color="black", ls="--", lw=1.5,
+        label=r"Expected dividend $E[D]=8$ $(=|\Delta v_t|)$",
+    )
+    ax.set_ylabel("Overnight price drop (exp. currency)")
+    ax.set_xticks(range(1, 15, 2))
+    ax.set_xlim(0.6, 14.4)
+    ax.legend(loc="upper right")
+    fig.tight_layout()
+    save(fig, "fig10_carry_daypath")
 
 
 # ----------------------------------------------------------------------
@@ -689,6 +723,7 @@ def main() -> None:
         "market-reps,", mkt.shape[0], "market-days",
     )
     fig_price_paths(mkt)
+    fig_carry(mkt)
     fig_mispricing(mkt)
     fig_liquidity(mkt)
     fig_volume_orderflow(mkt)
