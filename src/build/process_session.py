@@ -32,20 +32,9 @@ from paths import get_session, interim_dir_for, load_parameters, raw_dir_for
 # the day boundary for most trades.
 REALIZED_SPREAD_HORIZON_S = 10.0
 
-
-def _sign_trades(trades: pd.DataFrame) -> pd.Series:
-    """Sign trades Lee–Ready style: quote rule vs the prevailing midpoint,
-    tick test for at-mid / unquoted trades. +1 buyer-initiated, -1 seller-
-    initiated, NaN when neither rule applies."""
-    sign = np.sign(trades["price"] - trades["mid_pre"])
-    tick = np.sign(
-        trades.groupby(["market_uuid", "trading_day"])["price"].diff()
-    ).replace(0, np.nan)
-    tick = tick.groupby(
-        [trades["market_uuid"], trades["trading_day"]]
-    ).ffill()
-    sign = sign.replace(0, np.nan).fillna(tick)
-    return sign
+# Forecasts above this are treated as fat-finger entries (prices never exceed
+# ~135 experimental $ and the maximum fundamental value is 120).
+FORECAST_MAX_PLAUSIBLE = 200.0
 
 
 def build_tick_metrics(
@@ -96,11 +85,10 @@ def build_tick_metrics(
     trades = mbo[mbo["record_kind"] == "trade"].copy()
     trades["ts"] = pd.to_datetime(trades["event_ts"], format="ISO8601")
 
-    # True aggressor side per order: an order whose FIRST recorded event is a
-    # fill executed on arrival (marketable); one that first appears as "add"
-    # rested passively. (The exported aggressor_side field is empty.)
+    # First recorded event per order: "fill" = marketable, executed on
+    # arrival; "add" = passive limit order that rested in the book. Used for
+    # the limit-order metrics below.
     first_event = orders.sort_values("event_seq").groupby("order_id").first()
-    marketable_ids = set(first_event[first_event["event_type"] == "fill"].index)
 
     # --- quote-based metrics, time-weighted over two-sided-book spells ---
     quote_rows = []
@@ -188,18 +176,24 @@ def build_tick_metrics(
     # Sign trades by the TRUE aggressor. On trade records the exported
     # "side" column IS the aggressor side ("bid" = buyer-initiated): the
     # engine derives it from its internal aggressor marker (the separate
-    # aggressor_side column is dropped by the exporter's schema). Verified
-    # to agree 1:1 with reconstructing the aggressor as the order whose
-    # first event is an on-arrival fill. Lee-Ready signing is NOT used: it
-    # is biased here because trades often print against stale midpoints in
-    # these thin, intermittently one-sided books.
+    # aggressor_side column is dropped by the exporter's schema), and its
+    # matching logic always assigns one (deterministic tie-breaker), so the
+    # column is never missing. Verified to agree 1:1 with reconstructing the
+    # aggressor as the order whose first event is an on-arrival fill.
+    # Do NOT use Lee-Ready inference here: it is biased because trades often
+    # print against stale midpoints in these thin, intermittently one-sided
+    # books.
     trades["sign"] = np.select(
         [trades["side"] == "bid", trades["side"] == "ask"],
         [1.0, -1.0],
         default=np.nan,
     )
-    trades["sign"] = trades["sign"].fillna(_sign_trades(trades))
-    trades["eff_spread"] = 2 * (trades["price"] - trades["mid_pre"]).abs()
+    # Signed convention throughout (SEC Rule 605-style): 2q(p − m). For a
+    # correctly signed trade the effective spread is positive; negative
+    # values (~5% of trades) are executions past a just-repriced book and
+    # net out against the price-impact term. Per trade:
+    # effective = realized + price impact, exactly.
+    trades["eff_spread"] = 2 * trades["sign"] * (trades["price"] - trades["mid_pre"])
     trades["rel_eff_spread"] = trades["eff_spread"] / trades["mid_pre"]
     trades["realized_spread"] = (
         2 * trades["sign"] * (trades["price"] - trades["mid_post"])
@@ -231,6 +225,11 @@ def build_tick_metrics(
     trade_metrics["order_flow_imbalance"] = (
         trade_metrics["signed_volume"] / trade_metrics["signed_volume_gross"]
     )
+    # one-sidedness of aggressive flow, direction-free (0 = balanced churn,
+    # 1 = fully one-directional)
+    trade_metrics["abs_order_flow_imbalance"] = trade_metrics[
+        "order_flow_imbalance"
+    ].abs()
     trade_metrics = trade_metrics.drop(columns="signed_volume_gross")
 
     # --- limit-order activity ---
@@ -279,11 +278,18 @@ def build_tick_metrics(
         a = a.assign(ts=a_ts).sort_values("event_seq")
         q = mbp[(mbp["market_uuid"] == mu) & (mbp["trading_day"] == day)]
         q = q[q["spread"].notna()].sort_values("source_mbo_event_seq")
-        gaps, recov = [], []
+        gaps, gaps_same, recov = [], [], []
         for _, r in t.iterrows():
+            # a trade consumes the RESTING side (opposite of the aggressor)
+            consumed = "ask" if r["side"] == "bid" else "bid"
             nxt = a[a["event_seq"] > r["event_seq"]]
             if len(nxt):
                 gaps.append((nxt["ts"].iloc[0] - r["ts"]).total_seconds())
+            nxt_same = nxt[nxt["side"] == consumed]
+            if len(nxt_same):
+                gaps_same.append(
+                    (nxt_same["ts"].iloc[0] - r["ts"]).total_seconds()
+                )
             pre = q[q["source_mbo_event_seq"] < r["event_seq"]]
             post = q[q["source_mbo_event_seq"] > r["event_seq"]]
             if len(pre) and len(post):
@@ -295,6 +301,9 @@ def build_tick_metrics(
                 market_uuid=mu,
                 trading_day=day,
                 time_to_next_order_s=np.median(gaps) if gaps else np.nan,
+                time_to_same_side_order_s=(
+                    np.median(gaps_same) if gaps_same else np.nan
+                ),
                 spread_recovery_s=np.median(recov) if recov else np.nan,
             )
         )
@@ -609,6 +618,17 @@ def process_session(
     mp["return"] = mp.groupby("market_uuid")["closing_price"].pct_change()
     mp["abs_mispricing_ratio"] = mp["avg_abs_mispricing"] / mp["fundamental_value"]
 
+    # normalizations by the horizon-average fundamental (vbar = 64):
+    # RAD, next-day log return, and the fundamental gap used in the
+    # error-correction regressions. RAD follows the PER-TRADE convention of
+    # Asparouhova et al. (2024): mean_n |P_n - v_t| / vbar (Stockl et al.
+    # 2010 instead average the price first: |Pbar_t - v_t| / vbar; that
+    # period-mean version is recoverable as avg_mispricing.abs()/vbar).
+    vbar = DIVIDEND_PER_PERIOD * (ROUNDS_PER_REPETITION + 1) / 2
+    mp["rad"] = mp["avg_abs_mispricing"] / vbar
+    mp["ret_next"] = np.log(mp["price_next"]) - np.log(mp["closing_price"])
+    mp["fundamental_gap"] = (mp["closing_price"] - mp["fundamental_value"]) / vbar
+
     # --- 3c. Surge, crash, and bubble flags (Asparouhova 2024; Noussair 2001)
 
     def flag_extremes(
@@ -688,28 +708,23 @@ def process_session(
         (trader_day["n_buys"] - trader_day["n_sells"]).abs() / gross,
         np.nan,
     )
+    trader_day["churn"] = 1.0 - trader_day["directionality"]
 
     trader_day = trader_day.merge(
         mp, how="left", on=["market_uuid", "repetition", "trading_day"]
     )
 
     # ============================================================
-    # 5. Wealth and inequality
+    # 5. Wealth and inequality (trade-stream reconstruction)
     # ============================================================
-
-    trader_day["wealth_day"] = (
-        trader_day["current_cash"]
-        + trader_day["num_shares"] * trader_day["fundamental_value"]
-    )
-
-    # --- 5b. Trade-stream reconstruction ------------------------------
-    # The oTree player.num_shares snapshot is unreliable: it counts shares
-    # escrowed in open sell orders as held, and it is captured when each
-    # player's page submits (mid-day, asynchronous across traders), so
-    # market-day share sums exceed the 90 outstanding. Rebuild holdings and
-    # cash from the MBO trade stream instead, applying the day's REALIZED
-    # dividend (draws from {0,4,20,8}; dividend_per_share) to end-of-day
-    # reconstructed holdings.
+    # No snapshot-based wealth measure is built: the oTree player.num_shares
+    # snapshot is unreliable (it counts shares escrowed in open sell orders
+    # as held, and it is captured when each player's page submits — mid-day,
+    # asynchronous across traders — so market-day share sums exceed the 90
+    # outstanding). The raw num_shares / current_cash snapshots are kept in
+    # the panel for diagnostics only. Wealth and inequality are rebuilt from
+    # the MBO trade stream, applying the day's REALIZED dividend (draws from
+    # {0,4,8,20}; dividend_per_share) to end-of-day reconstructed holdings.
     trades["trade_value"] = trades["price"] * trades["size"]
     flows = (
         trades.groupby(["market_uuid", "trading_day", "buyer_uuid"])
@@ -736,27 +751,55 @@ def process_session(
         ["market_uuid", "trader_uuid", "trading_day"]
     ).reset_index(drop=True)
     g = trader_day.groupby(["market_uuid", "trader_uuid"])
-    trader_day["shares_recon"] = trader_day["initial_shares"] + g[
+    trader_day["shares"] = trader_day["initial_shares"] + g[
         "q_buy"
     ].cumsum() - g["q_sell"].cumsum()
-    trader_day["div_cash_recon"] = (
-        trader_day["dividend_per_share"] * trader_day["shares_recon"]
+    trader_day["div_cash"] = (
+        trader_day["dividend_per_share"] * trader_day["shares"]
     )
     g = trader_day.groupby(["market_uuid", "trader_uuid"])
-    trader_day["cash_recon"] = (
+    trader_day["cash"] = (
         trader_day["initial_cash"]
         + g["v_sell"].cumsum()
         - g["v_buy"].cumsum()
-        + g["div_cash_recon"].cumsum()
+        + g["div_cash"].cumsum()
     )
     # end-of-day mark-to-fundamental wealth: cash after the day's dividend
     # plus remaining expected dividends on reconstructed holdings
-    trader_day["wealth_day_recon"] = trader_day["cash_recon"] + trader_day[
-        "shares_recon"
+    trader_day["wealth_day"] = trader_day["cash"] + trader_day[
+        "shares"
     ] * DIVIDEND_PER_PERIOD * (ROUNDS_PER_REPETITION - trader_day["trading_day"])
+    # within-market relative wealth (endowments are equal by design, so this
+    # is the natural payoff measure for cross-market regressions; at day 15
+    # it equals final cash demeaned within market)
+    trader_day["rel_wealth"] = trader_day["wealth_day"] - trader_day.groupby(
+        ["market_uuid", "trading_day"]
+    )["wealth_day"].transform("mean")
     trader_day = trader_day.drop(
-        columns=["q_buy", "v_buy", "q_sell", "v_sell", "div_cash_recon"]
+        columns=["q_buy", "v_buy", "q_sell", "v_sell", "div_cash"]
     )
+
+    # --- 5c. Forecast accuracy -----------------------------------------
+    # forecast (elicited every 3rd day) targets the NEXT day's price. Errors
+    # are normalized by the horizon-average fundamental (vbar = 64, as in
+    # RAD). Forecasts above FORECAST_MAX_PLAUSIBLE (fat-finger entries, ~3%;
+    # prices never exceed ~135 and the max fundamental is 120) are set to NaN.
+    vbar = DIVIDEND_PER_PERIOD * (ROUNDS_PER_REPETITION + 1) / 2
+    next_avg = mp[["market_uuid", "trading_day", "avg_trade_price"]].copy()
+    next_avg["trading_day"] -= 1
+    next_avg = next_avg.rename(columns={"avg_trade_price": "next_avg_price"})
+    trader_day = trader_day.merge(
+        next_avg, how="left", on=["market_uuid", "trading_day"]
+    )
+    fcast = trader_day["forecast"].where(
+        trader_day["forecast"] <= FORECAST_MAX_PLAUSIBLE
+    )
+    v_next = trader_day["fundamental_value"] - DIVIDEND_PER_PERIOD
+    trader_day["forecast_err_price"] = (
+        (fcast - trader_day["next_avg_price"]).abs() / vbar
+    )
+    trader_day["forecast_err_fund"] = (fcast - v_next).abs() / vbar
+    trader_day["forecast_bias_fund"] = (fcast - v_next) / vbar
 
     def gini(x: pd.Series) -> float:
         """Gini coefficient for a wealth vector."""
@@ -768,12 +811,9 @@ def process_session(
             return 0.0 if np.allclose(vals, 0) else np.nan
         return np.abs(vals[:, None] - vals[None, :]).sum() / (2 * len(vals) ** 2 * mu)
 
-    trader_day["gini"] = trader_day.groupby(["market_uuid", "trading_day"])[
-        "wealth_day"
-    ].transform(gini)
-    trader_day["gini_recon"] = trader_day.groupby(
+    trader_day["gini"] = trader_day.groupby(
         ["market_uuid", "trading_day"]
-    )["wealth_day_recon"].transform(gini)
+    )["wealth_day"].transform(gini)
 
     # ============================================================
     # 6. Trader-type classification
@@ -852,6 +892,22 @@ def process_session(
         on=["market_uuid", "participant_code"],
     )
 
+    # Mutually exclusive type label (per trader-market): "market_maker"
+    # first, then the dominant directional type among non-MMs, else "other".
+    def label_type(r) -> str:
+        if r["market_maker_flag"] > 0:
+            return "market_maker"
+        flags = {
+            "feedback": r["feedback_flag"],
+            "speculator": r["speculator_flag"],
+            "fundamental": r["fundamental_flag"],
+        }
+        if max(flags.values()) <= 0:
+            return "other"
+        return max(flags, key=flags.get)
+
+    trader_day["trader_type"] = trader_day.apply(label_type, axis=1)
+
     # ============================================================
     # 7. Market-day panel (one row per market × trading_day)
     # ============================================================
@@ -885,14 +941,10 @@ def process_session(
             avg_overconfidence=("overconfidence", "mean"),
             sd_overconfidence=("overconfidence", "std"),
             avg_cq_attempts=("cq_attempt_count", "mean"),
-            # wealth
+            # wealth (trade-stream reconstruction; see section 5)
             avg_wealth=("wealth_day", "mean"),
             sd_wealth=("wealth_day", "std"),
             gini=("gini", "first"),
-            # trade-stream reconstructed wealth (preferred; see 5b)
-            avg_wealth_recon=("wealth_day_recon", "mean"),
-            sd_wealth_recon=("wealth_day_recon", "std"),
-            gini_recon=("gini_recon", "first"),
             # forecasts
             avg_forecast=("forecast", "median"),
             sd_forecast=("forecast", "std"),
@@ -939,6 +991,7 @@ def process_session(
         how="left",
         on=["market_uuid", "trading_day"],
     )
+    market_day["churn"] = 1.0 - market_day["avg_directionality"]
 
     # cumulative surge / crash / bubble counts within each market
     for col in ("surge", "crash", "bubble_period"):

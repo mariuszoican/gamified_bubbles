@@ -33,20 +33,15 @@ OUT = ROOT / "output" / "tables" / "error_correction.csv"
 
 TREATMENTS = ["ng", "ghp"]
 EXCLUDE_GROUPS = {"20260520_PM/ng1"}
-VBAR = 64.0
-
 
 def load_panel() -> pd.DataFrame:
+    """ret_next and fundamental_gap come from the processed panel."""
     mkt = pd.read_csv(ROOT / "data" / "processed" / "market_day_panel_full.csv")
     mkt = mkt[
         mkt["treatment"].isin(TREATMENTS)
         & ~mkt["group_label"].isin(EXCLUDE_GROUPS)
-    ].sort_values(["market_uuid", "trading_day"])
-    g = mkt.groupby("market_uuid")
-    mkt["ret_next"] = np.log(g["closing_price"].shift(-1)) - np.log(
-        mkt["closing_price"]
-    )
-    mkt["gap"] = (mkt["closing_price"] - mkt["fundamental_value"]) / VBAR
+    ].copy()
+    mkt["gap"] = mkt["fundamental_gap"]
     mkt["gamified"] = (mkt["treatment"] == "ghp").astype(float)
     return mkt.dropna(subset=["ret_next", "gap", "order_flow_imbalance"])
 

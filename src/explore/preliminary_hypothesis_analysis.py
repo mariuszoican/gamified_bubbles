@@ -430,7 +430,7 @@ results["h3"] = {
         t: r(ineq_grp.loc[ineq_grp.treatment == t, "sd_recon"].mean(), 0)
         for t in TREATS
     },
-    "cells_gini_panel_contaminated": cellmeans(gp_num, "gini_last", 3),
+    "cells_gini_panel_recon": cellmeans(gp_num, "gini_last", 3),
     "gamified_vs_ng_gini_recon": split_test(ineq_grp, "gini_recon", "gamified"),
     "gamified_vs_ng_sd_recon": split_test(ineq_grp, "sd_recon", "gamified"),
     "literacy_relpayoff_corr": corr,

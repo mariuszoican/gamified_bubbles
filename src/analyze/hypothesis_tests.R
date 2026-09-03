@@ -136,6 +136,8 @@ mkt <- mkt_day %>%
     avg_mispricing       = mean(avg_mispricing,       na.rm = TRUE),
     avg_abs_mispricing   = mean(avg_abs_mispricing,   na.rm = TRUE),
     abs_mispricing_ratio = mean(abs_mispricing_ratio, na.rm = TRUE),
+    # gini is the trade-stream reconstructed Gini (the snapshot-based
+    # version no longer exists; see src/analyze/HANDOFF_2026-09-02.md)
     gini                 = mean(gini,                 na.rm = TRUE),
     share_feedback       = first(share_feedback),
     share_speculator     = first(share_speculator),

@@ -1,0 +1,32 @@
+\begingroup
+\centering
+\begin{tabular}{lcccccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variable: & \multicolumn{6}{c}{$\Delta \log P_{t+1}$}\\
+    & \multicolumn{2}{c}{Pooled} & \multicolumn{2}{c}{Day FE} & \multicolumn{2}{c}{Day + Repetition FE} \\ 
+   Model:                 & (1)            & (2)            & (3)            & (4)            & (5)            & (6)\\  
+   \midrule
+   \emph{Variables}\\
+   Gap                    & -0.751$^{**}$  & -0.744$^{***}$ & -0.681$^{**}$  & -0.666$^{***}$ & -0.691$^{**}$  & -0.681$^{***}$\\   
+                          & (0.279)        & (0.202)        & (0.223)        & (0.160)        & (0.217)        & (0.144)\\   
+   Gap $\times$ Gamified  & 0.538          & 0.529$^{*}$    & 0.560$^{*}$    & 0.547$^{**}$   & 0.575$^{*}$    & 0.568$^{**}$\\   
+                          & (0.319)        & (0.254)        & (0.266)        & (0.217)        & (0.258)        & (0.202)\\   
+   OFI                    &                & 0.009          &                & 0.016          &                & 0.010\\   
+                          &                & (0.094)        &                & (0.092)        &                & (0.092)\\   
+   OFI $\times$ Gamified  &                & 0.024          &                & -0.038         &                & -0.037\\   
+                          &                & (0.126)        &                & (0.127)        &                & (0.126)\\   
+   Gamified               & 0.044          & 0.038          & 0.035          & 0.039          & 0.035          & 0.039\\   
+                          & (0.066)        & (0.073)        & (0.065)        & (0.068)        & (0.065)        & (0.068)\\   
+   Constant               & -0.135$^{***}$ & -0.136$^{***}$ & -0.135$^{***}$ & -0.133$^{***}$ & -0.135$^{***}$ & -0.134$^{***}$\\   
+                          & (0.017)        & (0.018)        & (0.012)        & (0.011)        & (0.013)        & (0.013)\\   
+   \midrule
+   \emph{Fit statistics}\\
+   Observations           & 224            & 221            & 224            & 221            & 224            & 221\\  
+   R$^2$                  & 0.16           & 0.16           & 0.26           & 0.26           & 0.27           & 0.27\\  
+   Repetition dummy       &                &                &                &                & Yes            & Yes\\  
+   Trading-day dummies    &                &                & Yes            & Yes            & Yes            & Yes\\  
+   \midrule \midrule
+   \multicolumn{7}{l}{\emph{Clustered (Group) standard-errors in parentheses}}\\
+   \multicolumn{7}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+\par\endgroup

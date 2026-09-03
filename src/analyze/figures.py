@@ -13,6 +13,7 @@ Figures
   2. liquidity_spreads    – relative effective and realized spreads
   3. volume_orderflow     – volume, order-flow imbalance, limit orders, churn
   4. literacy_gini_payoff – Gini day path; payoff by financial literacy
+  9. price_paths          – mean trade price by day in GHP vs NG, plus v_t
 
 Confidence intervals are 95% normal-approximation bands across market
 repetitions (figures 1–3) or across traders (figure 4, right panel).
@@ -42,7 +43,6 @@ TREATMENTS = ["ng", "ghp"]
 LABELS = {"ng": "Control (NG)", "ghp": "Gamified (GHP)"}
 COLORS = {"ng": "#4d4d4d", "ghp": "#0072b2"}
 EXCLUDE_GROUPS = {"20260520_PM/ng1"}  # abnormal-volume NG outlier
-VBAR = 64.0  # horizon-average fundamental value (RAD denominator)
 Z95 = 1.96
 
 plt.rcParams.update(
@@ -74,12 +74,10 @@ plt.rcParams.update(
 
 def load_market_panel() -> pd.DataFrame:
     mkt = pd.read_csv(PROCESSED / "market_day_panel_full.csv")
-    mkt = mkt[
+    return mkt[
         mkt["treatment"].isin(TREATMENTS)
         & ~mkt["group_label"].isin(EXCLUDE_GROUPS)
     ].copy()
-    mkt["rad"] = mkt["avg_mispricing"].abs() / VBAR
-    return mkt
 
 
 def load_trader_panel() -> pd.DataFrame:
@@ -153,6 +151,32 @@ def save(fig, name: str) -> None:
 
 
 # ----------------------------------------------------------------------
+# Figure 9: price paths vs fundamental value
+# ----------------------------------------------------------------------
+
+def fig_price_paths(mkt: pd.DataFrame) -> None:
+    """Mean transaction price by day (95% CI across market-reps) and the
+    deterministic declining fundamental v_t = 8 × remaining dividends."""
+    fig, ax = plt.subplots(figsize=(8.8, 4.95))  # ~16:9
+
+    draw_daypath(ax, day_path(mkt, "avg_trade_price"))
+    fv = (
+        mkt.groupby("trading_day", as_index=False)["fundamental_value"]
+        .first()
+        .sort_values("trading_day")
+    )
+    ax.plot(
+        fv["trading_day"], fv["fundamental_value"],
+        color="black", ls="--", lw=1.5, label="Fundamental value", zorder=3,
+    )
+    ax.set_ylabel("Average trade price (exp. currency)")
+    ax.set_ylim(bottom=0)
+    ax.legend(loc="upper right")
+    fig.tight_layout()
+    save(fig, "fig9_price_paths")
+
+
+# ----------------------------------------------------------------------
 # Figure 1: mispricing by trading day
 # ----------------------------------------------------------------------
 
@@ -163,17 +187,17 @@ def fig_mispricing(mkt: pd.DataFrame) -> None:
         (
             "avg_abs_mispricing",
             "A. Absolute mispricing",
-            r"$|P_{kt} - v_t|$ (exp. currency)",
+            r"mean$_n$ $|P_n - v_t|$ (exp. currency)",
         ),
         (
             "abs_mispricing_ratio",
             "B. Relative mispricing (AMR)",
-            r"$|P_{kt} - v_t|\,/\,v_t$",
+            r"mean$_n$ $|P_n - v_t|\,/\,v_t$",
         ),
         (
             "rad",
             "C. Relative absolute deviation (RAD)",
-            r"$|\bar{P}_{kt} - v_t|\,/\,\bar{v}$,  $\bar{v}=64$",
+            r"mean$_n$ $|P_n - v_t|\,/\,\bar{v}$,  $\bar{v}=64$",
         ),
     ]
     for ax, (col, title, ylab) in zip(axes, specs):
@@ -229,8 +253,6 @@ def fig_liquidity(mkt: pd.DataFrame) -> None:
 # ----------------------------------------------------------------------
 
 def fig_volume_orderflow(mkt: pd.DataFrame) -> None:
-    mkt = mkt.copy()
-    mkt["churn"] = 1.0 - mkt["avg_directionality"]
     rep = rep_level(
         mkt,
         [
@@ -321,7 +343,7 @@ def fig_liquidity_provision(mkt: pd.DataFrame) -> None:
         [
             "n_improving_adds",
             "share_improving_adds",
-            "time_to_next_order_s",
+            "time_to_same_side_order_s",
             "spread_recovery_s",
         ],
     )
@@ -336,9 +358,9 @@ def fig_liquidity_provision(mkt: pd.DataFrame) -> None:
     ax_b.set_title("B. Share of submissions improving the spread", loc="left")
     ax_b.set_ylabel("Percent of limit-order submissions")
 
-    draw_bars(ax_c, rep, "time_to_next_order_s")
+    draw_bars(ax_c, rep, "time_to_same_side_order_s")
     ax_c.set_title("C. Order replenishment after a trade", loc="left")
-    ax_c.set_ylabel("Median seconds from trade to\nnext limit-order submission")
+    ax_c.set_ylabel("Median seconds from trade to next\nlimit order on the consumed side")
 
     draw_bars(ax_d, rep, "spread_recovery_s")
     ax_d.set_title("D. Spread recovery after a trade", loc="left")
@@ -359,35 +381,29 @@ def fig_literacy(mkt: pd.DataFrame, trd: pd.DataFrame) -> None:
 
     # A. wealth inequality (Gini) by trading day, from trade-stream
     # reconstructed wealth (the oTree num_shares snapshot is unreliable)
-    draw_daypath(ax_a, day_path(mkt, "gini_recon"))
+    draw_daypath(ax_a, day_path(mkt, "gini"))
     ax_a.set_title("A. Wealth inequality", loc="left")
     ax_a.set_ylabel("Gini coefficient of trader wealth")
     ax_a.set_ylim(bottom=0)
     ax_a.legend(loc="upper left")
 
-    # B. within-market relative wealth by financial literacy (median split).
-    # Payoff = trade-stream reconstructed cash at day 15 (the corrected
-    # economic payoff; oTree's trade_payoff includes dividends overpaid on
-    # phantom shares), demeaned within each market-rep so endowment-equal
-    # markets are comparable, then averaged across a participant's two reps.
-    final = trd[trd["trading_day"] == 15].copy()
-    final["rel_wealth"] = final["cash_recon"] - final.groupby("market_uuid")[
-        "cash_recon"
-    ].transform("mean")
+    # B. within-market relative wealth by financial literacy (sample-wide
+    # median split from the panel). Payoff = rel_wealth at day 15 (the
+    # trade-stream reconstructed economic payoff; oTree's trade_payoff
+    # includes dividends overpaid on phantom shares), averaged across a
+    # participant's two reps.
     traders = (
-        final.groupby("participant_code")
+        trd[trd["trading_day"] == 15]
+        .groupby("participant_code")
         .agg(
             treatment=("treatment", "first"),
-            fin_quiz_score=("fin_quiz_score", "first"),
+            above=("above_median_literacy", "first"),
             payoff_recon=("rel_wealth", "mean"),
         )
         .reset_index()
         .dropna()
     )
-    med = traders["fin_quiz_score"].median()
-    traders["literacy"] = np.where(
-        traders["fin_quiz_score"] > med, "above", "below"
-    )
+    traders["literacy"] = np.where(traders["above"] > 0, "above", "below")
 
     width, x = 0.38, np.arange(2)  # x: below, above median
     for i, t in enumerate(TREATMENTS):
@@ -426,53 +442,34 @@ def fig_literacy(mkt: pd.DataFrame, trd: pd.DataFrame) -> None:
 # Figure 6: trader types — shares and payoffs
 # ----------------------------------------------------------------------
 
-TYPE_ORDER = ["feedback", "speculator", "fundamental", "market maker", "other"]
+TYPE_ORDER = ["feedback", "speculator", "fundamental", "market_maker", "other"]
 TYPE_LABELS = {
     "feedback": "Feedback",
     "speculator": "Speculator",
     "fundamental": "Fundamentalist",
     "other": "Unclassified",
-    "market maker": "Market maker",
+    "market_maker": "Market maker",
 }
 
 
 def _trader_types(trd: pd.DataFrame) -> pd.DataFrame:
-    """One row per trader-market with a MUTUALLY EXCLUSIVE type ("market
-    maker" first, then the dominant directional type among non-MMs), gross
-    trading volume, and relative final wealth (trade-stream reconstructed,
-    demeaned within market)."""
-    final = trd[trd["trading_day"] == 15].copy()
-    final["rel_wealth"] = final["cash_recon"] - final.groupby("market_uuid")[
-        "cash_recon"
-    ].transform("mean")
+    """One row per trader-market: mutually exclusive `trader_type` (from the
+    panel), gross trading volume, and final relative wealth (`rel_wealth`
+    at day 15)."""
     gross = (
         (trd["n_buys"] + trd["n_sells"])
         .groupby([trd["market_uuid"], trd["participant_code"]])
         .sum()
         .rename("gross")
     )
-    cols = [
-        "market_uuid", "participant_code", "treatment", "feedback_flag",
-        "speculator_flag", "fundamental_flag", "market_maker_flag",
-        "rel_wealth",
-    ]
-    tm = final[cols].copy()
-    tm = tm.join(gross, on=["market_uuid", "participant_code"])
-
-    def classify(r) -> str:
-        if r["market_maker_flag"] > 0:
-            return "market maker"
-        flags = {
-            "feedback": r["feedback_flag"],
-            "speculator": r["speculator_flag"],
-            "fundamental": r["fundamental_flag"],
-        }
-        if max(flags.values()) <= 0:
-            return "other"
-        return max(flags, key=flags.get)
-
-    tm["type"] = tm.apply(classify, axis=1)
-    return tm
+    tm = trd[trd["trading_day"] == 15][
+        [
+            "market_uuid", "participant_code", "treatment", "trader_type",
+            "rel_wealth",
+        ]
+    ].copy()
+    tm = tm.rename(columns={"trader_type": "type"})
+    return tm.join(gross, on=["market_uuid", "participant_code"])
 
 
 def fig_trader_types(trd: pd.DataFrame) -> None:
@@ -548,21 +545,15 @@ def fig_forecasts(trd: pd.DataFrame) -> None:
     Trader-level errors are aggregated to the market-day median (robust to
     fat-finger forecasts), then averaged across market-reps; all errors are
     normalized by the horizon-average fundamental (v-bar = 64), as in RAD."""
-    sub = trd.dropna(subset=["forecast"]).copy()
-    # drop fat-finger entries (~3% of forecasts, e.g. 4,110 or 5,200 when
-    # prices never exceed ~135 and the max fundamental is 120)
-    sub = sub[sub["forecast"] <= 200]
-    next_price = trd.groupby(["market_uuid", "trading_day"])[
-        "avg_trade_price"
-    ].first()
-    sub["next_avg_price"] = pd.MultiIndex.from_arrays(
-        [sub["market_uuid"], sub["trading_day"] + 1]
-    ).map(next_price)
-    sub["v_next"] = sub["fundamental_value"] - 8.0
-
-    sub["err_price"] = (sub["forecast"] - sub["next_avg_price"]).abs() / VBAR
-    sub["err_fund"] = (sub["forecast"] - sub["v_next"]).abs() / VBAR
-    sub["bias_fund"] = (sub["forecast"] - sub["v_next"]) / VBAR
+    # forecast_err_* / forecast_bias_* come from the panel (normalized by
+    # v-bar, fat-finger entries already set to NaN there)
+    sub = trd.dropna(subset=["forecast"]).rename(
+        columns={
+            "forecast_err_price": "err_price",
+            "forecast_err_fund": "err_fund",
+            "forecast_bias_fund": "bias_fund",
+        }
+    )
 
     med = (
         sub.groupby(["market_uuid", "treatment", "trading_day"])[
@@ -697,6 +688,7 @@ def main() -> None:
         {t: int(n) for t, n in mkt.groupby("treatment")["market_uuid"].nunique().items()},
         "market-reps,", mkt.shape[0], "market-days",
     )
+    fig_price_paths(mkt)
     fig_mispricing(mkt)
     fig_liquidity(mkt)
     fig_volume_orderflow(mkt)

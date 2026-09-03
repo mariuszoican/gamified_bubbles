@@ -35,9 +35,19 @@ def build_all(*, only: list[str] | None = None, skip_process: bool = False) -> N
         frames = [
             pd.read_csv(INTERIM_DIR / sid / f"{name}.csv") for sid in session_ids
         ]
+        full = pd.concat(frames, ignore_index=True)
+        if name == "trader_day_panel":
+            # sample-wide median split on financial literacy (needs the full
+            # concatenated sample, hence computed here and not per session)
+            med = full.drop_duplicates("participant_code")[
+                "fin_quiz_score"
+            ].median()
+            full["above_median_literacy"] = (
+                full["fin_quiz_score"] > med
+            ).astype(int)
         out = PROCESSED_DIR / f"{name}_full.csv"
-        pd.concat(frames, ignore_index=True).to_csv(out, index=False)
-        print(f"  wrote {out} ({sum(len(f) for f in frames):,} rows)")
+        full.to_csv(out, index=False)
+        print(f"  wrote {out} ({len(full):,} rows)")
 
 
 if __name__ == "__main__":
