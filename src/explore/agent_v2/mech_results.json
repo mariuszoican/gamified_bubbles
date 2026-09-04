@@ -1,0 +1,812 @@
+{
+ "data_quality": {
+  "gamified_dummy_bug": "processed panels code gh/gp as gamified=0 because group.market_design is 'hedonic_only'/'info_only'; re-derived from treatment labels here",
+  "cumulative_exports": "custom exports are cumulative oTree dumps; 20260520_AM contains all 20260512 markets \u2014 rows assigned to their own session before use"
+ },
+ "outlier": {
+  "group": [
+   "20260520_PM/ng1"
+  ],
+  "per_rep": [
+   {
+    "group_label": "20260520_PM/ng1",
+    "repetition": 1,
+    "trades": 495.0,
+    "amr": 2.59,
+    "peak_avg_price": 130.2
+   },
+   {
+    "group_label": "20260520_PM/ng1",
+    "repetition": 2,
+    "trades": 578.0,
+    "amr": 2.61,
+    "peak_avg_price": 132.1
+   }
+  ],
+  "ng_clean_total_trades": {
+   "20260512/ng1": 157,
+   "20260826/ng1": 127,
+   "20260826/ng2": 160
+  }
+ },
+ "headline": {
+  "trades": {
+   "cells": {
+    "ng": 74.0,
+    "gh": 139.0,
+    "gp": 208.0,
+    "ghp": 144.0
+   },
+   "gamified_mean": 150.75,
+   "ng_mean": 74.0,
+   "ratio": 2.037,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.012,
+   "p_hedonic": 0.164,
+   "p_pn": 0.126
+  },
+  "turnover": {
+   "cells": {
+    "ng": 0.822,
+    "gh": 1.544,
+    "gp": 2.311,
+    "ghp": 1.6
+   },
+   "gamified_mean": 1.675,
+   "ng_mean": 0.822,
+   "ratio": 2.037,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.012,
+   "p_hedonic": 0.164,
+   "p_pn": 0.126
+  },
+  "avg_mispricing": {
+   "cells": {
+    "ng": -2.639,
+    "gh": 17.029,
+    "gp": -11.354,
+    "ghp": 7.003
+   },
+   "gamified_mean": 7.215,
+   "ng_mean": -2.639,
+   "ratio": -2.734,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.376,
+   "p_hedonic": 0.109,
+   "p_pn": 1.0
+  },
+  "abs_mispricing": {
+   "cells": {
+    "ng": 14.314,
+    "gh": 19.914,
+    "gp": 15.916,
+    "ghp": 18.605
+   },
+   "gamified_mean": 18.596,
+   "ng_mean": 14.314,
+   "ratio": 1.299,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.63,
+   "p_hedonic": 0.788,
+   "p_pn": 0.662
+  },
+  "amr": {
+   "cells": {
+    "ng": 0.263,
+    "gh": 0.621,
+    "gp": 0.331,
+    "ghp": 0.555
+   },
+   "gamified_mean": 0.544,
+   "ng_mean": 0.263,
+   "ratio": 2.066,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.776,
+   "p_hedonic": 0.927,
+   "p_pn": 0.792
+  },
+  "RAD": {
+   "cells": {
+    "ng": 0.216,
+    "gh": 0.295,
+    "gp": 0.241,
+    "ghp": 0.287
+   },
+   "gamified_mean": 0.283,
+   "ng_mean": 0.216,
+   "ratio": 1.313,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.63,
+   "p_hedonic": 0.788,
+   "p_pn": 0.662
+  },
+  "RD": {
+   "cells": {
+    "ng": -0.041,
+    "gh": 0.266,
+    "gp": -0.177,
+    "ghp": 0.109
+   },
+   "gamified_mean": 0.113,
+   "ng_mean": -0.041,
+   "ratio": -2.734,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.376,
+   "p_hedonic": 0.109,
+   "p_pn": 1.0
+  },
+  "bubbles": {
+   "cells": {
+    "ng": 0.167,
+    "gh": 0.75,
+    "gp": 0.0,
+    "ghp": 0.9
+   },
+   "gamified_mean": 0.75,
+   "ng_mean": 0.167,
+   "ratio": 4.5,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.435,
+   "p_hedonic": 0.215,
+   "p_pn": 0.69
+  },
+  "surges": {
+   "cells": {
+    "ng": 0.5,
+    "gh": 0.25,
+    "gp": 0.5,
+    "ghp": 0.2
+   },
+   "gamified_mean": 0.25,
+   "ng_mean": 0.5,
+   "ratio": 0.5,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.43,
+   "p_hedonic": 0.251,
+   "p_pn": 0.614
+  },
+  "crashes": {
+   "cells": {
+    "ng": 0.0,
+    "gh": 0.0,
+    "gp": 0.0,
+    "ghp": 0.3
+   },
+   "gamified_mean": 0.188,
+   "ng_mean": 0.0,
+   "ratio": null,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.683,
+   "p_hedonic": 0.571,
+   "p_pn": 0.465
+  }
+ },
+ "by_repetition": {
+  "table": [
+   {
+    "group_label": "20260512/ghp1",
+    "treatment": "ghp",
+    "gamified": 1,
+    "RAD_r1": 0.191,
+    "RAD_r2": 0.074,
+    "trades_r1": 79.0,
+    "trades_r2": 106.0,
+    "d_trades": 27.0,
+    "d_RAD": -0.117
+   },
+   {
+    "group_label": "20260512/ng1",
+    "treatment": "ng",
+    "gamified": 0,
+    "RAD_r1": 0.086,
+    "RAD_r2": 0.052,
+    "trades_r1": 83.0,
+    "trades_r2": 74.0,
+    "d_trades": -9.0,
+    "d_RAD": -0.034
+   },
+   {
+    "group_label": "20260520_AM/gh1",
+    "treatment": "gh",
+    "gamified": 1,
+    "RAD_r1": 0.788,
+    "RAD_r2": 0.304,
+    "trades_r1": 111.0,
+    "trades_r2": 149.0,
+    "d_trades": 38.0,
+    "d_RAD": -0.484
+   },
+   {
+    "group_label": "20260520_AM/gp1",
+    "treatment": "gp",
+    "gamified": 1,
+    "RAD_r1": 0.276,
+    "RAD_r2": 0.206,
+    "trades_r1": 209.0,
+    "trades_r2": 207.0,
+    "d_trades": -2.0,
+    "d_RAD": -0.071
+   },
+   {
+    "group_label": "20260520_PM/ghp1",
+    "treatment": "ghp",
+    "gamified": 1,
+    "RAD_r1": 0.226,
+    "RAD_r2": 0.249,
+    "trades_r1": 145.0,
+    "trades_r2": 130.0,
+    "d_trades": -15.0,
+    "d_RAD": 0.023
+   },
+   {
+    "group_label": "20260520_PM/ghp2",
+    "treatment": "ghp",
+    "gamified": 1,
+    "RAD_r1": 0.549,
+    "RAD_r2": 0.428,
+    "trades_r1": 228.0,
+    "trades_r2": 258.0,
+    "d_trades": 30.0,
+    "d_RAD": -0.121
+   },
+   {
+    "group_label": "20260826/gh1",
+    "treatment": "gh",
+    "gamified": 1,
+    "RAD_r1": 0.036,
+    "RAD_r2": 0.05,
+    "trades_r1": 164.0,
+    "trades_r2": 132.0,
+    "d_trades": -32.0,
+    "d_RAD": 0.014
+   },
+   {
+    "group_label": "20260826/ghp1",
+    "treatment": "ghp",
+    "gamified": 1,
+    "RAD_r1": 0.329,
+    "RAD_r2": 0.416,
+    "trades_r1": 109.0,
+    "trades_r2": 122.0,
+    "d_trades": 13.0,
+    "d_RAD": 0.086
+   },
+   {
+    "group_label": "20260826/ghp2",
+    "treatment": "ghp",
+    "gamified": 1,
+    "RAD_r1": 0.331,
+    "RAD_r2": 0.077,
+    "trades_r1": 154.0,
+    "trades_r2": 109.0,
+    "d_trades": -45.0,
+    "d_RAD": -0.253
+   },
+   {
+    "group_label": "20260826/ng1",
+    "treatment": "ng",
+    "gamified": 0,
+    "RAD_r1": 0.309,
+    "RAD_r2": 0.382,
+    "trades_r1": 63.0,
+    "trades_r2": 64.0,
+    "d_trades": 1.0,
+    "d_RAD": 0.073
+   },
+   {
+    "group_label": "20260826/ng2",
+    "treatment": "ng",
+    "gamified": 0,
+    "RAD_r1": 0.238,
+    "RAD_r2": 0.226,
+    "trades_r1": 70.0,
+    "trades_r2": 90.0,
+    "d_trades": 20.0,
+    "d_RAD": -0.012
+   }
+  ],
+  "d_RAD_gamified_vs_ng_p": 0.376
+ },
+ "validation": {
+  "mbo_vs_panel_trades_match": true,
+  "n_market_reps": 22
+ },
+ "mechanisms": {
+  "n_adds": {
+   "cells": {
+    "ng": 212.0,
+    "gh": 343.75,
+    "gp": 385.5,
+    "ghp": 394.8
+   },
+   "gamified_mean": 380.875,
+   "ng_mean": 212.0,
+   "ratio": 1.797,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.085,
+   "p_hedonic": 0.164,
+   "p_pn": 0.247
+  },
+  "orders_per_trade": {
+   "cells": {
+    "ng": 2.872,
+    "gh": 2.431,
+    "gp": 1.854,
+    "ghp": 2.732
+   },
+   "gamified_mean": 2.547,
+   "ng_mean": 2.872,
+   "ratio": 0.887,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.776,
+   "p_hedonic": 0.788,
+   "p_pn": 1.0
+  },
+  "cancel_share": {
+   "cells": {
+    "ng": 0.471,
+    "gh": 0.487,
+    "gp": 0.388,
+    "ghp": 0.53
+   },
+   "gamified_mean": 0.502,
+   "ng_mean": 0.471,
+   "ratio": 1.066,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.921,
+   "p_hedonic": 0.527,
+   "p_pn": 0.792
+  },
+  "intraday_share": {
+   "cells": {
+    "ng": 0.089,
+    "gh": 0.309,
+    "gp": 0.488,
+    "ghp": 0.201
+   },
+   "gamified_mean": 0.264,
+   "ng_mean": 0.089,
+   "ratio": 2.953,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.085,
+   "p_hedonic": 0.527,
+   "p_pn": 0.537
+  },
+  "interday_share": {
+   "cells": {
+    "ng": 0.472,
+    "gh": 0.349,
+    "gp": 0.346,
+    "ghp": 0.421
+   },
+   "gamified_mean": 0.394,
+   "ng_mean": 0.472,
+   "ratio": 0.835,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.497,
+   "p_hedonic": 0.788,
+   "p_pn": 0.931
+  },
+  "net_share": {
+   "cells": {
+    "ng": 0.439,
+    "gh": 0.342,
+    "gp": 0.166,
+    "ghp": 0.377
+   },
+   "gamified_mean": 0.342,
+   "ng_mean": 0.439,
+   "ratio": 0.78,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.376,
+   "p_hedonic": 1.0,
+   "p_pn": 0.662
+  },
+  "churn_ratio": {
+   "cells": {
+    "ng": 2.414,
+    "gh": 3.019,
+    "gp": 6.137,
+    "ghp": 3.105
+   },
+   "gamified_mean": 3.463,
+   "ng_mean": 2.414,
+   "ratio": 1.434,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.279,
+   "p_hedonic": 0.927,
+   "p_pn": 0.662
+  },
+  "abs_rep_net": {
+   "cells": {
+    "ng": 65.667,
+    "gh": 96.0,
+    "gp": 69.0,
+    "ghp": 97.4
+   },
+   "gamified_mean": 93.5,
+   "ng_mean": 65.667,
+   "ratio": 1.424,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.052,
+   "p_hedonic": 0.018,
+   "p_pn": 0.36
+  },
+  "hot_potato_share": {
+   "cells": {
+    "ng": 0.387,
+    "gh": 0.542,
+    "gp": 0.678,
+    "ghp": 0.481
+   },
+   "gamified_mean": 0.521,
+   "ng_mean": 0.387,
+   "ratio": 1.346,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.133,
+   "p_hedonic": 0.648,
+   "p_pn": 0.429
+  },
+  "top2_share": {
+   "cells": {
+    "ng": 0.468,
+    "gh": 0.581,
+    "gp": 0.518,
+    "ghp": 0.56
+   },
+   "gamified_mean": 0.56,
+   "ng_mean": 0.468,
+   "ratio": 1.196,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.024,
+   "p_hedonic": 0.024,
+   "p_pn": 0.247
+  },
+  "hhi": {
+   "cells": {
+    "ng": 0.189,
+    "gh": 0.23,
+    "gp": 0.207,
+    "ghp": 0.222
+   },
+   "gamified_mean": 0.222,
+   "ng_mean": 0.189,
+   "ratio": 1.174,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.024,
+   "p_hedonic": 0.024,
+   "p_pn": 0.537
+  },
+  "tw_quoted_spread": {
+   "cells": {
+    "ng": 11.08,
+    "gh": 98.227,
+    "gp": 13.801,
+    "ghp": 10.206
+   },
+   "gamified_mean": 32.661,
+   "ng_mean": 11.08,
+   "ratio": 2.948,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 1.0,
+   "p_hedonic": 0.927,
+   "p_pn": 0.429
+  },
+  "tw_rel_spread": {
+   "cells": {
+    "ng": 0.261,
+    "gh": 0.285,
+    "gp": 0.263,
+    "ghp": 0.137
+   },
+   "gamified_mean": 0.19,
+   "ng_mean": 0.261,
+   "ratio": 0.727,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.279,
+   "p_hedonic": 0.164,
+   "p_pn": 0.177
+  },
+  "med_rel_spread": {
+   "cells": {
+    "ng": 0.159,
+    "gh": 0.223,
+    "gp": 0.165,
+    "ghp": 0.077
+   },
+   "gamified_mean": 0.124,
+   "ng_mean": 0.159,
+   "ratio": 0.784,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.376,
+   "p_hedonic": 0.23,
+   "p_pn": 0.247
+  },
+  "tw_depth": {
+   "cells": {
+    "ng": 2.506,
+    "gh": 4.749,
+    "gp": 2.478,
+    "ghp": 2.623
+   },
+   "gamified_mean": 3.137,
+   "ng_mean": 2.506,
+   "ratio": 1.252,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.921,
+   "p_hedonic": 0.927,
+   "p_pn": 0.792
+  },
+  "tw_two_sided": {
+   "cells": {
+    "ng": 0.83,
+    "gh": 0.888,
+    "gp": 0.939,
+    "ghp": 0.865
+   },
+   "gamified_mean": 0.88,
+   "ng_mean": 0.83,
+   "ratio": 1.061,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.776,
+   "p_hedonic": 1.0,
+   "p_pn": 1.0
+  },
+  "eff_spread_med": {
+   "cells": {
+    "ng": 0.069,
+    "gh": 0.075,
+    "gp": 0.066,
+    "ghp": 0.025
+   },
+   "gamified_mean": 0.043,
+   "ng_mean": 0.069,
+   "ratio": 0.614,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.376,
+   "p_hedonic": 0.23,
+   "p_pn": 0.247
+  },
+  "eff_spread_mean": {
+   "cells": {
+    "ng": 0.101,
+    "gh": 0.141,
+    "gp": 0.105,
+    "ghp": 0.042
+   },
+   "gamified_mean": 0.075,
+   "ng_mean": 0.101,
+   "ratio": 0.739,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.279,
+   "p_hedonic": 0.109,
+   "p_pn": 0.082
+  },
+  "pretrade_rel_spread_med": {
+   "cells": {
+    "ng": 0.139,
+    "gh": 0.149,
+    "gp": 0.132,
+    "ghp": 0.05
+   },
+   "gamified_mean": 0.085,
+   "ng_mean": 0.139,
+   "ratio": 0.614,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.376,
+   "p_hedonic": 0.23,
+   "p_pn": 0.247
+  },
+  "pretrade_depth_mean": {
+   "cells": {
+    "ng": 2.52,
+    "gh": 4.864,
+    "gp": 2.349,
+    "ghp": 2.938
+   },
+   "gamified_mean": 3.346,
+   "ng_mean": 2.52,
+   "ratio": 1.328,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.63,
+   "p_hedonic": 0.412,
+   "p_pn": 0.792
+  },
+  "impact_med": {
+   "cells": {
+    "ng": 0.03,
+    "gh": 0.025,
+    "gp": 0.024,
+    "ghp": 0.011
+   },
+   "gamified_mean": 0.016,
+   "ng_mean": 0.03,
+   "ratio": 0.535,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.63,
+   "p_hedonic": 0.412,
+   "p_pn": 0.662
+  },
+  "impact_mean": {
+   "cells": {
+    "ng": 0.115,
+    "gh": 0.101,
+    "gp": 0.059,
+    "ghp": 0.029
+   },
+   "gamified_mean": 0.05,
+   "ng_mean": 0.115,
+   "ratio": 0.439,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.63,
+   "p_hedonic": 0.315,
+   "p_pn": 0.537
+  },
+  "flow_imbalance": {
+   "cells": {
+    "ng": 0.742,
+    "gh": 0.448,
+    "gp": 0.272,
+    "ghp": 0.432
+   },
+   "gamified_mean": 0.416,
+   "ng_mean": 0.742,
+   "ratio": 0.561,
+   "n": [
+    8,
+    3
+   ],
+   "p_mw": 0.012,
+   "p_hedonic": 0.23,
+   "p_pn": 0.082
+  }
+ },
+ "volume_decomposition_shares": {
+  "gh": {
+   "trades": 139.0,
+   "intraday_rt_trades": 41.0,
+   "interday_rt_trades": 50.0,
+   "net_trades": 48.0
+  },
+  "ghp": {
+   "trades": 144.0,
+   "intraday_rt_trades": 33.1,
+   "interday_rt_trades": 62.2,
+   "net_trades": 48.7
+  },
+  "gp": {
+   "trades": 208.0,
+   "intraday_rt_trades": 101.5,
+   "interday_rt_trades": 72.0,
+   "net_trades": 34.5
+  },
+  "ng": {
+   "trades": 74.0,
+   "intraday_rt_trades": 6.8,
+   "interday_rt_trades": 34.3,
+   "net_trades": 32.8
+  }
+ },
+ "per_trader_volume": {
+  "ng": {
+   "mean": 24.7,
+   "median": 27.0,
+   "p90": 36.5,
+   "max": 48.0
+  },
+  "gh": {
+   "mean": 46.3,
+   "median": 39.0,
+   "p90": 91.1,
+   "max": 122.0
+  },
+  "gp": {
+   "mean": 69.3,
+   "median": 58.0,
+   "p90": 125.6,
+   "max": 138.0
+  },
+  "ghp": {
+   "mean": 48.0,
+   "median": 38.0,
+   "p90": 94.0,
+   "max": 192.0
+  }
+ }
+}
