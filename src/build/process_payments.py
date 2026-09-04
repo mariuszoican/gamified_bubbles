@@ -159,7 +159,7 @@ def process_payments(session_id: str) -> dict:
     write_session_log(record, session_log_path(session["id"]))
 
     print(format_stdout(record))
-    print(f"  wrote {len(payments)} payments → {xlsx_path}")
+    print(f"  wrote {len(payments)} payments -> {xlsx_path}")
     return record
 
 

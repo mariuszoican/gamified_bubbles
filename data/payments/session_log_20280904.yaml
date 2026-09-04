@@ -1,0 +1,26 @@
+session_id: '20280904'
+export_date: '2026-09-04'
+oTree_codes:
+- h04ar64h
+notes: 2 ghp + 2 ng. Incomplete ghp (n=3) paid but dropped from panels. Aborted pjdgwdrm
+  excluded. Export also contains 8o0qyfku (already logged as 20260826).
+processed_at: '2026-09-04T18:08:51.061216+00:00'
+counts:
+  slots_in_export: 27
+  started: 27
+  completed: 27
+  incomplete: 0
+  never_started: 0
+  paid: 27
+payoffs_points:
+  n: 27
+  min: 482.0
+  max: 9416.0
+  mean: 5261.888888888889
+payments:
+  participation_fee_cad: 15.0
+  exchange_rate: 0.003
+  experimental_payoff_cad_sum: 426.23
+  total_payment_cad_sum: 831.23
+incomplete: []
+flags: []
