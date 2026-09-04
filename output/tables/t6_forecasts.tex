@@ -3,22 +3,23 @@
 \begin{tabular}{lcccccc}
    \tabularnewline \midrule \midrule
    Dependent Variables: & \multicolumn{2}{c}{Forecast error (price)} & Forecast error (fund.) & \multicolumn{3}{c}{Forecast bias (fund.)}\\
-    & \multicolumn{3}{c}{Accuracy} & \multicolumn{3}{c}{Bias vs fundamental} \\ 
+   Accuracy & \multicolumn{6}{c}{3} \\ 
+   Bias vs fundamental & \multicolumn{6}{c}{3} \\ 
    Model:                    & (1)           & (2)           & (3)           & (4)     & (5)     & (6)\\  
    \midrule
    \emph{Variables}\\
-   Gamified                  & -0.089        & -0.090        & -0.001        & 0.083   & 0.084   & 0.084\\   
-                             & (0.068)       & (0.069)       & (0.065)       & (0.132) & (0.133) & (0.133)\\   
-   Gamified $\times$ Late    &               &               &               &         &         & 0.246\\   
-                             &               &               &               &         &         & (0.140)\\   
-   Late window (days 11--15) &               &               &               &         &         & 0.413$^{**}$\\   
-                             &               &               &               &         &         & (0.134)\\   
-   Constant                  & 0.330$^{***}$ & 0.330$^{***}$ & 0.367$^{***}$ & -0.149  & -0.149  & -0.149\\   
-                             & (0.052)       & (0.052)       & (0.045)       & (0.080) & (0.080) & (0.080)\\   
+   Gamified                  & 0.075         & 0.075         & -0.069        & -0.047  & -0.046  & -0.046\\   
+                             & (0.255)       & (0.255)       & (0.133)       & (0.172) & (0.172) & (0.172)\\   
+   Gamified $\times$ Late    &               &               &               &         &         & 0.248\\   
+                             &               &               &               &         &         & (0.158)\\   
+   Late window (days 11--15) &               &               &               &         &         & 0.560$^{***}$\\   
+                             &               &               &               &         &         & (0.138)\\   
+   Constant                  & 0.411$^{***}$ & 0.411$^{***}$ & 0.514$^{***}$ & -0.025  & -0.025  & -0.025\\   
+                             & (0.063)       & (0.062)       & (0.099)       & (0.147) & (0.147) & (0.147)\\   
    \midrule
    \emph{Fit statistics}\\
-   Observations              & 373           & 373           & 373           & 373     & 373     & 373\\  
-   R$^2$                     & 0.20          & 0.22          & 0.16          & 0.15    & 0.15    & 0.16\\  
+   Observations              & 498           & 498           & 504           & 504     & 504     & 504\\  
+   R$^2$                     & 0.06          & 0.07          & 0.13          & 0.15    & 0.15    & 0.16\\  
    Repetition dummy          &               & Yes           & Yes           &         & Yes     & Yes\\  
    Trading-day dummies       & Yes           & Yes           & Yes           & Yes     & Yes     & Yes\\  
    \midrule \midrule
