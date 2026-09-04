@@ -116,7 +116,7 @@ if KEEP_SESSIONS is not None:
 # AMR ~2.6 in both repetitions, Gini 0.218. Excluded on request;
 # summary stats of the dropped group retained for transparency.
 # (No-op when KEEP_SESSIONS already drops that session.)
-EXCLUDE_GROUPS = {"20260520_PM/ng1"}
+EXCLUDE_GROUPS = {"20260520_PM/ng1", "20280904/ghp1"}
 
 _excl = mkt[mkt.group_label.isin(EXCLUDE_GROUPS)]
 excluded_stats = []

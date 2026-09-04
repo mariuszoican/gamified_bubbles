@@ -15,8 +15,8 @@
 #   Table 7  fig8  Bubble incidence (market-rep counts)
 #   Table 8  ---   Error correction (gap x gamified; see error_correction.py)
 #
-# Sample (as in the figures): GHP vs NG market-reps only; outlier group
-# 20260520_PM/ng1 excluded. Day-level panels wherever the outcome varies by
+# Sample (as in the figures): GHP vs NG market-reps only; outlier groups
+# 20260520_PM/ng1 and 20280904/ghp1 excluded. Day-level panels wherever the outcome varies by
 # day; market-rep collapse only for count/composition outcomes.
 #
 # Specifications: no market-average composition controls (following
@@ -34,8 +34,8 @@
 # SEs: clustered by experimental GROUP (group_label) throughout — reps of
 # the same 6-subject group are not independent, and the treatment varies at
 # the group level (two-way group x day clustering was explored and is
-# immaterial: the group dimension binds). NOTE: only 8 group clusters ->
-# CR SEs are anti-conservative; confirm borderline p-values with a wild
+# immaterial: the group dimension binds). NOTE: 11 group clusters ->
+# CR SEs are still anti-conservative; confirm borderline p-values with a wild
 # cluster bootstrap (fwildclusterboot, from s3alfisc.r-universe.dev).
 #
 # Sources:  data/processed/market_day_panel_full.csv
@@ -76,7 +76,7 @@ TABLES    <- file.path(ROOT, "output", "tables")
 dir.create(TABLES, recursive = TRUE, showWarnings = FALSE)
 
 # ── LOAD & RESTRICT SAMPLE (GHP vs NG, outlier group excluded) ────────────────
-EXCLUDE_GROUPS <- c("20260520_PM/ng1")
+EXCLUDE_GROUPS <- c("20260520_PM/ng1", "20280904/ghp1")
 
 mkt_day <- read.csv(file.path(PROCESSED, "market_day_panel_full.csv")) %>%
   filter(treatment %in% c("ng", "ghp"), !(group_label %in% EXCLUDE_GROUPS))

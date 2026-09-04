@@ -1,11 +1,11 @@
 ,coef,se,t,spec
-gamified,0.0712,0.0594,1.1991,baseline
-gap,-0.7441,0.2015,-3.6923,baseline
-gap x gamified,0.5293,0.2545,2.0801,baseline
-OFI,0.0091,0.0943,0.0964,baseline
-OFI x gamified,0.0243,0.1257,0.1933,baseline
-gamified,0.0569,0.0633,0.8999,day FE + rep
-gap,-0.681,0.1442,-4.7209,day FE + rep
-gap x gamified,0.5678,0.2022,2.8087,day FE + rep
-OFI,0.0098,0.092,0.1065,day FE + rep
-OFI x gamified,-0.0368,0.1261,-0.2915,day FE + rep
+gamified,0.002,0.0901,0.0222,baseline
+gap,-0.2543,0.2153,-1.1812,baseline
+gap x gamified,0.1678,0.2172,0.7728,baseline
+OFI,0.1247,0.1004,1.2415,baseline
+OFI x gamified,-0.0472,0.1239,-0.3806,baseline
+gamified,-0.0001,0.0849,-0.0015,day FE + rep
+gap,-0.2285,0.1974,-1.1579,day FE + rep
+gap x gamified,0.1626,0.1974,0.8238,day FE + rep
+OFI,0.1152,0.0915,1.2584,day FE + rep
+OFI x gamified,-0.076,0.1176,-0.6459,day FE + rep

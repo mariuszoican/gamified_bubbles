@@ -3,7 +3,7 @@ Error-correction regression: does gamification switch off the force that
 pulls prices back to fundamentals?
 
 Pooled day-level regression on the processed market-day panel (GHP and NG
-market-reps; outlier group 20260520_PM/ng1 excluded):
+market-reps; outliers 20260520_PM/ng1 and 20280904/ghp1 excluded):
 
     ret_next[m,t] = b0 + b1 gamified + b2 gap + b3 gap x gamified
                        + b4 OFI + b5 OFI x gamified (+ day/rep controls)
@@ -13,8 +13,8 @@ normalized fundamental gap (P - v_t)/vbar (positive = overpriced), and OFI
 is the signed order-flow imbalance. b2 < 0 is error correction in control
 markets; b3 > 0 means gamification weakens it.
 
-Standard errors are cluster-robust (CR1) by experimental group. With 8
-clusters they are anti-conservative: confirm borderline p-values with a
+Standard errors are cluster-robust (CR1) by experimental group. With 11
+clusters they are still anti-conservative: confirm borderline p-values with a
 wild cluster bootstrap before quoting them in the paper.
 
 Writes output/tables/error_correction.csv and prints the table.
@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "output" / "tables" / "error_correction.csv"
 
 TREATMENTS = ["ng", "ghp"]
-EXCLUDE_GROUPS = {"20260520_PM/ng1"}
+EXCLUDE_GROUPS = {"20260520_PM/ng1", "20280904/ghp1"}
 
 def load_panel() -> pd.DataFrame:
     """ret_next and fundamental_gap come from the processed panel."""

@@ -4,9 +4,9 @@ Publication-grade figures for the Gamified Bubbles paper.
 Reads ONLY the processed panels in data/processed/ and writes figures
 (PDF + 300-dpi PNG) to output/figures/.
 
-Sample: GHP (full gamification) vs NG (control) market-reps; the outlier
-group 20260520_PM/ng1 (two-trader churn/peg pathology, ~3x normal volume)
-is excluded throughout.
+Sample: GHP (full gamification) vs NG (control) market-reps. Outliers
+excluded throughout: 20260520_PM/ng1 (two-trader churn/peg, ~3x volume)
+and 20280904/ghp1 (price opens below 10 and stays there in both reps).
 
 Figures
   1. mispricing_daypath   – absolute mispricing, AMR, RAD by trading day
@@ -18,7 +18,7 @@ Figures
 
 Confidence intervals are 95% normal-approximation bands across market
 repetitions (figures 1–3) or across traders (figure 4, right panel).
-Note for inference: reps within a group are not independent (11 groups);
+Note for inference: reps within a group are not independent (11 GHP+NG groups after exclusions);
 formal tests should cluster at the group level.
 
 Usage:  python src/analyze/figures.py
@@ -43,7 +43,10 @@ FIG_DIR = ROOT / "output" / "figures"
 TREATMENTS = ["ng", "ghp"]
 LABELS = {"ng": "Control (NG)", "ghp": "Gamified (GHP)"}
 COLORS = {"ng": "#4d4d4d", "ghp": "#0072b2"}
-EXCLUDE_GROUPS = {"20260520_PM/ng1"}  # abnormal-volume NG outlier
+EXCLUDE_GROUPS = {
+    "20260520_PM/ng1",  # wash/churn peg at ~130
+    "20280904/ghp1",  # collapsed: P stays below 10 both reps
+}
 Z95 = 1.96
 
 plt.rcParams.update(

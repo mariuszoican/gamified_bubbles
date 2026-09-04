@@ -42,7 +42,7 @@ sessions:
     export_date: "2026-09-04"
     oTree_codes: [h04ar64h]
     include: true
-    notes: "2 ghp + 2 ng. Incomplete ghp (n=3) paid but dropped from panels. Aborted pjdgwdrm excluded. Export also contains 8o0qyfku (already logged as 20260826)."
+    notes: "2 ghp + 2 ng. Incomplete ghp (n=3) paid but dropped from panels. Aborted pjdgwdrm excluded. Export also contains 8o0qyfku (already logged as 20260826). Analysis excludes 20280904/ghp1 (P stays below 10 both reps)."
 
   - id: "20260505_PILOT"
     export_date: "2026-05-05"

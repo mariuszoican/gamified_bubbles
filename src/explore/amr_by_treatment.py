@@ -24,7 +24,7 @@ PROCESSED = ROOT / "data" / "processed"
 OUT = Path(__file__).resolve().parent / "amr_by_treatment.json"
 
 TREATS = ["ng", "gh", "gp", "ghp"]
-EXCLUDE_GROUPS = {"20260520_PM/ng1"}
+EXCLUDE_GROUPS = {"20260520_PM/ng1", "20280904/ghp1"}
 
 mkt = pd.read_csv(PROCESSED / "market_day_panel_full.csv")
 trd = pd.read_csv(PROCESSED / "trader_day_panel_full.csv")

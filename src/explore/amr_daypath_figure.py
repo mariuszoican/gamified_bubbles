@@ -31,7 +31,7 @@ LABELS = {
     "ghp": "ghp (both)",
 }
 COLORS = {"ng": "#444444", "gh": "#d62728", "gp": "#1f77b4", "ghp": "#9467bd"}
-EXCLUDE_GROUPS = {"20260520_PM/ng1"}
+EXCLUDE_GROUPS = {"20260520_PM/ng1", "20280904/ghp1"}
 
 mkt = pd.read_csv(PROCESSED / "market_day_panel_full.csv")
 trd = pd.read_csv(PROCESSED / "trader_day_panel_full.csv")
