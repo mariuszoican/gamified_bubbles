@@ -2,7 +2,7 @@
 # Does Trading Gamification Fuel Bubbles?
 # Chapkovski, Goswami, Işık, Zoican (2026)
 # Date created: 03-09-2026
-# Date last modified: 03-09-2026
+# Date last modified: 04-09-2026
 # ============================================================
 # Regression tables mirroring the figures (src/analyze/figures.py):
 #   Table 1  fig1  Mispricing (market x day)
@@ -20,7 +20,8 @@
 # day; market-rep collapse only for count/composition outcomes.
 #
 # Specifications: no market-average composition controls (following
-# Asparouhova et al. 2024). Fixed effects instead:
+# Asparouhova et al. 2024), except the group share who took a finance
+# course (post-exp; share_finance_course). Fixed effects:
 #   trading_day  -- within-market day index (absorbs the deterministic
 #                   fundamental path v_t and late-day mechanics)
 #   repetition   -- market repetition 1 vs 2 (experience)
@@ -31,12 +32,7 @@
 # slope on gamified is the same as absorbed FE; the constant is the
 # unconditional non-gamified mean of the outcome.
 #
-# SEs: clustered by experimental GROUP (group_label) throughout — reps of
-# the same 6-subject group are not independent, and the treatment varies at
-# the group level (two-way group x day clustering was explored and is
-# immaterial: the group dimension binds). NOTE: 11 group clusters ->
-# CR SEs are still anti-conservative; confirm borderline p-values with a wild
-# cluster bootstrap (fwildclusterboot, from s3alfisc.r-universe.dev).
+# SEs: HC1 heteroskedasticity-robust (no clustering).
 #
 # Sources:  data/processed/market_day_panel_full.csv
 #           data/processed/trader_day_panel_full.csv
@@ -84,6 +80,12 @@ mkt_day <- read.csv(file.path(PROCESSED, "market_day_panel_full.csv")) %>%
 trader_day <- read.csv(file.path(PROCESSED, "trader_day_panel_full.csv")) %>%
   filter(treatment %in% c("ng", "ghp"), !(group_label %in% EXCLUDE_GROUPS))
 
+# Group-average finance-course share onto trader panels (same six subjects).
+course_by_mkt <- mkt_day %>%
+  distinct(market_uuid, share_finance_course)
+trader_day <- trader_day %>%
+  left_join(course_by_mkt, by = "market_uuid")
+
 # ── DERIVED VARIABLES ─────────────────────────────────────────────────────────
 # In this two-arm sample, gamified == 1{treatment == "ghp"}.
 mkt_day <- mkt_day %>%
@@ -103,6 +105,7 @@ mkt <- mkt_day %>%
     n_bubble_runs      = sum(bubble_start,    na.rm = TRUE),
     n_surges           = sum(surge,           na.rm = TRUE),
     n_crashes          = sum(crash,           na.rm = TRUE),
+    share_finance_course = first(share_finance_course),
     share_market_maker = first(share_market_maker),
     share_feedback     = first(share_feedback),
     share_speculator   = first(share_speculator),
@@ -153,37 +156,44 @@ rhs_fe <- function(df, factors) {
   paste(cols, collapse = " + ")
 }
 
-# Clustered OLS with NG-centered FE on the RHS (so etable prints a constant).
+# HC1-robust OLS with NG-centered FE on the RHS (so etable prints a constant).
 # Re-center on complete cases of the outcome so the intercept equals the
 # NG mean in the estimation sample (not the full-panel NG mean).
-.NG_NUMERICS <- c("late", "fundamental_gap", "order_flow_imbalance")
-ols <- function(lhs, rhs, data, fe = NULL, cluster = ~group_label) {
+.NG_NUMERICS <- c("late", "fundamental_gap", "order_flow_imbalance",
+                 "share_finance_course")
+# Appended to every treatment RHS so tables condition on group composition.
+.COURSE <- "share_finance_course"
+g <- function(extra = "gamified") paste(extra, .COURSE, sep = " + ")
+ols <- function(lhs, rhs, data, fe = NULL, vcov = "HC1") {
   dat <- data[!is.na(data[[lhs]]), , drop = FALSE]
   nums <- intersect(.NG_NUMERICS, names(dat))
   on <- if (any(dat$gamified == 0, na.rm = TRUE)) "ng" else "sample"
   dat <- prep_ng_intercept(dat, factors = fe, numerics = nums, on = on)
   extra <- if (length(fe)) paste("+", rhs_fe(dat, fe)) else ""
   feols(as.formula(paste(lhs, "~", rhs, extra)),
-        data = dat, cluster = cluster)
+        data = dat, vcov = vcov)
 }
 
 mkt_day <- prep_ng_intercept(
   mkt_day,
   factors  = c("repetition", "trading_day"),
-  numerics = c("late", "fundamental_gap", "order_flow_imbalance")
+  numerics = c("late", "fundamental_gap", "order_flow_imbalance",
+               "share_finance_course")
 )
 mkt <- prep_ng_intercept(
   mkt,
-  factors = "repetition"
+  factors  = "repetition",
+  numerics = "share_finance_course"
 )
 trader_day <- prep_ng_intercept(
   trader_day,
   factors  = c("repetition", "trading_day"),
-  numerics = "late"
+  numerics = c("late", "share_finance_course")
 )
 trader_final <- prep_ng_intercept(
   trader_final,
-  factors = "repetition"
+  factors  = "repetition",
+  numerics = "share_finance_course"
 )
 
 # ── LABEL DICT ────────────────────────────────────────────────────────────────
@@ -250,6 +260,7 @@ setFixest_dict(c(
   vol_speculator            = "Speculators",
   vol_other                 = "Unclassified",
   # controls / FE
+  share_finance_course      = "Finance course share",
   fin_quiz_score            = "Financial literacy",
   self_assessment           = "Self-assessed literacy",
   age                       = "Age",
@@ -269,8 +280,8 @@ ETABLE_OPTS <- list(
 
 write_table <- function(models, title, headers, file, order = NULL, drop = NULL, ...) {
   if (is.null(order)) {
-    order <- c("Gamified$", "Late", "Gamified.*Late", "Gap", "OFI",
-               "Market maker", "!Financial|Self|Age|Over|Trading|Repetition")
+    order <- c("Gamified$", "Finance course", "Late", "Gamified.*Late", "Gap", "OFI",
+               "Market maker", "!Financial literacy|Self|Age|Over|Trading|Repetition")
   }
   drop <- unique(c(drop, "^d_repetition_", "^d_trading_day_", "^d_session_id_"))
   tex <- do.call(etable, c(
@@ -288,12 +299,12 @@ write_table <- function(models, title, headers, file, order = NULL, drop = NULL,
 # FE dummies are NG-centered: constant = unconditional NG mean.
 # No market FE: treatment is constant within market.
 # ============================================================
-t1_1 <- ols("abs_mispricing_ratio", "gamified", mkt_day, fe = "repetition")
-t1_2 <- ols("abs_mispricing_ratio", "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t1_3 <- ols("rad",                   "gamified", mkt_day, fe = "repetition")
-t1_4 <- ols("rad",                   "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t1_5 <- ols("avg_abs_mispricing",    "gamified", mkt_day, fe = "repetition")
-t1_6 <- ols("avg_abs_mispricing",    "gamified", mkt_day, fe = c("repetition", "trading_day"))
+t1_1 <- ols("abs_mispricing_ratio", g(), mkt_day, fe = "repetition")
+t1_2 <- ols("abs_mispricing_ratio", g(), mkt_day, fe = c("repetition", "trading_day"))
+t1_3 <- ols("rad",                   g(), mkt_day, fe = "repetition")
+t1_4 <- ols("rad",                   g(), mkt_day, fe = c("repetition", "trading_day"))
+t1_5 <- ols("avg_abs_mispricing",    g(), mkt_day, fe = "repetition")
+t1_6 <- ols("avg_abs_mispricing",    g(), mkt_day, fe = c("repetition", "trading_day"))
 
 write_table(
   list(t1_1, t1_2, t1_3, t1_4, t1_5, t1_6),
@@ -310,12 +321,12 @@ write_table(
 # Table 2 (fig 2): Liquidity — market x day, full FE
 # Spreads/impact relative to midpoint; effective = realized + impact
 # ============================================================
-t2_1 <- ols("rel_quoted_spread",   "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t2_2 <- ols("rel_eff_spread",      "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t2_3 <- ols("rel_realized_spread", "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t2_4 <- ols("rel_price_impact",    "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t2_5 <- ols("depth_best",          "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t2_6 <- ols("rv_mid",              "gamified", mkt_day, fe = c("repetition", "trading_day"))
+t2_1 <- ols("rel_quoted_spread",   g(), mkt_day, fe = c("repetition", "trading_day"))
+t2_2 <- ols("rel_eff_spread",      g(), mkt_day, fe = c("repetition", "trading_day"))
+t2_3 <- ols("rel_realized_spread", g(), mkt_day, fe = c("repetition", "trading_day"))
+t2_4 <- ols("rel_price_impact",    g(), mkt_day, fe = c("repetition", "trading_day"))
+t2_5 <- ols("depth_best",          g(), mkt_day, fe = c("repetition", "trading_day"))
+t2_6 <- ols("rv_mid",              g(), mkt_day, fe = c("repetition", "trading_day"))
 
 write_table(
   list(t2_1, t2_2, t2_3, t2_4, t2_5, t2_6),
@@ -331,11 +342,11 @@ write_table(
 # ============================================================
 # Table 3 (fig 3): Volume, order flow, and order composition
 # ============================================================
-t3_1 <- ols("n_trades_market",          "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t3_2 <- ols("abs_order_flow_imbalance", "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t3_3 <- ols("churn",                    "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t3_4 <- ols("n_limit_orders",           "gamified", mkt_day, fe = c("repetition", "trading_day"))
-t3_5 <- ols("share_limit_orders",       "gamified", mkt_day, fe = c("repetition", "trading_day"))
+t3_1 <- ols("n_trades_market",          g(), mkt_day, fe = c("repetition", "trading_day"))
+t3_2 <- ols("abs_order_flow_imbalance", g(), mkt_day, fe = c("repetition", "trading_day"))
+t3_3 <- ols("churn",                    g(), mkt_day, fe = c("repetition", "trading_day"))
+t3_4 <- ols("n_limit_orders",           g(), mkt_day, fe = c("repetition", "trading_day"))
+t3_5 <- ols("share_limit_orders",       g(), mkt_day, fe = c("repetition", "trading_day"))
 
 write_table(
   list(t3_1, t3_2, t3_3, t3_4, t3_5),
@@ -353,12 +364,12 @@ write_table(
 # Each outcome: trading-day dummies, then trading-day + repetition.
 # Replenishment = median seconds to the next same-side limit order.
 # ============================================================
-t4_1 <- ols("n_improving_adds",          "gamified", mkt_day, fe = "trading_day")
-t4_2 <- ols("n_improving_adds",          "gamified", mkt_day, fe = c("trading_day", "repetition"))
-t4_3 <- ols("time_to_same_side_order_s", "gamified", mkt_day, fe = "trading_day")
-t4_4 <- ols("time_to_same_side_order_s", "gamified", mkt_day, fe = c("trading_day", "repetition"))
-t4_5 <- ols("spread_recovery_s",         "gamified", mkt_day, fe = "trading_day")
-t4_6 <- ols("spread_recovery_s",         "gamified", mkt_day, fe = c("trading_day", "repetition"))
+t4_1 <- ols("n_improving_adds",          g(), mkt_day, fe = "trading_day")
+t4_2 <- ols("n_improving_adds",          g(), mkt_day, fe = c("trading_day", "repetition"))
+t4_3 <- ols("time_to_same_side_order_s", g(), mkt_day, fe = "trading_day")
+t4_4 <- ols("time_to_same_side_order_s", g(), mkt_day, fe = c("trading_day", "repetition"))
+t4_5 <- ols("spread_recovery_s",         g(), mkt_day, fe = "trading_day")
+t4_6 <- ols("spread_recovery_s",         g(), mkt_day, fe = c("trading_day", "repetition"))
 
 write_table(
   list(t4_1, t4_2, t4_3, t4_4, t4_5, t4_6),
@@ -377,16 +388,16 @@ write_table(
 # gross trades (buys+sells). Single FE set (day + repetition).
 # ============================================================
 .t5_fe <- c("trading_day", "repetition")
-t5_1 <- ols("share_vol_market_maker", "gamified", mkt_day, fe = .t5_fe)
-t5_2 <- ols("vol_market_maker",       "gamified", mkt_day, fe = .t5_fe)
-t5_3 <- ols("share_vol_fundamental",  "gamified", mkt_day, fe = .t5_fe)
-t5_4 <- ols("vol_fundamental",        "gamified", mkt_day, fe = .t5_fe)
-t5_5 <- ols("share_vol_feedback",     "gamified", mkt_day, fe = .t5_fe)
-t5_6 <- ols("vol_feedback",           "gamified", mkt_day, fe = .t5_fe)
-t5_7 <- ols("share_vol_speculator",   "gamified", mkt_day, fe = .t5_fe)
-t5_8 <- ols("vol_speculator",         "gamified", mkt_day, fe = .t5_fe)
-t5_9 <- ols("share_vol_other",        "gamified", mkt_day, fe = .t5_fe)
-t5_10 <- ols("vol_other",             "gamified", mkt_day, fe = .t5_fe)
+t5_1 <- ols("share_vol_market_maker", g(), mkt_day, fe = .t5_fe)
+t5_2 <- ols("vol_market_maker",       g(), mkt_day, fe = .t5_fe)
+t5_3 <- ols("share_vol_fundamental",  g(), mkt_day, fe = .t5_fe)
+t5_4 <- ols("vol_fundamental",        g(), mkt_day, fe = .t5_fe)
+t5_5 <- ols("share_vol_feedback",     g(), mkt_day, fe = .t5_fe)
+t5_6 <- ols("vol_feedback",           g(), mkt_day, fe = .t5_fe)
+t5_7 <- ols("share_vol_speculator",   g(), mkt_day, fe = .t5_fe)
+t5_8 <- ols("vol_speculator",         g(), mkt_day, fe = .t5_fe)
+t5_9 <- ols("share_vol_other",        g(), mkt_day, fe = .t5_fe)
+t5_10 <- ols("vol_other",             g(), mkt_day, fe = .t5_fe)
 
 write_table(
   list(t5_1, t5_2, t5_3, t5_4, t5_5, t5_6, t5_7, t5_8, t5_9, t5_10),
@@ -415,12 +426,12 @@ fb   <- .type_payoff("feedback",     "payoff_feedback")
 sp   <- .type_payoff("speculator",   "payoff_speculator")
 oth  <- .type_payoff("other",        "payoff_other")
 
-t5b_1 <- ols("payoff_mm",          "gamified", mm)
-t5b_2 <- ols("payoff_mm",          "gamified", mm,   fe = "repetition")
-t5b_3 <- ols("payoff_fundamental", "gamified", fund, fe = "repetition")
-t5b_4 <- ols("payoff_feedback",    "gamified", fb,   fe = "repetition")
-t5b_5 <- ols("payoff_speculator",  "gamified", sp,   fe = "repetition")
-t5b_6 <- ols("payoff_other",       "gamified", oth,  fe = "repetition")
+t5b_1 <- ols("payoff_mm",          g(), mm)
+t5b_2 <- ols("payoff_mm",          g(), mm,   fe = "repetition")
+t5b_3 <- ols("payoff_fundamental", g(), fund, fe = "repetition")
+t5b_4 <- ols("payoff_feedback",    g(), fb,   fe = "repetition")
+t5b_5 <- ols("payoff_speculator",  g(), sp,   fe = "repetition")
+t5b_6 <- ols("payoff_other",       g(), oth,  fe = "repetition")
 
 write_table(
   list(t5b_1, t5b_2, t5b_3, t5b_4, t5b_5, t5b_6),
@@ -436,12 +447,12 @@ write_table(
 # Table 6 (fig 7): Forecast accuracy and bias — trader x day
 # Forecasts elicited on days 3, 6, 9, 12 (others are NA)
 # ============================================================
-t6_1 <- ols("forecast_err_price",  "gamified",        trader_day, fe = "trading_day")
-t6_2 <- ols("forecast_err_price",  "gamified",        trader_day, fe = c("trading_day", "repetition"))
-t6_3 <- ols("forecast_err_fund",   "gamified",        trader_day, fe = c("trading_day", "repetition"))
-t6_4 <- ols("forecast_bias_fund",  "gamified",        trader_day, fe = "trading_day")
-t6_5 <- ols("forecast_bias_fund",  "gamified",        trader_day, fe = c("trading_day", "repetition"))
-t6_6 <- ols("forecast_bias_fund",  "gamified * late", trader_day, fe = c("trading_day", "repetition"))
+t6_1 <- ols("forecast_err_price",  g(),                 trader_day, fe = "trading_day")
+t6_2 <- ols("forecast_err_price",  g(),                 trader_day, fe = c("trading_day", "repetition"))
+t6_3 <- ols("forecast_err_fund",   g(),                 trader_day, fe = c("trading_day", "repetition"))
+t6_4 <- ols("forecast_bias_fund",  g(),                 trader_day, fe = "trading_day")
+t6_5 <- ols("forecast_bias_fund",  g(),                 trader_day, fe = c("trading_day", "repetition"))
+t6_6 <- ols("forecast_bias_fund",  g("gamified * late"), trader_day, fe = c("trading_day", "repetition"))
 
 write_table(
   list(t6_1, t6_2, t6_3, t6_4, t6_5, t6_6),
@@ -457,12 +468,12 @@ write_table(
 # ============================================================
 # Table 7 (fig 8): Bubble incidence — market-rep counts
 # ============================================================
-t7_1 <- ols("n_bubble_days", "gamified", mkt)
-t7_2 <- ols("n_bubble_days", "gamified", mkt, fe = "repetition")
-t7_3 <- ols("n_bubble_runs", "gamified", mkt, fe = "repetition")
-t7_4 <- ols("n_surges",      "gamified", mkt, fe = "repetition")
-t7_5 <- ols("n_crashes",     "gamified", mkt, fe = "repetition")
-t7_6 <- ols("n_trades",      "gamified", mkt, fe = "repetition")
+t7_1 <- ols("n_bubble_days", g(), mkt)
+t7_2 <- ols("n_bubble_days", g(), mkt, fe = "repetition")
+t7_3 <- ols("n_bubble_runs", g(), mkt, fe = "repetition")
+t7_4 <- ols("n_surges",      g(), mkt, fe = "repetition")
+t7_5 <- ols("n_crashes",     g(), mkt, fe = "repetition")
+t7_6 <- ols("n_trades",      g(), mkt, fe = "repetition")
 
 write_table(
   list(t7_1, t7_2, t7_3, t7_4, t7_5, t7_6),
@@ -480,15 +491,15 @@ write_table(
 # gap < 0 slope = convergence force; gap x gamified > 0 = switched off.
 # Gap and OFI are NG-centered, so the constant is the NG mean of ret_next.
 # ============================================================
-t8_1 <- ols("ret_next", "fundamental_gap * gamified", mkt_day)
-t8_2 <- ols("ret_next", "fundamental_gap * gamified + order_flow_imbalance * gamified",
+t8_1 <- ols("ret_next", g("fundamental_gap * gamified"), mkt_day)
+t8_2 <- ols("ret_next", g("fundamental_gap * gamified + order_flow_imbalance * gamified"),
             mkt_day)
-t8_3 <- ols("ret_next", "fundamental_gap * gamified", mkt_day, fe = "trading_day")
-t8_4 <- ols("ret_next", "fundamental_gap * gamified + order_flow_imbalance * gamified",
+t8_3 <- ols("ret_next", g("fundamental_gap * gamified"), mkt_day, fe = "trading_day")
+t8_4 <- ols("ret_next", g("fundamental_gap * gamified + order_flow_imbalance * gamified"),
             mkt_day, fe = "trading_day")
-t8_5 <- ols("ret_next", "fundamental_gap * gamified",
+t8_5 <- ols("ret_next", g("fundamental_gap * gamified"),
             mkt_day, fe = c("trading_day", "repetition"))
-t8_6 <- ols("ret_next", "fundamental_gap * gamified + order_flow_imbalance * gamified",
+t8_6 <- ols("ret_next", g("fundamental_gap * gamified + order_flow_imbalance * gamified"),
             mkt_day, fe = c("trading_day", "repetition"))
 
 write_table(
@@ -496,7 +507,8 @@ write_table(
   title = "Gamification Switches Off Error Correction",
   headers = list("Pooled" = 2, "Day FE" = 2, "Day + Repetition FE" = 2),
   file = "t8_error_correction.tex",
-  order = c("^Gap$", "Gap .*Gamified", "^OFI$", "OFI .*Gamified", "Gamified$"),
+  order = c("^Gap$", "Gap .*Gamified", "^OFI$", "OFI .*Gamified", "Gamified$",
+            "Finance course"),
   extralines = list(
     "_Repetition dummy"    = c("", "", "", "", "Yes", "Yes"),
     "_Trading-day dummies" = c("", "", "Yes", "Yes", "Yes", "Yes")
