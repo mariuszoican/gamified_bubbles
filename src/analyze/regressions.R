@@ -20,8 +20,7 @@
 # day; market-rep collapse only for count/composition outcomes.
 #
 # Specifications: no market-average composition controls (following
-# Asparouhova et al. 2024), except the group share who took a finance
-# course (post-exp; share_finance_course). Fixed effects:
+# Asparouhova et al. 2024). Fixed effects:
 #   trading_day  -- within-market day index (absorbs the deterministic
 #                   fundamental path v_t and late-day mechanics)
 #   repetition   -- market repetition 1 vs 2 (experience)
@@ -32,7 +31,8 @@
 # slope on gamified is the same as absorbed FE; the constant is the
 # unconditional non-gamified mean of the outcome.
 #
-# SEs: HC1 heteroskedasticity-robust (no clustering).
+# SEs in parentheses: heteroskedasticity-robust HC1 (White), as in
+# Asparouhova et al. (2024, RoF). No clustering. Stars from HC1 p-values.
 #
 # Sources:  data/processed/market_day_panel_full.csv
 #           data/processed/trader_day_panel_full.csv
@@ -80,12 +80,6 @@ mkt_day <- read.csv(file.path(PROCESSED, "market_day_panel_full.csv")) %>%
 trader_day <- read.csv(file.path(PROCESSED, "trader_day_panel_full.csv")) %>%
   filter(treatment %in% c("ng", "ghp"), !(group_label %in% EXCLUDE_GROUPS))
 
-# Group-average finance-course share onto trader panels (same six subjects).
-course_by_mkt <- mkt_day %>%
-  distinct(market_uuid, share_finance_course)
-trader_day <- trader_day %>%
-  left_join(course_by_mkt, by = "market_uuid")
-
 # ── DERIVED VARIABLES ─────────────────────────────────────────────────────────
 # In this two-arm sample, gamified == 1{treatment == "ghp"}.
 mkt_day <- mkt_day %>%
@@ -105,7 +99,6 @@ mkt <- mkt_day %>%
     n_bubble_runs      = sum(bubble_start,    na.rm = TRUE),
     n_surges           = sum(surge,           na.rm = TRUE),
     n_crashes          = sum(crash,           na.rm = TRUE),
-    share_finance_course = first(share_finance_course),
     share_market_maker = first(share_market_maker),
     share_feedback     = first(share_feedback),
     share_speculator   = first(share_speculator),
@@ -156,44 +149,40 @@ rhs_fe <- function(df, factors) {
   paste(cols, collapse = " + ")
 }
 
-# HC1-robust OLS with NG-centered FE on the RHS (so etable prints a constant).
-# Re-center on complete cases of the outcome so the intercept equals the
-# NG mean in the estimation sample (not the full-panel NG mean).
-.NG_NUMERICS <- c("late", "fundamental_gap", "order_flow_imbalance",
-                 "share_finance_course")
-# Appended to every treatment RHS so tables condition on group composition.
-.COURSE <- "share_finance_course"
-g <- function(extra = "gamified") paste(extra, .COURSE, sep = " + ")
-ols <- function(lhs, rhs, data, fe = NULL, vcov = "HC1") {
+# OLS with NG-centered FE on the RHS (so etable prints a constant).
+# Re-center on complete cases of the outcome so the intercept equals
+# the NG mean in the estimation sample (not the full-panel NG mean).
+# SEs: HC1 (fixest vcov = "HC1"); stars from the same VCOV.
+.NG_NUMERICS <- c("late", "fundamental_gap", "order_flow_imbalance")
+g <- function(extra = "gamified") extra
+
+ols <- function(lhs, rhs, data, fe = NULL) {
   dat <- data[!is.na(data[[lhs]]), , drop = FALSE]
   nums <- intersect(.NG_NUMERICS, names(dat))
   on <- if (any(dat$gamified == 0, na.rm = TRUE)) "ng" else "sample"
   dat <- prep_ng_intercept(dat, factors = fe, numerics = nums, on = on)
   extra <- if (length(fe)) paste("+", rhs_fe(dat, fe)) else ""
   feols(as.formula(paste(lhs, "~", rhs, extra)),
-        data = dat, vcov = vcov)
+        data = dat, vcov = "HC1")
 }
 
 mkt_day <- prep_ng_intercept(
   mkt_day,
   factors  = c("repetition", "trading_day"),
-  numerics = c("late", "fundamental_gap", "order_flow_imbalance",
-               "share_finance_course")
+  numerics = c("late", "fundamental_gap", "order_flow_imbalance")
 )
 mkt <- prep_ng_intercept(
   mkt,
-  factors  = "repetition",
-  numerics = "share_finance_course"
+  factors  = "repetition"
 )
 trader_day <- prep_ng_intercept(
   trader_day,
   factors  = c("repetition", "trading_day"),
-  numerics = c("late", "share_finance_course")
+  numerics = "late"
 )
 trader_final <- prep_ng_intercept(
   trader_final,
-  factors  = "repetition",
-  numerics = "share_finance_course"
+  factors  = "repetition"
 )
 
 # ── LABEL DICT ────────────────────────────────────────────────────────────────
@@ -261,27 +250,35 @@ setFixest_dict(c(
   vol_other                 = "Unclassified",
   # controls / FE
   share_finance_course      = "Finance course share",
+  avg_fin_quiz              = "Financial literacy",
+  avg_age                   = "Age",
+  share_female              = "Female share",
+  share_trading_experience  = "Trading experience share",
   fin_quiz_score            = "Financial literacy",
   self_assessment           = "Self-assessed literacy",
   age                       = "Age",
+  gender_female             = "Female",
+  finance_course            = "Finance course",
   overconfidence            = "Overconfidence",
   trading_experience        = "Trading experience",
   trading_day               = "Trading day",
   repetition                = "Repetition",
   market_uuid               = "Market",
   group_label               = "Group",
+  session_id                = "Session",
   participant_code          = "Participant"
 ))
 
 ETABLE_OPTS <- list(
   tex = TRUE, digits = "r3", digits.stats = "r2", depvar = TRUE,
-  fitstat = c("n", "r2")
+  fitstat = c("n", "r2"),
+  notes = "Heteroskedasticity-robust (HC1) standard errors in parentheses."
 )
 
 write_table <- function(models, title, headers, file, order = NULL, drop = NULL, ...) {
   if (is.null(order)) {
-    order <- c("Gamified$", "Finance course", "Late", "Gamified.*Late", "Gap", "OFI",
-               "Market maker", "!Financial literacy|Self|Age|Over|Trading|Repetition")
+    order <- c("Gamified$", "Late", "Gamified.*Late", "Gap", "OFI",
+               "Market maker", "!Financial|Self|Age|Over|Trading|Repetition")
   }
   drop <- unique(c(drop, "^d_repetition_", "^d_trading_day_", "^d_session_id_"))
   tex <- do.call(etable, c(

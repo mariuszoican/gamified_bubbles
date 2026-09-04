@@ -16,10 +16,11 @@ Figures
   9. price_paths          – mean trade price by day in GHP vs NG, plus v_t
  10. carry_daypath        – realized price drop vs expected dividend (carry)
 
-Confidence intervals are 95% normal-approximation bands across market
-repetitions (figures 1–3) or across traders (figure 4, right panel).
-Note for inference: reps within a group are not independent (11 GHP+NG groups after exclusions);
-formal tests should cluster at the group level.
+Confidence intervals are 95% HC1 bands (mean ± 1.96·s/√n), the same
+White SE as the tables. Day-path figures use market-days on that day;
+bar figures use market-days (not first-collapsed market-rep means),
+except fig 8, whose outcomes are market-rep counts. Trader panels use
+trader-markets.
 
 Usage:  python src/analyze/figures.py
 """
@@ -96,20 +97,25 @@ def load_trader_panel() -> pd.DataFrame:
 # Helpers
 # ----------------------------------------------------------------------
 
+def mean_ci(vals, scale: float = 1.0) -> tuple[float, float]:
+    """Sample mean and HC1 95% half-width (s/√n). Same VCOV as tables."""
+    v = np.asarray(vals, dtype=float)
+    v = v[np.isfinite(v)] * scale
+    n = v.size
+    if n == 0:
+        return np.nan, np.nan
+    if n < 2:
+        return float(v.mean()), 0.0
+    return float(v.mean()), float(Z95 * v.std(ddof=1) / np.sqrt(n))
+
+
 def day_path(mkt: pd.DataFrame, col: str) -> pd.DataFrame:
-    """Mean and 95% CI of `col` per treatment × trading day, across
-    market-reps (nan-aware: days without trades are skipped)."""
+    """Mean and HC1 95% CI of `col` per treatment × trading day
+    (nan-aware: days without trades are skipped)."""
     g = mkt.groupby(["treatment", "trading_day"])[col]
     out = g.agg(mean="mean", sd="std", n="count").reset_index()
     out["ci"] = Z95 * out["sd"] / np.sqrt(out["n"])
     return out
-
-
-def rep_level(mkt: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
-    """Aggregate market-days to market-rep means (one obs per market-rep)."""
-    return (
-        mkt.groupby(["market_uuid", "treatment"])[cols].mean().reset_index()
-    )
 
 
 def draw_daypath(ax, path: pd.DataFrame) -> None:
@@ -130,12 +136,10 @@ def draw_daypath(ax, path: pd.DataFrame) -> None:
     ax.set_xlabel("Trading day")
 
 
-def draw_bars(ax, rep: pd.DataFrame, col: str, scale: float = 1.0) -> None:
-    """Treatment-mean bars with 95% CIs across market-reps."""
+def draw_bars(ax, df: pd.DataFrame, col: str, scale: float = 1.0) -> None:
+    """Treatment-mean bars with HC1 95% CIs on the rows of `df`."""
     for i, t in enumerate(TREATMENTS):
-        vals = rep.loc[rep["treatment"] == t, col].dropna() * scale
-        m = vals.mean()
-        ci = Z95 * vals.std(ddof=1) / np.sqrt(len(vals))
+        m, ci = mean_ci(df.loc[df["treatment"] == t, col], scale=scale)
         ax.bar(i, m, width=0.55, color=COLORS[t], alpha=0.85, zorder=2)
         ax.errorbar(
             i, m, yerr=ci, fmt="none", ecolor="black",
@@ -159,7 +163,7 @@ def save(fig, name: str) -> None:
 # ----------------------------------------------------------------------
 
 def fig_price_paths(mkt: pd.DataFrame) -> None:
-    """Mean transaction price by day (95% CI across market-reps) and the
+    """Mean transaction price by day (HC1 95% CI) and the
     deterministic declining fundamental v_t = 8 × remaining dividends."""
     fig, ax = plt.subplots(figsize=(8.8, 4.95))  # ~16:9
 
@@ -252,17 +256,6 @@ def fig_mispricing(mkt: pd.DataFrame) -> None:
 # ----------------------------------------------------------------------
 
 def fig_liquidity(mkt: pd.DataFrame) -> None:
-    rep = rep_level(
-        mkt,
-        [
-            "rel_quoted_spread",
-            "rel_eff_spread",
-            "rel_realized_spread",
-            "rel_price_impact",
-            "depth_best",
-            "rv_mid",
-        ],
-    )
     fig, axes = plt.subplots(2, 3, figsize=(12.5, 8.0))
 
     pct = "Percent of prevailing midpoint"
@@ -276,7 +269,7 @@ def fig_liquidity(mkt: pd.DataFrame) -> None:
     ]
     for ax, (col, title, ylab) in zip(axes.ravel(), specs):
         scale = 100.0 if ylab == pct else 1.0
-        draw_bars(ax, rep, col, scale=scale)
+        draw_bars(ax, mkt, col, scale=scale)
         ax.set_title(title, loc="left")
         ax.set_ylabel(ylab)
         if scale == 100.0:
@@ -290,18 +283,6 @@ def fig_liquidity(mkt: pd.DataFrame) -> None:
 # ----------------------------------------------------------------------
 
 def fig_volume_orderflow(mkt: pd.DataFrame) -> None:
-    rep = rep_level(
-        mkt,
-        [
-            "n_trades_market",
-            "order_flow_imbalance",
-            "n_limit_orders",
-            "n_cancels",
-            "share_limit_orders",
-            "churn",
-        ],
-    )
-
     fig, axes = plt.subplots(2, 2, figsize=(10.5, 7.6))
     (ax_a, ax_b), (ax_c, ax_d) = axes
 
@@ -313,7 +294,7 @@ def fig_volume_orderflow(mkt: pd.DataFrame) -> None:
     ax_a.legend(loc="upper right")
 
     # B. order-flow imbalance
-    draw_bars(ax_b, rep, "order_flow_imbalance")
+    draw_bars(ax_b, mkt, "order_flow_imbalance")
     ax_b.set_title("B. Order-flow imbalance", loc="left")
     ax_b.set_ylabel(r"$(V^{buy} - V^{sell})\,/\,(V^{buy} + V^{sell})$")
     ax_b.axhline(0, color="0.6", lw=0.8, zorder=1)
@@ -325,7 +306,7 @@ def fig_volume_orderflow(mkt: pd.DataFrame) -> None:
     width = 0.38
     x = np.arange(3)
     for i, t in enumerate(TREATMENTS):
-        sub = rep[rep["treatment"] == t]
+        sub = mkt[mkt["treatment"] == t]
         for ax, cols, scale in (
             (ax_c, ["n_limit_orders", "n_cancels"], 1.0),
             (ax_c2, ["share_limit_orders"], 100.0),
@@ -333,9 +314,9 @@ def fig_volume_orderflow(mkt: pd.DataFrame) -> None:
             pos = x[:2] if ax is ax_c else x[2:]
             means, cis = [], []
             for c in cols:
-                v = sub[c].dropna() * scale
-                means.append(v.mean())
-                cis.append(Z95 * v.std(ddof=1) / np.sqrt(len(v)))
+                m, ci = mean_ci(sub[c], scale=scale)
+                means.append(m)
+                cis.append(ci)
             ax.bar(
                 pos + (i - 0.5) * width, means, width=width * 0.92,
                 color=COLORS[t], alpha=0.85, zorder=2,
@@ -359,7 +340,7 @@ def fig_volume_orderflow(mkt: pd.DataFrame) -> None:
     ax_c.legend(loc="upper left")
 
     # D. intraday churn
-    draw_bars(ax_d, rep, "churn")
+    draw_bars(ax_d, mkt, "churn")
     ax_d.set_title("D. Intraday churn", loc="left")
     ax_d.set_ylabel(r"$1 - |B - S|\,/\,(B + S)$ per trader-day")
 
@@ -375,31 +356,22 @@ def fig_liquidity_provision(mkt: pd.DataFrame) -> None:
     """Why spreads tighten despite heavier order-flow consumption: gamified
     traders undercut the standing book more often and replenish quotes
     faster after trades."""
-    rep = rep_level(
-        mkt,
-        [
-            "n_improving_adds",
-            "share_improving_adds",
-            "time_to_same_side_order_s",
-            "spread_recovery_s",
-        ],
-    )
     fig, axes = plt.subplots(2, 2, figsize=(10.5, 7.6))
     (ax_a, ax_b), (ax_c, ax_d) = axes
 
-    draw_bars(ax_a, rep, "n_improving_adds")
+    draw_bars(ax_a, mkt, "n_improving_adds")
     ax_a.set_title("A. Spread-improving limit orders", loc="left")
     ax_a.set_ylabel("Submissions tightening the quoted\nspread, per market-day")
 
-    draw_bars(ax_b, rep, "share_improving_adds", scale=100.0)
+    draw_bars(ax_b, mkt, "share_improving_adds", scale=100.0)
     ax_b.set_title("B. Share of submissions improving the spread", loc="left")
     ax_b.set_ylabel("Percent of limit-order submissions")
 
-    draw_bars(ax_c, rep, "time_to_same_side_order_s")
+    draw_bars(ax_c, mkt, "time_to_same_side_order_s")
     ax_c.set_title("C. Order replenishment after a trade", loc="left")
     ax_c.set_ylabel("Median seconds from trade to next\nlimit order on the consumed side")
 
-    draw_bars(ax_d, rep, "spread_recovery_s")
+    draw_bars(ax_d, mkt, "spread_recovery_s")
     ax_d.set_title("D. Spread recovery after a trade", loc="left")
     ax_d.set_ylabel("Median seconds until spread returns\nto its pre-trade level")
 
@@ -450,8 +422,9 @@ def fig_literacy(mkt: pd.DataFrame, trd: pd.DataFrame) -> None:
                 (traders["treatment"] == t) & (traders["literacy"] == lit),
                 "payoff_recon",
             ]
-            means.append(v.mean())
-            cis.append(Z95 * v.std(ddof=1) / np.sqrt(len(v)))
+            m, ci = mean_ci(v)
+            means.append(m)
+            cis.append(ci)
         ax_b.bar(
             x + (i - 0.5) * width, means, width=width * 0.92,
             color=COLORS[t], alpha=0.85, label=LABELS[t], zorder=2,
@@ -541,17 +514,15 @@ def fig_trader_types(trd: pd.DataFrame) -> None:
     ax_v.set_title("B. Share of trading volume by type", loc="left")
     ax_v.set_ylabel("Percent of gross trading volume")
 
-    # C. mean relative final wealth by type and treatment, with 95% CIs
+    # C. mean relative final wealth by type and treatment, HC1 95% CIs
     # across trader-markets
     for i, t in enumerate(TREATMENTS):
         sub = tm[tm["treatment"] == t]
         means, cis = [], []
         for ty in TYPE_ORDER:
-            v = sub.loc[sub["type"] == ty, "rel_wealth"].dropna()
-            means.append(v.mean() if len(v) else np.nan)
-            cis.append(
-                Z95 * v.std(ddof=1) / np.sqrt(len(v)) if len(v) > 1 else 0.0
-            )
+            m, ci = mean_ci(sub.loc[sub["type"] == ty, "rel_wealth"])
+            means.append(m)
+            cis.append(ci)
         ax_b.bar(
             x + (i - 0.5) * width, means, width=width * 0.92,
             color=COLORS[t], alpha=0.85, zorder=2,
@@ -580,7 +551,7 @@ def fig_forecasts(trd: pd.DataFrame) -> None:
     """Next-day price forecasts (elicited on days 3, 6, 9, 12) versus the
     realized next-day average price and the next-day fundamental value.
     Trader-level errors are aggregated to the market-day median (robust to
-    fat-finger forecasts), then averaged across market-reps; all errors are
+    fat-finger forecasts), then averaged with HC1 CIs; all errors are
     normalized by the horizon-average fundamental (v-bar = 64), as in RAD."""
     # forecast_err_* / forecast_bias_* come from the panel (normalized by
     # v-bar, fat-finger entries already set to NaN there)
@@ -640,7 +611,7 @@ def fig_forecasts(trd: pd.DataFrame) -> None:
     axes[0][0].legend(loc="upper left")
 
     # bottom row: same metrics by trader type and treatment (median across
-    # a trader's four forecasts, 95% CIs across trader-markets)
+    # a trader's four forecasts, HC1 95% CIs across trader-markets)
     types = _trader_types(trd)[["market_uuid", "participant_code", "type"]]
     per_trader = (
         sub.groupby(["market_uuid", "participant_code", "treatment"])[
@@ -657,11 +628,9 @@ def fig_forecasts(trd: pd.DataFrame) -> None:
             s = per_trader[per_trader["treatment"] == t]
             means, cis = [], []
             for ty in TYPE_ORDER:
-                v = s.loc[s["type"] == ty, col].dropna()
-                means.append(v.mean() if len(v) else np.nan)
-                cis.append(
-                    Z95 * v.std(ddof=1) / np.sqrt(len(v)) if len(v) > 1 else 0.0
-                )
+                m, ci = mean_ci(s.loc[s["type"] == ty, col])
+                means.append(m)
+                cis.append(ci)
             ax.bar(
                 x + (i - 0.5) * width, means, width=width * 0.92,
                 color=COLORS[t], alpha=0.85, zorder=2,

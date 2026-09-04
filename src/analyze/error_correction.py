@@ -14,7 +14,7 @@ normalized fundamental gap (P - v_t)/vbar (positive = overpriced), and OFI
 is the signed order-flow imbalance. b2 < 0 is error correction in control
 markets; b3 > 0 means gamification weakens it.
 
-Standard errors are HC1 heteroskedasticity-robust (no clustering).
+Standard errors are clustered by experimental group (`group_label`).
 
 Writes output/tables/error_correction.csv and prints the table.
 Usage:  python src/analyze/error_correction.py
@@ -47,14 +47,19 @@ def load_panel() -> pd.DataFrame:
     )
 
 
-def ols_hc1(y: np.ndarray, X: np.ndarray):
-    """OLS with HC1 heteroskedasticity-robust standard errors."""
+def ols_cr1(y: np.ndarray, X: np.ndarray, cluster: np.ndarray):
+    """OLS with CR1 standard errors clustered by experimental group."""
     b, *_ = np.linalg.lstsq(X, y, rcond=None)
     resid = y - X @ b
     n, k = X.shape
     xtxi = np.linalg.inv(X.T @ X)
-    meat = X.T @ (resid[:, None] ** 2 * X)
-    V = (n / (n - k)) * xtxi @ meat @ xtxi
+    meat = np.zeros((k, k))
+    for c in np.unique(cluster):
+        idx = cluster == c
+        score = X[idx].T @ resid[idx]
+        meat += np.outer(score, score)
+    g = len(np.unique(cluster))
+    V = (g / (g - 1)) * ((n - 1) / (n - k)) * xtxi @ meat @ xtxi
     return b, np.sqrt(np.diag(V))
 
 
@@ -79,7 +84,9 @@ def run_spec(d: pd.DataFrame, day_fe: bool) -> pd.DataFrame:
         names.append("rep2")
         cols.append((d["repetition"] == 2).astype(float))
     X = np.column_stack(cols)
-    b, se = ols_hc1(d["ret_next"].to_numpy(), X)
+    b, se = ols_cr1(
+        d["ret_next"].to_numpy(), X, d["group_label"].to_numpy()
+    )
     out = pd.DataFrame({"coef": b, "se": se}, index=names)
     out["t"] = out["coef"] / out["se"]
     return out.loc[[
@@ -104,7 +111,7 @@ def main() -> None:
         print(tab[["coef", "se", "t"]].to_string(), "\n")
     OUT.parent.mkdir(parents=True, exist_ok=True)
     pd.concat(tables).to_csv(OUT)
-    print(f"saved {OUT}\nSEs: HC1 heteroskedasticity-robust.")
+    print(f"saved {OUT}\nSEs: clustered by group_label.")
 
 
 if __name__ == "__main__":

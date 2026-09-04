@@ -3,29 +3,29 @@
 \begin{tabular}{lcccccc}
    \tabularnewline \midrule \midrule
    Dependent Variables: & \multicolumn{2}{c}{Forecast error (price)} & Forecast error (fund.) & \multicolumn{3}{c}{Forecast bias (fund.)}\\
-   Accuracy & \multicolumn{6}{c}{3} \\ 
-   Bias vs fundamental & \multicolumn{6}{c}{3} \\ 
-   Model:                    & (1)            & (2)            & (3)            & (4)           & (5)           & (6)\\  
+    & \multicolumn{3}{c}{Accuracy} & \multicolumn{3}{c}{Bias vs fundamental} \\ 
+   Model:                    & (1)           & (2)           & (3)           & (4)     & (5)     & (6)\\  
    \midrule
    \emph{Variables}\\
-   Gamified                  & 0.029          & 0.029          & -0.117$^{***}$ & -0.069        & -0.068        & -0.068\\   
-                             & (0.061)        & (0.061)        & (0.039)        & (0.058)       & (0.057)       & (0.057)\\   
-   Finance course share      & -0.596$^{***}$ & -0.596$^{***}$ & -0.571$^{***}$ & -0.262$^{**}$ & -0.263$^{**}$ & -0.262$^{**}$\\   
-                             & (0.135)        & (0.135)        & (0.070)        & (0.114)       & (0.114)       & (0.113)\\   
-   Gamified $\times$ Late    &                &                &                &               &               & 0.248$^{**}$\\   
-                             &                &                &                &               &               & (0.111)\\   
-   Late window (days 11--15) &                &                &                &               &               & 0.560$^{***}$\\   
-                             &                &                &                &               &               & (0.103)\\   
-   Constant                  & 0.411$^{***}$  & 0.411$^{***}$  & 0.514$^{***}$  & -0.025        & -0.025        & -0.025\\   
-                             & (0.034)        & (0.034)        & (0.029)        & (0.043)       & (0.043)       & (0.043)\\   
+   Gamified                  & 0.075         & 0.075         & -0.069$^{*}$  & -0.047  & -0.046  & -0.046\\   
+                             & (0.067)       & (0.068)       & (0.041)       & (0.057) & (0.057) & (0.056)\\   
+   Gamified $\times$ Late    &               &               &               &         &         & 0.248$^{**}$\\   
+                             &               &               &               &         &         & (0.113)\\   
+   Late window (days 11--15) &               &               &               &         &         & 0.560$^{***}$\\   
+                             &               &               &               &         &         & (0.104)\\   
+   Constant                  & 0.411$^{***}$ & 0.411$^{***}$ & 0.514$^{***}$ & -0.025  & -0.025  & -0.025\\   
+                             & (0.032)       & (0.032)       & (0.030)       & (0.044) & (0.044) & (0.044)\\   
    \midrule
    \emph{Fit statistics}\\
-   Observations              & 498            & 498            & 504            & 504           & 504           & 504\\  
-   R$^2$                     & 0.11           & 0.11           & 0.24           & 0.17          & 0.17          & 0.17\\  
-   Repetition dummy          &                & Yes            & Yes            &               & Yes           & Yes\\  
-   Trading-day dummies       & Yes            & Yes            & Yes            & Yes           & Yes           & Yes\\  
+   Observations              & 498           & 498           & 504           & 504     & 504     & 504\\  
+   R$^2$                     & 0.06          & 0.07          & 0.13          & 0.15    & 0.15    & 0.16\\  
+   Repetition dummy          &               & Yes           & Yes           &         & Yes     & Yes\\  
+   Trading-day dummies       & Yes           & Yes           & Yes           & Yes     & Yes     & Yes\\  
    \midrule \midrule
    \multicolumn{7}{l}{\emph{Heteroskedasticity-robust standard-errors in parentheses}}\\
    \multicolumn{7}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
 \end{tabular}
+ 
+\par \raggedright 
+Heteroskedasticity-robust (HC1) standard errors in parentheses.
 \par\endgroup
