@@ -42,7 +42,7 @@ PROCESSED = ROOT / "data" / "processed"
 FIG_DIR = ROOT / "output" / "figures"
 
 TREATMENTS = ["ng", "ghp"]
-LABELS = {"ng": "Control (NG)", "ghp": "Gamified (GHP)"}
+LABELS = {"ng": "Non-gamified", "ghp": "Gamified"}
 COLORS = {"ng": "#4d4d4d", "ghp": "#0072b2"}
 EXCLUDE_GROUPS = {
     "20260520_PM/ng1",  # wash/churn peg at ~130
@@ -682,6 +682,17 @@ def fig_bubble_incidence(mkt: pd.DataFrame) -> None:
         ax.set_ylim(bottom=0)
     fig.tight_layout(w_pad=2.2)
     save(fig, "fig8_bubble_incidence")
+
+    # Paper version: retain only the two bubble-incidence outcomes discussed
+    # in the Results section.
+    fig, axes = plt.subplots(1, 2, figsize=(8.8, 4.0))
+    for ax, (col, title, ylab) in zip(axes, specs[:2]):
+        draw_bars(ax, rep, col)
+        ax.set_title(title, loc="left")
+        ax.set_ylabel(ylab)
+        ax.set_ylim(bottom=0)
+    fig.tight_layout(w_pad=2.2)
+    save(fig, "fig8_bubble_incidence_selected")
 
 
 # ----------------------------------------------------------------------
